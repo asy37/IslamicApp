@@ -1,5 +1,6 @@
 import { MaterialIcons } from "@expo/vector-icons";
 import { Pressable, Text, View } from "react-native";
+import { useRouter } from "expo-router";
 import clsx from "clsx";
 
 type MenuItemType = {
@@ -8,6 +9,7 @@ type MenuItemType = {
   subtitle?: string;
   icon: string;
   iconBg: "primary" | "gray";
+  route?: string;
 };
 
 type MenuItemProps = {
@@ -21,6 +23,8 @@ export default function MenuItem({
   isDark,
   isLast,
 }: MenuItemProps) {
+  const router = useRouter();
+
   const getIconBackgroundColor = () => {
     if (item.iconBg === "primary") {
       return isDark ? "bg-primary-500/20" : "bg-primary-50";
@@ -35,12 +39,19 @@ export default function MenuItem({
     return isDark ? "#D1D5DB" : "#4B5563";
   };
 
+  const handlePress = () => {
+    if (item.route) {
+      router.push(item.route as any);
+    }
+  };
+
   return (
     <Pressable
       className={clsx(
         "flex-row items-center justify-between p-4",
         !isLast && (isDark ? "border-b border-gray-800" : "border-b border-gray-100")
       )}
+      onPress={handlePress}
     >
       <View className="flex-row items-center gap-4">
         <View

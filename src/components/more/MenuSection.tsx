@@ -8,6 +8,7 @@ type MenuItemType = {
   subtitle?: string;
   icon: string;
   iconBg: "primary" | "gray";
+  route?: string;
 };
 
 type MenuSectionProps = {
@@ -23,7 +24,7 @@ export default function MenuSection({
 }: MenuSectionProps) {
   return (
     <View className="space-y-3">
-      {title && (
+      {title !== "" && (
         <Text
           className={clsx(
             "px-2 text-sm font-semibold uppercase tracking-wider opacity-80",

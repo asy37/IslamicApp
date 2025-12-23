@@ -12,6 +12,7 @@ const TOOLS_ITEMS = [
     subtitle: "Günlük tesbihatlarınız",
     icon: "timer",
     iconBg: "primary" as const,
+    route: "/more/dhikr",
   },
   {
     key: "daily-verse",
@@ -19,6 +20,7 @@ const TOOLS_ITEMS = [
     subtitle: "Günün ilhamı",
     icon: "menu-book",
     iconBg: "primary" as const,
+    route: "/more/daily-verse",
   },
   {
     key: "prayers",
@@ -26,6 +28,7 @@ const TOOLS_ITEMS = [
     subtitle: "Kaydedilen dualar",
     icon: "volunteer-activism",
     iconBg: "primary" as const,
+    route: "/more/duas",
   },
 ] as const;
 
@@ -35,12 +38,14 @@ const LOCATION_ITEMS = [
     title: "Kıble Bulucu",
     icon: "explore",
     iconBg: "primary" as const,
+    route: "/adhan", // Qibla için adhan tab'ına yönlendir
   },
   {
     key: "mosques",
     title: "Yakındaki Camiler",
     icon: "mosque",
     iconBg: "primary" as const,
+    route: "/adhan", // Mosques için adhan tab'ına yönlendir
   },
 ] as const;
 
@@ -50,12 +55,14 @@ const ACCOUNT_ITEMS = [
     title: "Profil",
     icon: "person",
     iconBg: "gray" as const,
+    route: "/more/profile",
   },
   {
     key: "settings",
     title: "Ayarlar",
     icon: "settings",
     iconBg: "gray" as const,
+    route: "/more/settings",
   },
 ] as const;
 
