@@ -37,8 +37,9 @@ const LOCATION_ITEMS = [
     key: "qibla",
     title: "Kıble Bulucu",
     icon: "explore",
+    
     iconBg: "primary" as const,
-    route: "/adhan", // Qibla için adhan tab'ına yönlendir
+    route: "/more/qibla", // Qibla için adhan tab'ına yönlendir
   },
   {
     key: "mosques",
