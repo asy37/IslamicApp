@@ -1,9 +1,11 @@
-import { Stack } from 'expo-router';
-import { useEffect } from 'react';
-import { useFonts } from 'expo-font';
-import * as SplashScreen from 'expo-splash-screen';
-import '../global.css';
-import '../src/lib/notifications/NotificationService';
+import { Stack } from "expo-router";
+import { useEffect } from "react";
+import { useFonts } from "expo-font";
+import * as SplashScreen from "expo-splash-screen";
+import "../global.css";
+import "../src/lib/notifications/NotificationService";
+import PrayerHeader from "@/components/layout/header";
+import { NativeStackNavigationOptions } from "react-native-screens/lib/typescript/native-stack/types";
 
 // Keep splash screen visible while loading fonts
 SplashScreen.preventAutoHideAsync();
@@ -26,13 +28,21 @@ export default function RootLayout() {
     }
   }, [fontsLoaded]);
 
+  if (!fontsLoaded && fontsLoaded !== undefined) {
+    return null;
+  }
+
   return (
-    <Stack
-      screenOptions={{
-        headerShown: false,
-      }}
-    >
-      <Stack.Screen name="(tabs)" />
-    </Stack>
+    <>
+      <PrayerHeader />
+      <Stack
+        screenOptions={{
+          headerShown: false,
+        }}
+      >
+        <Stack.Screen name="(tabs)" />
+      </Stack>
+    </>
   );
 }
+
