@@ -1,7 +1,7 @@
-import { SafeAreaView } from "react-native-safe-area-context";
 import { ScrollView, useColorScheme } from "react-native";
 import TodayJourneyCard from "@/components/tracking/TodayJourneyCard";
 import DailyPrayersSection from "@/components/tracking/DailyPrayersSection";
+import clsx from "clsx";
 
 const PRAYERS = [
   {
@@ -41,19 +41,14 @@ export default function PrayerTrackingScreen() {
   const isDark = colorScheme === "dark";
 
   return (
-    <SafeAreaView
-      className={
-        isDark ? "flex-1 bg-background-dark" : "flex-1 bg-background-light"
-      }
+    <ScrollView
+      className={clsx("flex-1 p-4", isDark ? "bg-background-dark" : "bg-background-light")}
+      contentContainerStyle={{ paddingBottom: 32 }}
+      showsVerticalScrollIndicator={false}
     >
-      <ScrollView
-        className="flex-1 px-4 "
-        contentContainerStyle={{ paddingBottom: 32 }}
-        showsVerticalScrollIndicator={false}
-      >
+
         <TodayJourneyCard />
         <DailyPrayersSection prayers={PRAYERS} />
-      </ScrollView>
-    </SafeAreaView>
+    </ScrollView>
   );
 }

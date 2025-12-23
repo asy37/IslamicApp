@@ -25,7 +25,7 @@ module.exports = {
         // BACKGROUND COLORS
         // =========================
         background: {
-          light: "#F8FAF9",
+          light: "#CFEBDD",
           dark: "#0F1F1A",
           cardLight: "#FFFFFF",
           cardDark: "#162925",

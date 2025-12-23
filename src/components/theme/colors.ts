@@ -16,4 +16,11 @@ export const colors = {
     light: "#E2ECE8",
     dark: "#223833",
   },
+  text: {
+    primaryLight: "#1C2A26",
+    secondaryLight: "#6B7F78",
+    primaryDark: "#EAF3F0",
+    secondaryDark: "#8FA6A0",
+    muted: "#A8BDB6",
+  },
 };

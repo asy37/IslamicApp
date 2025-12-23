@@ -4,7 +4,7 @@
 
 export interface Ayah {
   number: number;
-  text: string;
+  arabic: string;
   translation?: string;
 }
 

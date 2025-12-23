@@ -33,9 +33,9 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="dhikr"
+        name="adhan"
         options={{
-          title: 'Zikir',
+          title: 'Ezan',
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="infinite-outline" size={size} color={color} />
           ),

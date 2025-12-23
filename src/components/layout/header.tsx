@@ -17,7 +17,7 @@ export default function PrayerHeader() {
     >
       <View
         className={
-          "border-b px-4  " +
+          "border-b px-4 py-2 " +
           (isDark
             ? "border-border-dark bg-background-dark/95"
             : "border-border-light bg-background-light/95")
