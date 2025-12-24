@@ -1,4 +1,5 @@
 import { ScrollView, useColorScheme, View } from "react-native";
+import { useState } from "react";
 import clsx from "clsx";
 import AdhanHeader from "@/components/adhan/AdhanHeader";
 import DateInfo from "@/components/adhan/DateInfo";
@@ -7,20 +8,24 @@ import PrayerScheduleList from "@/components/adhan/PrayerScheduleList";
 import { usePrayerTimes } from "@/lib/hooks/usePrayerTimes";
 import { PrayerDate } from "@/components/adhan/types/date-info";
 import { PrayerTimings } from "@/components/adhan/types/prayer-timings";
+import { useLocation, type LocationData } from "@/lib/hooks/useLocation";
 
 export default function AdhanScreen() {
   const colorScheme = useColorScheme();
+  const { location: gpsLocation, requestLocation } = useLocation();
+  const [manualLocation, setManualLocation] = useState<LocationData | null>(null);
+
   const isDark = colorScheme === "dark";
 
-  // İstanbul koordinatları
-  const istanbulLatitude = 41.0082;
-  const istanbulLongitude = 28.9784;
+  // Manuel lokasyon varsa onu kullan, yoksa GPS lokasyonu, yoksa default (Istanbul)
+  const activeLocation = manualLocation || gpsLocation;
+  const latitudeLocation = activeLocation?.latitude ?? 41.0082;
+  const longitudeLocation = activeLocation?.longitude ?? 28.9784;
 
-  // Prayer times API çağrısı
   const { data } = usePrayerTimes({
-    latitude: istanbulLatitude,
-    longitude: istanbulLongitude,
-    method: 2, // ISNA
+    latitude: latitudeLocation,
+    longitude: longitudeLocation,
+    method: 2,
   });
 
   const prayerDate = data?.data.date as PrayerDate;
@@ -38,7 +43,12 @@ export default function AdhanScreen() {
         contentContainerStyle={{ paddingBottom: 100 }}
         showsVerticalScrollIndicator={false}
       >
-        <AdhanHeader isDark={isDark} />
+        <AdhanHeader
+          isDark={isDark}
+          requestLocation={requestLocation}
+          location={activeLocation}
+          onLocationSelect={setManualLocation}
+        />
         <DateInfo isDark={isDark} data={prayerDate} />
         <NextPrayerCard isDark={isDark} data={prayerTimings} />
         <PrayerScheduleList isDark={isDark} data={prayerTimings} />

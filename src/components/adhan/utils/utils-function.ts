@@ -1,3 +1,4 @@
+import { LocationData } from "@/lib/hooks/useLocation";
 import { PrayerItem, PrayerTimings } from "../types/prayer-timings";
 
 /**
@@ -291,4 +292,18 @@ export function getNextPrayer(
     timeRemaining,
     localTime,
   };
+}
+
+
+export function getLocationText(location: LocationData | null): string {
+  if (location?.city && location?.country) {
+    return `${location.city}, ${location.country}`;
+  }
+  if (location?.city) {
+    return location.city;
+  }
+  if (location?.country) {
+    return location.country;
+  }
+  return "Istanbul, Türkiye";
 }
