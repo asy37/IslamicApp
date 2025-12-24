@@ -1,57 +1,31 @@
 import { ScrollView, useColorScheme, View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { useEffect } from "react";
 import clsx from "clsx";
 import AdhanHeader from "@/components/adhan/AdhanHeader";
 import DateInfo from "@/components/adhan/DateInfo";
 import NextPrayerCard from "@/components/adhan/NextPrayerCard";
 import PrayerScheduleList from "@/components/adhan/PrayerScheduleList";
-
-export const PRAYER_SCHEDULE = [
-  {
-    key: "fajr",
-    name: "Fajr",
-    meaning: "The Dawn",
-    icon: "dark-mode",
-    time: "04:55 AM",
-    status: "past" as const,
-  },
-  {
-    key: "dhuhr",
-    name: "Dhuhr",
-    meaning: "The Noon",
-    icon: "light-mode",
-    time: "12:15 PM",
-    status: "past" as const,
-  },
-  {
-    key: "asr",
-    name: "Asr",
-    meaning: "The Afternoon",
-    icon: "wb-twilight",
-    time: "03:45 PM",
-    status: "past" as const,
-  },
-  {
-    key: "maghrib",
-    name: "Maghrib",
-    meaning: "The Sunset",
-    icon: "nights-stay",
-    time: "06:10 PM",
-    status: "active" as const,
-  },
-  {
-    key: "isha",
-    name: "Isha",
-    meaning: "The Night",
-    icon: "bedtime",
-    time: "07:40 PM",
-    status: "upcoming" as const,
-  },
-];
+import { usePrayerTimes } from "@/lib/hooks/usePrayerTimes";
+import { PrayerDate } from "@/components/adhan/types/date-info";
+import { PrayerTimings } from "@/components/adhan/types/prayer-timings";
 
 export default function AdhanScreen() {
   const colorScheme = useColorScheme();
   const isDark = colorScheme === "dark";
+
+  // İstanbul koordinatları
+  const istanbulLatitude = 41.0082;
+  const istanbulLongitude = 28.9784;
+
+  // Prayer times API çağrısı
+  const { data, error } = usePrayerTimes({
+    latitude: istanbulLatitude,
+    longitude: istanbulLongitude,
+    method: 2, // ISNA
+  });
+
+  const prayerDate = data?.data.date as PrayerDate;
+  const prayerTimings = data?.data.timings as PrayerTimings;
 
   return (
     <View
@@ -66,9 +40,9 @@ export default function AdhanScreen() {
         showsVerticalScrollIndicator={false}
       >
         <AdhanHeader isDark={isDark} />
-        <DateInfo isDark={isDark} />
-        <NextPrayerCard isDark={isDark} />
-        <PrayerScheduleList isDark={isDark} />
+        <DateInfo isDark={isDark} data={prayerDate} />
+        <NextPrayerCard isDark={isDark}  />
+        <PrayerScheduleList isDark={isDark} data={prayerTimings} />
       </ScrollView>
     </View>
   );

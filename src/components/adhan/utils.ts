@@ -8,11 +8,9 @@ export const getIconColor = (isActive: boolean, isDark: boolean) => {
   return isDark ? colors.text.secondaryDark : colors.text.secondaryLight;
 };
 
-export const getBackgroundColor = (isActive: boolean, isDark: boolean) => {
-  if (isActive) {
-    // Active prayer has a subtle primary color background
-    return isDark ? "bg-primary-500/10" : "bg-primary-500/5";
-  }
+export const getBackgroundColor = (isActive: boolean,isPast: boolean, isDark: boolean) => {
+  if (isPast && !isActive) {
+    return isDark ? "bg-background-cardDark" : "bg-background-cardLight/50";  }
   // Non-active prayers use standard card background
   return isDark ? "bg-background-cardDark" : "bg-background-cardLight";
 };

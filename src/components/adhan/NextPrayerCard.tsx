@@ -1,6 +1,6 @@
 import { MaterialIcons } from "@expo/vector-icons";
 import { Image, Text, View } from "react-native";
-import { PRAYER_SCHEDULE } from "../../../app/(tabs)/adhan";
+import { PRAYER_SCHEDULE } from "@/constants/prayer-schedule";
 import clsx from "clsx";
 
 export default function NextPrayerCard({ isDark }: { isDark: boolean }) {

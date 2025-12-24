@@ -1,7 +1,6 @@
 import { MaterialIcons } from "@expo/vector-icons";
 import clsx from "clsx";
 import { Text, View } from "react-native";
-import { PRAYER_SCHEDULE } from "../../../app/(tabs)/adhan";
 import {
   getActiveBorderColor,
   getBackgroundColor,
@@ -15,23 +14,33 @@ import {
   getTimeTextColor,
 } from "./utils";
 
+type PrayerItem = {
+  readonly name: string;
+  readonly time: string;
+  readonly key: string;
+  readonly meaning: string;
+  readonly icon: string;
+};
+
 type PrayerScheduleItemProps = {
-  readonly prayer: (typeof PRAYER_SCHEDULE)[number];
+  readonly prayer: PrayerItem;
   readonly isDark: boolean;
+  readonly isPast: boolean;
+  readonly isActive: boolean;
 };
 
 export default function PrayerScheduleItem({
   prayer,
   isDark,
+  isPast,
+  isActive,
 }: PrayerScheduleItemProps) {
-  const isActive = prayer.status === "active";
-  const isPast = prayer.status === "past";
 
   return (
     <View
       className={clsx(
         "flex-row items-center gap-4 p-4 rounded-xl border shadow-sm relative overflow-hidden",
-        getBackgroundColor(isActive, isDark),
+        getBackgroundColor(isActive, isPast, isDark),
         getBorderColor(isActive, isDark)
       )}
     >
