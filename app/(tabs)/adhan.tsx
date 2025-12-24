@@ -1,5 +1,4 @@
 import { ScrollView, useColorScheme, View } from "react-native";
-import { useEffect } from "react";
 import clsx from "clsx";
 import AdhanHeader from "@/components/adhan/AdhanHeader";
 import DateInfo from "@/components/adhan/DateInfo";
@@ -18,7 +17,7 @@ export default function AdhanScreen() {
   const istanbulLongitude = 28.9784;
 
   // Prayer times API çağrısı
-  const { data, error } = usePrayerTimes({
+  const { data } = usePrayerTimes({
     latitude: istanbulLatitude,
     longitude: istanbulLongitude,
     method: 2, // ISNA

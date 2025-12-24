@@ -1,6 +1,6 @@
 // Tailwind color constants from tailwind.config.js
 
-import { colors } from "../theme/colors";
+import { colors } from "../../theme/colors";
 
 
 export const getIconColor = (isActive: boolean, isDark: boolean) => {

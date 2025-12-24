@@ -12,3 +12,11 @@ export type PrayerTimings = {
     Firstthird: string
     Lastthird: string
   }
+
+  export type PrayerItem = {
+    readonly name: string;
+    readonly time: string;
+    readonly key: string;
+    readonly meaning: string;
+    readonly icon: string;
+  };

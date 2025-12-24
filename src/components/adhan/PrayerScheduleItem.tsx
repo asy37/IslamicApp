@@ -12,7 +12,7 @@ import {
   getNotificationBadgeBg,
   getNotificationIconColor,
   getTimeTextColor,
-} from "./utils";
+} from "./utils/utils-styles";
 
 type PrayerItem = {
   readonly name: string;
