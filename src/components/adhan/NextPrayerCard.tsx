@@ -1,11 +1,36 @@
 import { MaterialIcons } from "@expo/vector-icons";
 import { Image, Text, View } from "react-native";
-import { PRAYER_SCHEDULE } from "@/constants/prayer-schedule";
+import { useEffect, useState } from "react";
 import clsx from "clsx";
+import { PrayerTimings } from "./types/prayer-timings";
+import { getNextPrayer, type NextPrayerInfo } from "./utils/utils-function";
 
-export default function NextPrayerCard({ isDark }: { isDark: boolean }) {
-  const nextPrayer = PRAYER_SCHEDULE.find((p) => p.status === "active");
-  const timeRemaining = "-00:45:12";
+type NextPrayerCardProps = {
+  readonly isDark: boolean;
+  readonly data: PrayerTimings | undefined;
+};
+
+export default function NextPrayerCard({
+  isDark,
+  data,
+}: NextPrayerCardProps) {
+  const [nextPrayerInfo, setNextPrayerInfo] = useState<NextPrayerInfo | null>(
+    getNextPrayer(data)
+  );
+
+  // Geri sayım sayacı - her saniye güncelle
+  useEffect(() => {
+    // İlk güncelleme
+    setNextPrayerInfo(getNextPrayer(data));
+
+    // Her saniye güncelle
+    const interval = setInterval(() => {
+      setNextPrayerInfo(getNextPrayer(data));
+    }, 1000);
+
+    // Cleanup
+    return () => clearInterval(interval);
+  }, [data]);
 
   return (
     <View className={clsx("px-4 mb-8")}>
@@ -51,10 +76,10 @@ export default function NextPrayerCard({ isDark }: { isDark: boolean }) {
             </Text>
           </View>
           <Text className="text-white text-4xl font-bold mt-2 mb-1 tracking-tight">
-            {nextPrayer?.name}
+            {nextPrayerInfo?.name || "Loading..."}
           </Text>
           <Text className="text-white/90 text-lg mb-6 font-light">
-            {nextPrayer?.time}
+            {nextPrayerInfo?.localTime || "--:--"}
           </Text>
           <View className="flex-col items-center">
             <Text className="text-white/80 text-xs uppercase tracking-widest mb-1">
@@ -70,7 +95,7 @@ export default function NextPrayerCard({ isDark }: { isDark: boolean }) {
                 textShadowRadius: 20,
               }}
             >
-              {timeRemaining}
+              {nextPrayerInfo?.timeRemaining || "00:00:00"}
             </Text>
           </View>
         </View>

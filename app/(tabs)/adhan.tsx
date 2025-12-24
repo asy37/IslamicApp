@@ -40,7 +40,7 @@ export default function AdhanScreen() {
       >
         <AdhanHeader isDark={isDark} />
         <DateInfo isDark={isDark} data={prayerDate} />
-        <NextPrayerCard isDark={isDark}  />
+        <NextPrayerCard isDark={isDark} data={prayerTimings} />
         <PrayerScheduleList isDark={isDark} data={prayerTimings} />
       </ScrollView>
     </View>

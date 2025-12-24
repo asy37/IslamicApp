@@ -194,3 +194,101 @@ export function transformPrayerTimings(
       icon: prayerMap[key].icon,
     }));
 }
+
+export type NextPrayerInfo = {
+  readonly name: string;
+  readonly timeRemaining: string;
+  readonly localTime: string;
+};
+
+/**
+ * Bir sonraki ezan vaktini belirler ve kalan süreyi hesaplar
+ */
+export function getNextPrayer(
+  timings: PrayerTimings | undefined
+): NextPrayerInfo | null {
+  if (!timings) {
+    return null;
+  }
+
+  const now = new Date();
+  const prayerOrder = ["Imsak", "Sunrise", "Dhuhr", "Asr", "Maghrib", "Isha"];
+
+  // Tüm vakitleri sıralı olarak al
+  const prayerItems = transformPrayerTimings(timings);
+  const sortedPrayers = prayerOrder
+    .map((key) => prayerItems.find((p) => p.key === key))
+    .filter((p): p is PrayerItem => p !== undefined);
+
+  if (sortedPrayers.length === 0) {
+    return null;
+  }
+
+  // Bugünün tarihini gece yarısından başlat
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  today.setSeconds(0);
+  today.setMilliseconds(0);
+
+  // Imsak zamanını hesapla
+  const imsakPrayer = sortedPrayers.find((p) => p.key === "Imsak");
+  if (!imsakPrayer) {
+    return null;
+  }
+
+  const imsakTime = createPrayerTime(imsakPrayer.time, today);
+  const isBeforeImsak = now.getTime() < imsakTime.getTime();
+
+  // Tüm vakitleri kontrol et ve bir sonraki vakti bul
+  let nextPrayer: PrayerItem | null = null;
+  let nextPrayerTime: Date | null = null;
+
+  for (const prayer of sortedPrayers) {
+    let prayerTime: Date;
+
+    if (isBeforeImsak) {
+      // Dünün vakitleri
+      const yesterday = new Date(today);
+      yesterday.setDate(yesterday.getDate() - 1);
+      prayerTime = createPrayerTime(prayer.time, yesterday);
+    } else {
+      // Bugünün vakitleri
+      prayerTime = createPrayerTime(prayer.time, today);
+    }
+
+    // Eğer bu vakit henüz gelmediyse, bu bir sonraki vakit
+    if (now.getTime() < prayerTime.getTime()) {
+      nextPrayer = prayer;
+      nextPrayerTime = prayerTime;
+      break;
+    }
+  }
+
+  // Eğer bugün hiç vakit kalmadıysa, yarının Imsak'ı bir sonraki vakit
+  if (!nextPrayer || !nextPrayerTime) {
+    const tomorrow = new Date(today);
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    nextPrayer = imsakPrayer;
+    nextPrayerTime = createPrayerTime(imsakPrayer.time, tomorrow);
+  }
+
+  // Kalan süreyi hesapla
+  const timeDiff = nextPrayerTime.getTime() - now.getTime();
+  const hours = Math.floor(timeDiff / (1000 * 60 * 60));
+  const minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
+  const seconds = Math.floor((timeDiff % (1000 * 60)) / 1000);
+
+  // Format: HH:MM:SS
+  const timeRemaining = `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+
+  // Yerel saati formatla: HH:MM
+  const localHours = now.getHours();
+  const localMinutes = now.getMinutes();
+  const localTime = `${String(localHours).padStart(2, "0")}:${String(localMinutes).padStart(2, "0")}`;
+
+  return {
+    name: nextPrayer.name,
+    timeRemaining,
+    localTime,
+  };
+}

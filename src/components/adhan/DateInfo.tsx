@@ -2,13 +2,15 @@ import clsx from "clsx";
 import { Text, View } from "react-native";
 import { PrayerDate } from "./types/date-info";
 
+type DateInfoProps = {
+  readonly isDark: boolean;
+  readonly data: PrayerDate;
+};
+
 export default function DateInfo({
   isDark,
   data,
-}: {
-  isDark: boolean;
-  data: PrayerDate;
-}) {
+}: DateInfoProps) {
   const { hijri, gregorian } = data ?? {};
   const hijriDate = `${hijri?.day}, ${hijri?.weekday.en} ${hijri?.month.en} ${hijri?.year}`;
   const gregorianDate = `${gregorian?.day}, ${gregorian?.weekday.en} ${gregorian?.month.en} ${gregorian?.year}`;
