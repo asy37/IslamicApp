@@ -24,6 +24,8 @@
         ],
         "NSLocationWhenInUseUsageDescription": "Namaz vakitlerini doğru hesaplamak için konumunuza ihtiyacımız var.",
         "NSLocationAlwaysUsageDescription": "Namaz vakitlerini doğru hesaplamak için konumunuza ihtiyacımız var.",
+        "NSPhotoLibraryUsageDescription": "Profil fotoğrafı eklemek için fotoğraf kütüphanenize erişim gerekiyor.",
+        "NSCameraUsageDescription": "Profil fotoğrafı çekmek için kameraya erişim gerekiyor.",
         "UILaunchScreen": {
           "backgroundColor": "#2D5016"
         },
@@ -87,6 +89,13 @@
             "./assets/fonts/ScheherazadeNew-Regular.ttf",
             "./assets/fonts/ScheherazadeNew-Bold.ttf"
           ]
+        }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Profil fotoğrafı eklemek için fotoğraf kütüphanenize erişim gerekiyor.",
+          "cameraPermission": "Profil fotoğrafı çekmek için kameraya erişim gerekiyor."
         }
       ],
       "expo-router"
