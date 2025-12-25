@@ -1,17 +1,26 @@
 import { Text, useColorScheme, View } from "react-native";
-import type { Prayer } from "../../../app/(tabs)";
-import PrayerRow from "./PrayerRow";
-import ActiveMaghribCard from "./ActiveMaghribCard";
-import IshaRow from "./IshaRow";
+import type { PrayerTrackingItem } from "@/types/prayer-tracking-v2";
+import PrayerRowV2 from "./PrayerRowV2";
 
 type DailyPrayersSectionProps = {
-  readonly prayers: readonly Prayer[];
+  readonly prayers: Array<PrayerTrackingItem & { scheduledTime: string; displayTime: string }>;
 };
 
 export default function DailyPrayersSection({ prayers }: DailyPrayersSectionProps) {
   const colorScheme = useColorScheme();
   const isDark = colorScheme === "dark";
-  const prayedPrayers = prayers.slice(0, 3);
+
+  // Always show all 5 prayers
+  const order: Record<string, number> = {
+    fajr: 1,
+    dhuhr: 2,
+    asr: 3,
+    maghrib: 4,
+    isha: 5,
+  };
+  const sortedPrayers = [...prayers].sort((a, b) => {
+    return (order[a.id] || 0) - (order[b.id] || 0);
+  });
 
   return (
     <View className="mt-6 space-y-4">
@@ -24,12 +33,10 @@ export default function DailyPrayersSection({ prayers }: DailyPrayersSectionProp
         Günlük Namazlar
       </Text>
 
-      {prayedPrayers.map((prayer) => (
-        <PrayerRow key={prayer.key} prayer={prayer} />
+      {/* All prayers - always show 5 */}
+      {sortedPrayers.map((prayer) => (
+        <PrayerRowV2 key={prayer.id} prayer={prayer} />
       ))}
-
-      <ActiveMaghribCard />
-      <IshaRow />
     </View>
   );
 }

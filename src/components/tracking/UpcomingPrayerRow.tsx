@@ -1,19 +1,19 @@
 import { MaterialIcons } from "@expo/vector-icons";
 import { Text, useColorScheme, View } from "react-native";
 import type { PrayerWithTime } from "@/types/prayer-tracking";
-import { colors } from "../theme/colors";
 
-type PrayerRowProps = {
+type UpcomingPrayerRowProps = {
   readonly prayer: PrayerWithTime;
 };
 
-export default function PrayerRow({ prayer }: PrayerRowProps) {
+export default function UpcomingPrayerRow({ prayer }: UpcomingPrayerRowProps) {
   const colorScheme = useColorScheme();
   const isDark = colorScheme === "dark";
+  
   return (
     <View
       className={
-        "flex-row items-center justify-between rounded-xl border p-4 opacity-80 shadow-sm " +
+        "flex-row items-center justify-between rounded-xl border p-4 shadow-sm " +
         (isDark
           ? "border-border-dark bg-background-cardDark"
           : "border-border-light bg-background-cardLight")
@@ -36,8 +36,8 @@ export default function PrayerRow({ prayer }: PrayerRowProps) {
         <View>
           <Text
             className={
-              "text-base font-medium line-through " +
-              (isDark ? "text-text-secondaryDark" : "text-text-secondaryLight")
+              "text-base font-medium " +
+              (isDark ? "text-text-primaryDark" : "text-text-primaryLight")
             }
           >
             {prayer.displayName}
@@ -45,9 +45,7 @@ export default function PrayerRow({ prayer }: PrayerRowProps) {
           <Text
             className={
               "text-xs " +
-              (isDark
-                ? "text-text-secondaryDark/70"
-                : "text-text-secondaryLight/70")
+              (isDark ? "text-text-secondaryDark" : "text-text-secondaryLight")
             }
           >
             {prayer.time}
@@ -55,16 +53,16 @@ export default function PrayerRow({ prayer }: PrayerRowProps) {
         </View>
       </View>
 
-      <View className="flex-row items-center gap-2">
-        <Text className="hidden text-sm font-medium text-success sm:block">
-          Kılındı
-        </Text>
-        <MaterialIcons
-          name="check-circle"
-          size={22}
-          color={isDark ? colors.success : colors.primary[500]}
-        />
+      <View
+        className={
+          isDark
+            ? "rounded-full bg-border-dark/40 px-3 py-1 text-xs font-medium text-text-secondaryDark"
+            : "rounded-full bg-border-light/40 px-3 py-1 text-xs font-medium text-text-secondaryLight"
+        }
+      >
+        <Text className="text-[11px]">Yaklaşıyor</Text>
       </View>
     </View>
   );
 }
+

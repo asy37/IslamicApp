@@ -5,20 +5,58 @@
  * - Local scheduled notifications (primary)
  * - Remote push notifications (secondary)
  * - Background tasks (critical operations)
+ * 
+ * Note: expo-notifications is not fully supported in Expo Go.
+ * Use a development build for full functionality.
  */
 
-import * as Notifications from 'expo-notifications';
-import * as TaskManager from 'expo-task-manager';
-import * as BackgroundFetch from 'expo-background-fetch';
+// Conditional import for Expo Go compatibility
+// Use lazy loading to avoid errors in Expo Go
+let Notifications: typeof import('expo-notifications') | null = null;
+let TaskManager: typeof import('expo-task-manager') | null = null;
+let BackgroundFetch: typeof import('expo-background-fetch') | null = null;
 
-// Configure notification behavior
-Notifications.setNotificationHandler({
-  handleNotification: async () => ({
-    shouldShowAlert: true,
-    shouldPlaySound: true,
-    shouldSetBadge: false,
-  }),
-});
+// Lazy load modules to avoid errors in Expo Go
+function loadNotificationModules() {
+  if (Notifications !== null) {
+    return; // Already loaded
+  }
+
+  try {
+    // Use dynamic require to avoid errors at module load time
+    // This will only fail when the function is called, not at import time
+    Notifications = require('expo-notifications');
+    TaskManager = require('expo-task-manager');
+    BackgroundFetch = require('expo-background-fetch');
+  } catch (error) {
+    // Silently fail in Expo Go - this is expected
+    // The error will only occur when the service is actually used
+    Notifications = null;
+    TaskManager = null;
+    BackgroundFetch = null;
+  }
+}
+
+// Expose a getter for Notifications that lazy loads
+const getNotifications = () => {
+  loadNotificationModules();
+  return Notifications;
+};
+
+// Configure notification behavior (only if available)
+// This will be called when the service is first used
+function configureNotifications() {
+  const NotificationsModule = getNotifications();
+  if (NotificationsModule) {
+    NotificationsModule.setNotificationHandler({
+      handleNotification: async () => ({
+        shouldShowAlert: true,
+        shouldPlaySound: true,
+        shouldSetBadge: false,
+      }),
+    });
+  }
+}
 
 export class NotificationService {
   private static instance: NotificationService;
@@ -36,11 +74,19 @@ export class NotificationService {
    * Request notification permissions
    */
   async requestPermissions(): Promise<boolean> {
-    const { status: existingStatus } = await Notifications.getPermissionsAsync();
+    const NotificationsModule = getNotifications();
+    if (!NotificationsModule) {
+      console.warn('[NotificationService] Notifications not available');
+      return false;
+    }
+
+    configureNotifications(); // Ensure handler is set
+
+    const { status: existingStatus } = await NotificationsModule.getPermissionsAsync();
     let finalStatus = existingStatus;
 
     if (existingStatus !== 'granted') {
-      const { status } = await Notifications.requestPermissionsAsync();
+      const { status } = await NotificationsModule.requestPermissionsAsync();
       finalStatus = status;
     }
 
@@ -57,13 +103,21 @@ export class NotificationService {
     }>,
     days: number = 7
   ): Promise<void> {
+    const NotificationsModule = getNotifications();
+    if (!NotificationsModule) {
+      console.warn('[NotificationService] Notifications not available');
+      return;
+    }
+
+    configureNotifications(); // Ensure handler is set
+
     // Cancel existing prayer notifications
     await this.cancelPrayerNotifications();
 
     // Schedule new notifications
     for (const day of prayerTimes.slice(0, days)) {
       for (const prayer of day.prayers) {
-        await Notifications.scheduleNotificationAsync({
+        await NotificationsModule.scheduleNotificationAsync({
           content: {
             title: `${prayer.name} Vakti`,
             body: 'Namaz vaktiniz geldi',
@@ -88,13 +142,18 @@ export class NotificationService {
    * Cancel all prayer time notifications
    */
   async cancelPrayerNotifications(): Promise<void> {
-    const notifications = await Notifications.getAllScheduledNotificationsAsync();
+    const NotificationsModule = getNotifications();
+    if (!NotificationsModule) {
+      return;
+    }
+
+    const notifications = await NotificationsModule.getAllScheduledNotificationsAsync();
     const prayerNotifications = notifications.filter(
       (n) => n.content.data?.type === 'prayer_time'
     );
 
     for (const notification of prayerNotifications) {
-      await Notifications.cancelScheduledNotificationAsync(notification.identifier);
+      await NotificationsModule.cancelScheduledNotificationAsync(notification.identifier);
     }
   }
 
@@ -102,8 +161,14 @@ export class NotificationService {
    * Register push notification token
    */
   async registerPushToken(): Promise<string | null> {
+    const NotificationsModule = getNotifications();
+    if (!NotificationsModule) {
+      console.warn('[NotificationService] Notifications not available');
+      return null;
+    }
+
     try {
-      const token = await Notifications.getExpoPushTokenAsync({
+      const token = await NotificationsModule.getExpoPushTokenAsync({
         projectId: 'your-project-id', // TODO: Replace with actual project ID
       });
       return token.data;
@@ -117,6 +182,12 @@ export class NotificationService {
    * Register background task for critical operations
    */
   async registerBackgroundTask(): Promise<void> {
+    loadNotificationModules();
+    if (!BackgroundFetch) {
+      console.warn('[NotificationService] BackgroundFetch not available');
+      return;
+    }
+
     try {
       await BackgroundFetch.registerTaskAsync('refresh-prayer-times', {
         minimumInterval: 15 * 60, // 15 minutes
@@ -132,8 +203,12 @@ export class NotificationService {
    * Handle notification response (when user taps notification)
    */
   async handleNotificationResponse(
-    response: Notifications.NotificationResponse
+    response: { notification: { request: { content: { data?: any } } } }
   ): Promise<void> {
+    const NotificationsModule = getNotifications();
+    if (!NotificationsModule) {
+      return;
+    }
     const data = response.notification.request.content.data;
 
     // Handle different notification types

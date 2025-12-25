@@ -1,10 +1,35 @@
 import { Text, useColorScheme, View } from "react-native";
 import ProgressCircle from "./ProgressCircle";
 import MiniPrayerProgress from "./MiniPrayerProgress";
+import type { PrayerTrackingItem, PrayerTrackingResponse } from "@/types/prayer-tracking-v2";
 
-export default function TodayJourneyCard() {
+type TodayJourneyCardProps = {
+  readonly stats: PrayerTrackingResponse['stats'];
+  readonly prayers: Array<PrayerTrackingItem & { scheduledTime: string; displayTime: string }>;
+};
+
+export default function TodayJourneyCard({ stats, prayers }: TodayJourneyCardProps) {
   const colorScheme = useColorScheme();
   const isDark = colorScheme === "dark";
+
+  const completionPercentage = stats?.completionPercentage || 0;
+  const totalPrayed = stats?.completedCount || 0;
+  const totalCount = stats?.totalCount || 5;
+
+  // Motivasyon mesajı
+  const getMotivationMessage = (): string => {
+    if (completionPercentage === 100) {
+      return "Mükemmel! Bugün tüm vakitleri kıldın. Allah kabul etsin.";
+    } else if (completionPercentage >= 80) {
+      return `Harika! Bugün ${totalCount} vakitten ${totalPrayed}'ünü kıldın. Devam edelim inşallah.`;
+    } else if (completionPercentage >= 50) {
+      return `İstikrar çok kıymetli. Bugün ${totalCount} vakitten ${totalPrayed}'ünü kıldın. Devam edelim inşallah.`;
+    } else if (totalPrayed > 0) {
+      return `Başlangıç güzel. Bugün ${totalPrayed} vakit kıldın. Devam edelim inşallah.`;
+    } else {
+      return "Bugün henüz vakit kılmadın. Hemen başlayalım inşallah.";
+    }
+  };
 
   return (
     <View
@@ -33,15 +58,14 @@ export default function TodayJourneyCard() {
               (isDark ? "text-text-secondaryDark" : "text-text-secondaryLight")
             }
           >
-            İstikrar çok kıymetli. Bugün 5 vakitten 3&apos;ünü kıldın. Devam
-            edelim inşallah.
+            {getMotivationMessage()}
           </Text>
         </View>
 
-        <ProgressCircle />
+        <ProgressCircle percentage={completionPercentage} />
       </View>
 
-      <MiniPrayerProgress />
+      <MiniPrayerProgress prayers={prayers} />
     </View>
   );
 }

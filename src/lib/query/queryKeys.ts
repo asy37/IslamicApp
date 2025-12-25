@@ -39,6 +39,12 @@ export const queryKeys = {
     byUser: (userId: string) => ['prayerLogs', 'user', userId] as const,
   },
 
+  // Prayer Tracking
+  prayerTracking: {
+    all: ['prayerTracking'] as const,
+    today: () => ['prayerTracking', 'today'] as const,
+  },
+
   // Dhikr
   dhikr: {
     all: ['dhikr'] as const,

@@ -4,7 +4,8 @@ import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 import { QueryClientProvider } from "@tanstack/react-query";
 import "../global.css";
-import "../src/lib/notifications/NotificationService";
+// Note: NotificationService is lazy-loaded to avoid Expo Go compatibility issues
+// It will be imported only when needed, not at app startup
 import PrayerHeader from "@/components/layout/header";
 import { queryClient } from "@/lib/query/queryClient";
 import { setupQueryManagers } from "@/lib/query/setup";

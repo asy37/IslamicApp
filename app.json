@@ -4,7 +4,6 @@
     "slug": "islamic-app",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
     "userInterfaceStyle": "automatic",
     "splash": {
       "image": "./assets/splash.png",
@@ -27,6 +26,18 @@
         "NSLocationAlwaysUsageDescription": "Namaz vakitlerini doğru hesaplamak için konumunuza ihtiyacımız var.",
         "UILaunchScreen": {
           "backgroundColor": "#2D5016"
+        },
+        "NSAppTransportSecurity": {
+          "NSAllowsArbitraryLoads": false,
+          "NSExceptionDomains": {
+            "supabase.co": {
+              "NSExceptionAllowsInsecureHTTPLoads": false,
+              "NSIncludesSubdomains": true,
+              "NSExceptionRequiresForwardSecrecy": true,
+              "NSExceptionMinimumTLSVersion": "TLSv1.2",
+              "NSThirdPartyExceptionRequiresForwardSecrecy": false
+            }
+          }
         }
       },
       "config": {
@@ -77,7 +88,8 @@
             "./assets/fonts/ScheherazadeNew-Bold.ttf"
           ]
         }
-      ]
+      ],
+      "expo-router"
     ],
     "extra": {
       "eas": {
@@ -87,4 +99,3 @@
     "scheme": "islamicapp"
   }
 }
-

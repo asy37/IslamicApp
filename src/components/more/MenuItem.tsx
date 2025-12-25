@@ -41,7 +41,7 @@ export default function MenuItem({
 
   const handlePress = () => {
     if (item.route) {
-      router.push(item.route as any);
+      router.push(item.route);
     }
   };
 
