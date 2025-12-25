@@ -59,9 +59,7 @@ export default function LocationPermissionModal({
                 isDark ? "text-text-primaryDark" : "text-text-primaryLight"
               )}
             >
-              {isDark
-                ? "Let's find your Qibla"
-                : "Enable location for accurate prayer times"}
+              Konum Erişimi
             </Text>
             <Text
               className={clsx(
@@ -69,9 +67,7 @@ export default function LocationPermissionModal({
                 isDark ? "text-text-secondaryDark" : "text-text-secondaryLight"
               )}
             >
-              {isDark
-                ? "To provide you with accurate prayer times and the correct Qibla direction, we need to know where you are. We respect your privacy."
-                : "We use your location to calculate precise prayer times and Qibla direction for your city. Your privacy is always respected."}
+              Doğru namaz vakitleri ve kıble yönü için konumunuza ihtiyacımız var. Gizliliğinize saygı gösteriyoruz.
             </Text>
 
             {/* Buttons */}
@@ -92,7 +88,7 @@ export default function LocationPermissionModal({
               >
                 <MaterialIcons name="near-me" size={20} color="#FFFFFF" />
                 <Text className="text-base font-bold text-white tracking-wide">
-                  Enable Location Access
+                  Konum Erişimine İzin Ver
                 </Text>
               </Pressable>
 
@@ -108,9 +104,7 @@ export default function LocationPermissionModal({
                       : "text-text-secondaryLight decoration-text-secondaryLight/20"
                   )}
                 >
-                  {isDark
-                    ? "I'll search for my city manually"
-                    : "Enter location manually"}
+                  Şehrimi manuel olarak gireceğim
                 </Text>
               </Pressable>
             </View>

@@ -60,18 +60,19 @@ export function useAuth(): AuthState {
 
 /**
  * Hook: Check if user should see registration screen
+ * Email confirmation is no longer required - users can access app immediately after registration
  */
 export function useAuthFlow() {
   const { user, session, isLoading, isAnonymous, isEmailConfirmed } = useAuth();
 
   // Determine what screen to show
   const shouldShowRegister = !isLoading && !session;
-  const shouldShowConfirmation = !isLoading && session && user && !isAnonymous && !isEmailConfirmed;
-  const canAccessApp = !isLoading && session && (isAnonymous || isEmailConfirmed);
+  // Email confirmation is optional - users can access app without confirming email
+  const canAccessApp = !isLoading && !!session;
 
   return {
     shouldShowRegister,
-    shouldShowConfirmation,
+    shouldShowConfirmation: false, // Deprecated - no longer blocking
     canAccessApp,
     isLoading,
     user,

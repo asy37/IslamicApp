@@ -81,9 +81,9 @@ export default function RegisterScreen() {
         return;
       }
 
-      if (result.user) {
-        // Navigate to confirmation screen
-        router.push("/auth/confirmation");
+      if (result.user || result.session) {
+        // Navigate directly to app - email confirmation is optional
+        router.replace("/(tabs)");
       }
     } catch (error) {
       Alert.alert("Hata", "Kayıt olurken bir hata oluştu. Lütfen tekrar deneyin.");

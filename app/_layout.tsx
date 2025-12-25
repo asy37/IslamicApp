@@ -11,6 +11,8 @@ import PrayerHeader from "@/components/layout/header";
 import { queryClient } from "@/lib/query/queryClient";
 import { setupQueryManagers } from "@/lib/query/setup";
 import { useAuthFlow } from "@/lib/hooks/useAuth";
+import EmailConfirmationProvider from "@/components/auth/EmailConfirmationProvider";
+import LocationPermissionProvider from "@/components/location/LocationPermissionProvider";
 
 // Keep splash screen visible while loading fonts
 SplashScreen.preventAutoHideAsync();
@@ -45,14 +47,11 @@ export default function RootLayout() {
     if (shouldShowRegister && !inAuthGroup) {
       // No session, redirect to register
       router.replace("/auth/register");
-    } else if (shouldShowConfirmation && !inAuthGroup) {
-      // Session exists but email not confirmed, redirect to confirmation
-      router.replace("/auth/confirmation");
     } else if (canAccessApp && !inTabsGroup && !inAuthGroup) {
-      // Session exists and user can access app, redirect to tabs
+      // Session exists - user can access app (email confirmation not required)
       router.replace("/(tabs)");
     }
-  }, [isLoading, shouldShowRegister, shouldShowConfirmation, canAccessApp, segments, isNavigationReady, router]);
+  }, [isLoading, shouldShowRegister, canAccessApp, segments, isNavigationReady, router]);
 
   useEffect(() => {
     // Hide splash screen immediately if fonts are not used
@@ -79,6 +78,8 @@ export default function RootLayout() {
 
   return (
     <QueryClientProvider client={queryClient}>
+      <EmailConfirmationProvider />
+      <LocationPermissionProvider />
       <PrayerHeader />
       <Stack
         screenOptions={{
