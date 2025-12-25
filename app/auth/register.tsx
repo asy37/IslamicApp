@@ -9,17 +9,21 @@ import {
   useColorScheme,
   KeyboardAvoidingView,
   Platform,
+  Alert,
 } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import clsx from "clsx";
 import * as ImagePicker from "expo-image-picker";
+import { signUp, signInAnonymously } from "@/lib/api/services/auth";
 
 export default function RegisterScreen() {
   const colorScheme = useColorScheme();
   const isDark = colorScheme === "dark";
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [name, setName] = useState("");
+  const [surname, setSurname] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [avatar, setAvatar] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -45,17 +49,65 @@ export default function RegisterScreen() {
 
   const handleRegister = async () => {
     if (!email || !password) {
-      alert("Lütfen tüm alanları doldurun");
+      Alert.alert("Eksik Bilgi", "Lütfen email ve şifre alanlarını doldurun");
+      return;
+    }
+
+    // Basic email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      Alert.alert("Geçersiz Email", "Lütfen geçerli bir email adresi girin");
+      return;
+    }
+
+    // Password validation (minimum 6 characters)
+    if (password.length < 6) {
+      Alert.alert("Geçersiz Şifre", "Şifre en az 6 karakter olmalıdır");
       return;
     }
 
     setIsLoading(true);
     try {
-      // TODO: Implement Supabase registration
-      // For now, navigate to confirmation
-      router.push("/auth/confirmation");
+      const result = await signUp({
+        email,
+        password,
+        name: name || undefined,
+        surname: surname || undefined,
+        image: avatar || undefined,
+      });
+
+      if (result.error) {
+        Alert.alert("Kayıt Hatası", result.error.message);
+        return;
+      }
+
+      if (result.user) {
+        // Navigate to confirmation screen
+        router.push("/auth/confirmation");
+      }
     } catch (error) {
-      alert("Kayıt olurken bir hata oluştu");
+      Alert.alert("Hata", "Kayıt olurken bir hata oluştu. Lütfen tekrar deneyin.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleGuestContinue = async () => {
+    setIsLoading(true);
+    try {
+      const result = await signInAnonymously();
+
+      if (result.error) {
+        Alert.alert("Hata", result.error.message);
+        return;
+      }
+
+      if (result.session) {
+        // Navigate to app
+        router.replace("/(tabs)");
+      }
+    } catch (error) {
+      Alert.alert("Hata", "Misafir girişi yapılırken bir hata oluştu.");
     } finally {
       setIsLoading(false);
     }
@@ -152,6 +204,56 @@ export default function RegisterScreen() {
 
           {/* Form Fields */}
           <View style={{ gap: 20 }}>
+            {/* Name Field (Optional) */}
+            <View style={{ gap: 8 }}>
+              <Text
+                className={clsx(
+                  "text-sm font-medium ml-1",
+                  isDark ? "text-text-secondaryDark" : "text-text-primaryLight"
+                )}
+              >
+                Ad (isteğe bağlı)
+              </Text>
+              <TextInput
+                className={clsx(
+                  "w-full h-14 rounded-xl border px-4 text-base",
+                  isDark
+                    ? "bg-background-cardDark border-border-dark text-text-primaryDark"
+                    : "bg-white border-gray-200 text-text-primaryLight"
+                )}
+                placeholder="Adınız"
+                placeholderTextColor={isDark ? "#8FA6A0" : "#6B7F78"}
+                value={name}
+                onChangeText={setName}
+                autoCapitalize="words"
+              />
+            </View>
+
+            {/* Surname Field (Optional) */}
+            <View style={{ gap: 8 }}>
+              <Text
+                className={clsx(
+                  "text-sm font-medium ml-1",
+                  isDark ? "text-text-secondaryDark" : "text-text-primaryLight"
+                )}
+              >
+                Soyad (isteğe bağlı)
+              </Text>
+              <TextInput
+                className={clsx(
+                  "w-full h-14 rounded-xl border px-4 text-base",
+                  isDark
+                    ? "bg-background-cardDark border-border-dark text-text-primaryDark"
+                    : "bg-white border-gray-200 text-text-primaryLight"
+                )}
+                placeholder="Soyadınız"
+                placeholderTextColor={isDark ? "#8FA6A0" : "#6B7F78"}
+                value={surname}
+                onChangeText={setSurname}
+                autoCapitalize="words"
+              />
+            </View>
+
             {/* Email Field */}
             <View style={{ gap: 8 }}>
               <Text
@@ -312,11 +414,12 @@ export default function RegisterScreen() {
 
           {/* Guest Link */}
           <View className="items-center mt-auto mb-4">
-            <TouchableOpacity onPress={() => router.replace("/(tabs)")}>
+            <TouchableOpacity onPress={handleGuestContinue} disabled={isLoading}>
               <Text
                 className={clsx(
                   "text-sm font-semibold",
-                  isDark ? "text-text-secondaryDark" : "text-text-secondaryLight"
+                  isDark ? "text-text-secondaryDark" : "text-text-secondaryLight",
+                  isLoading && "opacity-50"
                 )}
               >
                 Misafir olarak devam et

@@ -3,6 +3,7 @@
  */
 
 import { createClient } from '@supabase/supabase-js';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Database } from './types';
 
 const supabaseUrl = process.env.EXPO_PUBLIC_SUPABASE_URL || '';
@@ -45,12 +46,25 @@ if (!supabaseUrl || !supabaseAnonKey) {
   }
 }
 
+// Custom AsyncStorage adapter for Supabase auth
+const AsyncStorageAdapter = {
+  getItem: async (key: string) => {
+    return await AsyncStorage.getItem(key);
+  },
+  setItem: async (key: string, value: string) => {
+    await AsyncStorage.setItem(key, value);
+  },
+  removeItem: async (key: string) => {
+    await AsyncStorage.removeItem(key);
+  },
+};
+
 // Use Supabase's default fetch implementation
 // React Native's fetch should work out of the box with Supabase
 // Custom fetch was causing issues in iOS Simulator
 export const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey, {
   auth: {
-    storage: undefined, // We'll use AsyncStorage for auth storage
+    storage: AsyncStorageAdapter,
     autoRefreshToken: true,
     persistSession: true,
     detectSessionInUrl: false,

@@ -1,15 +1,45 @@
-import { View, Text, TouchableOpacity, useColorScheme } from "react-native";
+import { View, Text, TouchableOpacity, useColorScheme, Alert } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import clsx from "clsx";
+import { useState, useEffect } from "react";
+import { useAuth } from "@/lib/hooks/useAuth";
+import { resendConfirmationEmail } from "@/lib/api/services/auth";
 
 export default function RegistrationConfirmationScreen() {
   const colorScheme = useColorScheme();
   const isDark = colorScheme === "dark";
+  const { user } = useAuth();
+  const [isResending, setIsResending] = useState(false);
 
-  const handleResendEmail = () => {
-    // TODO: Implement resend email functionality
-    alert("Onay maili tekrar gönderildi");
+  // Check if email is confirmed and redirect
+  useEffect(() => {
+    if (user && user.email_confirmed_at) {
+      // Email confirmed, navigate to app
+      router.replace("/(tabs)");
+    }
+  }, [user]);
+
+  const handleResendEmail = async () => {
+    if (!user?.email) {
+      Alert.alert("Hata", "Email adresi bulunamadı");
+      return;
+    }
+
+    setIsResending(true);
+    try {
+      const { error } = await resendConfirmationEmail(user.email);
+
+      if (error) {
+        Alert.alert("Hata", error.message);
+      } else {
+        Alert.alert("Başarılı", "Onay maili tekrar gönderildi. Lütfen mail kutunuzu kontrol edin.");
+      }
+    } catch (error) {
+      Alert.alert("Hata", "Mail gönderilirken bir hata oluştu");
+    } finally {
+      setIsResending(false);
+    }
   };
 
   return (
@@ -63,7 +93,7 @@ export default function RegistrationConfirmationScreen() {
             isDark ? "text-text-secondaryDark" : "text-text-secondaryLight"
           )}
         >
-          Hesabını aktifleştirmek için mailine bir onay linki gönderdik.
+          Hesabını aktifleştirmek için {user?.email ? `${user.email} adresine` : "mailine"} bir onay linki gönderdik.
         </Text>
         {/* Helper/Meta Text */}
         <View className="pt-2">
@@ -83,15 +113,17 @@ export default function RegistrationConfirmationScreen() {
         {/* Secondary Button */}
         <TouchableOpacity
           onPress={handleResendEmail}
+          disabled={isResending}
           className={clsx(
             "h-12 px-6 rounded-xl items-center justify-center flex-row",
-            isDark ? "bg-primary-500/10" : "bg-primary-50"
+            isDark ? "bg-primary-500/10" : "bg-primary-50",
+            isResending && "opacity-50"
           )}
           style={{ minWidth: 84, maxWidth: 480, gap: 8 }}
         >
           <MaterialIcons name="send" size={20} color="#1F8F5F" />
           <Text className="text-primary-500 text-sm font-bold">
-            Maili tekrar gönder
+            {isResending ? "Gönderiliyor..." : "Maili tekrar gönder"}
           </Text>
         </TouchableOpacity>
       </View>
