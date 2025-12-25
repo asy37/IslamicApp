@@ -191,6 +191,7 @@ export function isEmailConfirmed(user: User | null): boolean {
  */
 export async function signOut(): Promise<{ error: Error | null }> {
   try {
+    console.log("SIGNING OUT");
     const { error } = await supabase.auth.signOut();
     if (error) {
       return { error: new Error(error.message) };

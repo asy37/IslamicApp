@@ -1,9 +1,11 @@
-import { ScrollView, useColorScheme, View } from "react-native";
+import { ScrollView, useColorScheme, View, Alert } from "react-native";
+import { useRouter } from "expo-router";
 import clsx from "clsx";
 import MoreHeader from "@/components/more/MoreHeader";
 import MenuSection from "@/components/more/MenuSection";
 import PremiumCard from "@/components/more/PremiumCard";
 import VersionInfo from "@/components/more/VersionInfo";
+import { signOut } from "@/lib/api/services/auth";
 
 const TOOLS_ITEMS = [
   {
@@ -50,26 +52,60 @@ const LOCATION_ITEMS = [
   },
 ] as const;
 
-const ACCOUNT_ITEMS = [
-  {
-    key: "profile",
-    title: "Profil",
-    icon: "person",
-    iconBg: "gray" as const,
-    route: "./profile",
-  },
-  {
-    key: "settings",
-    title: "Ayarlar",
-    icon: "settings",
-    iconBg: "gray" as const,
-    route: "./settings",
-  },
-] as const;
-
 export default function MoreScreen() {
   const colorScheme = useColorScheme();
   const isDark = colorScheme === "dark";
+  const router = useRouter();
+
+  const handleLogout = async () => {
+    Alert.alert(
+      "Çıkış Yap",
+      "Çıkış yapmak istediğinize emin misiniz?",
+      [
+        {
+          text: "İptal",
+          style: "cancel",
+        },
+        {
+          text: "Çıkış Yap",
+          style: "destructive",
+          onPress: async () => {
+            const { error } = await signOut();
+            if (error) {
+              Alert.alert("Hata", error.message);
+            } else {
+              // Sign out successful - navigation will be handled by auth flow
+              router.replace("/auth/register");
+            }
+          },
+        },
+      ]
+    );
+  };
+
+  const ACCOUNT_ITEMS = [
+    {
+      key: "profile",
+      title: "Profil",
+      icon: "person",
+      iconBg: "gray" as const,
+      route: "./profile",
+    },
+    {
+      key: "settings",
+      title: "Ayarlar",
+      icon: "settings",
+      iconBg: "gray" as const,
+      route: "./settings",
+    },
+    {
+      key: "logout",
+      title: "Çıkış Yap",
+      icon: "logout",
+      iconBg: "gray" as const,
+      onPress: handleLogout,
+    },
+  ] as const;
 
   return (
     <ScrollView

@@ -9,6 +9,7 @@ type MenuItemType = {
   icon: string;
   iconBg: "primary" | "gray";
   route?: string;
+  onPress?: () => void | Promise<void>;
 };
 
 type MenuSectionProps = {

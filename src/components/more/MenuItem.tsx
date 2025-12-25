@@ -10,6 +10,7 @@ type MenuItemType = {
   icon: string;
   iconBg: "primary" | "gray";
   route?: string;
+  onPress?: () => void | Promise<void>;
 };
 
 type MenuItemProps = {
@@ -39,8 +40,10 @@ export default function MenuItem({
     return isDark ? "#D1D5DB" : "#4B5563";
   };
 
-  const handlePress = () => {
-    if (item.route) {
+  const handlePress = async () => {
+    if (item.onPress) {
+      await item.onPress();
+    } else if (item.route) {
       router.push(item.route);
     }
   };
@@ -87,11 +90,13 @@ export default function MenuItem({
           )}
         </View>
       </View>
-      <MaterialIcons
-        name="navigate-next"
-        size={20}
-        color={isDark ? "#4B5563" : "#9CA3AF"}
-      />
+      {!item.onPress && (
+        <MaterialIcons
+          name="navigate-next"
+          size={20}
+          color={isDark ? "#4B5563" : "#9CA3AF"}
+        />
+      )}
     </Pressable>
   );
 }
