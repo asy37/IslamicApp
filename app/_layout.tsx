@@ -20,7 +20,7 @@ SplashScreen.preventAutoHideAsync();
 export default function RootLayout() {
   const router = useRouter();
   const segments = useSegments();
-  const { shouldShowRegister, shouldShowConfirmation, canAccessApp, isLoading } = useAuthFlow();
+  const { shouldShowRegister, canAccessApp, isLoading } = useAuthFlow();
   const [isNavigationReady, setIsNavigationReady] = useState(false);
 
   // Fonts are optional - app will work without them
@@ -51,7 +51,14 @@ export default function RootLayout() {
       // Session exists - user can access app (email confirmation not required)
       router.replace("/(tabs)");
     }
-  }, [isLoading, shouldShowRegister, canAccessApp, segments, isNavigationReady, router]);
+  }, [
+    isLoading,
+    shouldShowRegister,
+    canAccessApp,
+    segments,
+    isNavigationReady,
+    router,
+  ]);
 
   useEffect(() => {
     // Hide splash screen immediately if fonts are not used
@@ -80,7 +87,7 @@ export default function RootLayout() {
     <QueryClientProvider client={queryClient}>
       <EmailConfirmationProvider />
       <LocationPermissionProvider />
-      <PrayerHeader />
+      {!shouldShowRegister && <PrayerHeader />}
       <Stack
         screenOptions={{
           headerShown: false,
@@ -92,4 +99,3 @@ export default function RootLayout() {
     </QueryClientProvider>
   );
 }
-

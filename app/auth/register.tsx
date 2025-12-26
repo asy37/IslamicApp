@@ -86,7 +86,10 @@ export default function RegisterScreen() {
         router.replace("/(tabs)");
       }
     } catch (error) {
-      Alert.alert("Hata", "Kayıt olurken bir hata oluştu. Lütfen tekrar deneyin.");
+      Alert.alert(
+        "Hata",
+        "Kayıt olurken bir hata oluştu. Lütfen tekrar deneyin."
+      );
     } finally {
       setIsLoading(false);
     }
@@ -116,40 +119,16 @@ export default function RegisterScreen() {
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
-      className={clsx("flex-1", isDark ? "bg-background-dark" : "bg-background-light")}
+      className={clsx(
+        "flex-1",
+        isDark ? "bg-background-dark" : "bg-background-light"
+      )}
     >
       <ScrollView
         className="flex-1"
         contentContainerStyle={{ paddingBottom: 32 }}
         showsVerticalScrollIndicator={false}
       >
-        {/* Header */}
-        <View className="flex-row items-center justify-between px-4 pt-12 pb-4">
-          <TouchableOpacity
-            onPress={() => router.back()}
-            className={clsx(
-              "w-10 h-10 rounded-full items-center justify-center",
-              isDark ? "bg-background-cardDark" : "bg-white"
-            )}
-          >
-            <MaterialIcons
-              name="arrow-back"
-              size={24}
-              color={isDark ? "#EAF3F0" : "#1C2A26"}
-            />
-          </TouchableOpacity>
-          <TouchableOpacity>
-            <Text
-              className={clsx(
-                "text-sm font-semibold",
-                isDark ? "text-primary-400" : "text-primary-500"
-              )}
-            >
-              Yardım
-            </Text>
-          </TouchableOpacity>
-        </View>
-
         <View className="px-6 pt-4">
           {/* Avatar Upload Section */}
           <View className="items-center py-6" style={{ gap: 16 }}>
@@ -163,7 +142,10 @@ export default function RegisterScreen() {
               )}
             >
               {avatar ? (
-                <Image source={{ uri: avatar }} className="w-full h-full rounded-full" />
+                <Image
+                  source={{ uri: avatar }}
+                  className="w-full h-full rounded-full"
+                />
               ) : (
                 <MaterialIcons
                   name="add-a-photo"
@@ -280,7 +262,14 @@ export default function RegisterScreen() {
                   autoCapitalize="none"
                   autoComplete="email"
                 />
-                <View style={{ position: "absolute", right: 16, top: "50%", marginTop: -10 }}>
+                <View
+                  style={{
+                    position: "absolute",
+                    right: 16,
+                    top: "50%",
+                    marginTop: -10,
+                  }}
+                >
                   <MaterialIcons
                     name="mail"
                     size={20}
@@ -318,7 +307,12 @@ export default function RegisterScreen() {
                 />
                 <TouchableOpacity
                   onPress={() => setShowPassword(!showPassword)}
-                  style={{ position: "absolute", right: 16, top: "50%", marginTop: -10 }}
+                  style={{
+                    position: "absolute",
+                    right: 16,
+                    top: "50%",
+                    marginTop: -10,
+                  }}
                 >
                   <MaterialIcons
                     name={showPassword ? "visibility-off" : "visibility"}
@@ -414,11 +408,16 @@ export default function RegisterScreen() {
 
           {/* Guest Link */}
           <View className="items-center mt-auto mb-4">
-            <TouchableOpacity onPress={handleGuestContinue} disabled={isLoading}>
+            <TouchableOpacity
+              onPress={handleGuestContinue}
+              disabled={isLoading}
+            >
               <Text
                 className={clsx(
                   "text-sm font-semibold",
-                  isDark ? "text-text-secondaryDark" : "text-text-secondaryLight",
+                  isDark
+                    ? "text-text-secondaryDark"
+                    : "text-text-secondaryLight",
                   isLoading && "opacity-50"
                 )}
               >
@@ -431,4 +430,3 @@ export default function RegisterScreen() {
     </KeyboardAvoidingView>
   );
 }
-
