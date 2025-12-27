@@ -15,6 +15,23 @@ export type Json =
 
 export interface Database {
   public: {
+    Functions: {
+      get_today_prayer_log: {
+        Args: Record<PropertyKey, never>;
+        Returns: Json;
+      };
+      update_prayer_status: {
+        Args: {
+          p_prayer_name: string;
+          p_status: string;
+        };
+        Returns: void;
+      };
+      get_prayer_streak: {
+        Args: Record<PropertyKey, never>;
+        Returns: number;
+      };
+    };
     Tables: {
       profiles: {
         Row: {
@@ -131,7 +148,21 @@ export interface Database {
       [_ in never]: never;
     };
     Functions: {
-      [_ in never]: never;
+      get_today_prayer_log: {
+        Args: Record<PropertyKey, never>;
+        Returns: Json;
+      };
+      update_prayer_status: {
+        Args: {
+          p_prayer_name: string;
+          p_status: string;
+        };
+        Returns: void;
+      };
+      get_prayer_streak: {
+        Args: Record<PropertyKey, never>;
+        Returns: number;
+      };
     };
     Enums: {
       [_ in never]: never;

@@ -1,20 +1,19 @@
 import { Text, useColorScheme, View } from "react-native";
+import clsx from "clsx";
 import ProgressCircle from "./ProgressCircle";
-import MiniPrayerProgress from "./MiniPrayerProgress";
-import type { PrayerTrackingItem, PrayerTrackingResponse } from "@/types/prayer-tracking-v2";
+import type { PrayerTrackingData } from "@/types/prayer-tracking";
 
 type TodayJourneyCardProps = {
-  readonly stats: PrayerTrackingResponse['stats'];
-  readonly prayers: Array<PrayerTrackingItem & { scheduledTime: string; displayTime: string }>;
+  readonly data: PrayerTrackingData;
 };
 
-export default function TodayJourneyCard({ stats, prayers }: TodayJourneyCardProps) {
+export default function TodayJourneyCard({ data }: TodayJourneyCardProps) {
   const colorScheme = useColorScheme();
   const isDark = colorScheme === "dark";
 
-  const completionPercentage = stats?.completionPercentage || 0;
-  const totalPrayed = stats?.completedCount || 0;
-  const totalCount = stats?.totalCount || 5;
+  const completionPercentage = data.percent || 0;
+  const totalPrayed = Object.values(data.prayers).filter((s) => s === 'prayed').length;
+  const totalCount = 5;
 
   // Motivasyon mesajı
   const getMotivationMessage = (): string => {
@@ -65,7 +64,24 @@ export default function TodayJourneyCard({ stats, prayers }: TodayJourneyCardPro
         <ProgressCircle percentage={completionPercentage} />
       </View>
 
-      <MiniPrayerProgress prayers={prayers} />
+      {/* Mini progress indicators */}
+      <View className="flex-row gap-2">
+        {(['fajr', 'dhuhr', 'asr', 'maghrib', 'isha'] as const).map((prayer) => (
+          <View
+            key={prayer}
+            className={clsx(
+              "h-2 flex-1 rounded-full",
+              data.prayers[prayer] === 'prayed'
+                ? isDark
+                  ? "bg-primary-500"
+                  : "bg-primary-500"
+                : isDark
+                ? "bg-border-dark"
+                : "bg-gray-200"
+            )}
+          />
+        ))}
+      </View>
     </View>
   );
 }
