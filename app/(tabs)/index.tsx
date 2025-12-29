@@ -3,14 +3,23 @@ import clsx from "clsx";
 import TodayJourneyCard from "@/components/tracking/TodayJourneyCard";
 import DailyProgressSection from "@/components/tracking/DailyProgressSection";
 import StreakCounter from "@/components/tracking/StreakCounter";
-import { usePrayerTracking } from "@/lib/hooks/usePrayerTracking";
+import { usePrayerTrackingLocal, convertToPrayerTrackingData } from "@/lib/hooks/usePrayerTrackingLocal";
 import { usePrayerStreak } from "@/lib/hooks/usePrayerTracking";
+import { useAutoSync } from "@/lib/hooks/usePrayerSync";
 
 export default function PrayerTrackingScreen() {
   const colorScheme = useColorScheme();
   const isDark = colorScheme === "dark";
-  const { data, isLoading, error } = usePrayerTracking();
+  
+  // Setup auto sync
+  useAutoSync();
+  
+  // Get local prayer state
+  const { data: localState, isLoading, error } = usePrayerTrackingLocal();
   const { data: streakData } = usePrayerStreak();
+  
+  // Convert local state to PrayerTrackingData format
+  const data = localState ? convertToPrayerTrackingData(localState) : null;
 
   if (isLoading) {
     return (

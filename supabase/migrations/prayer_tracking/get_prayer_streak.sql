@@ -1,5 +1,6 @@
 -- Function: Calculate prayer streak (consecutive days with ALL prayers prayed)
 -- Returns the count of consecutive days ending today where all 5 prayers were prayed
+-- Uses boolean format (true = prayed)
 
 create or replace function public.get_prayer_streak()
 returns int
@@ -30,13 +31,13 @@ begin
     -- If no record exists, stop counting
     exit when v_log_record is null;
 
-    -- Check if all 5 prayers were prayed
+    -- Check if all 5 prayers were prayed (all booleans must be true)
     v_all_prayed := (
-      v_log_record.fajr = 'prayed' and
-      v_log_record.dhuhr = 'prayed' and
-      v_log_record.asr = 'prayed' and
-      v_log_record.maghrib = 'prayed' and
-      v_log_record.isha = 'prayed'
+      v_log_record.fajr = true and
+      v_log_record.dhuhr = true and
+      v_log_record.asr = true and
+      v_log_record.maghrib = true and
+      v_log_record.isha = true
     );
 
     -- If not all prayed, stop counting

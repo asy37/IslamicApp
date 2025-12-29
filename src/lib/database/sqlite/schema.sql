@@ -1,0 +1,33 @@
+-- SQLite Schema for Offline-First Prayer Tracking
+-- This is the source of truth for daily prayer state
+
+-- 1️⃣ Daily Prayer State Table (SINGLE ROW ONLY)
+-- Stores ONLY the current day's prayer state
+-- Reset daily after imsak time
+
+CREATE TABLE IF NOT EXISTS daily_prayer_state (
+  id INTEGER PRIMARY KEY CHECK (id = 1),
+  date TEXT NOT NULL, -- YYYY-MM-DD format
+  fajr TEXT NOT NULL DEFAULT 'upcoming', -- 'prayed' | 'unprayed' | 'later' | 'upcoming'
+  dhuhr TEXT NOT NULL DEFAULT 'upcoming',
+  asr TEXT NOT NULL DEFAULT 'upcoming',
+  maghrib TEXT NOT NULL DEFAULT 'upcoming',
+  isha TEXT NOT NULL DEFAULT 'upcoming',
+  updated_at INTEGER NOT NULL -- milliseconds (Date.now())
+);
+
+-- 2️⃣ Sync Queue Table (PERSISTENT UNTIL SYNCED)
+-- Stores prayer logs waiting to be synced to Supabase
+-- Data persists until successfully synced (then DELETED)
+
+CREATE TABLE IF NOT EXISTS prayer_sync_queue (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  date TEXT NOT NULL, -- YYYY-MM-DD format
+  payload TEXT NOT NULL, -- JSON: {fajr: boolean, dhuhr: boolean, asr: boolean, maghrib: boolean, isha: boolean}
+  created_at INTEGER NOT NULL -- milliseconds (Date.now())
+);
+
+-- Indexes
+CREATE INDEX IF NOT EXISTS idx_prayer_sync_queue_date ON prayer_sync_queue(date);
+CREATE INDEX IF NOT EXISTS idx_prayer_sync_queue_created ON prayer_sync_queue(created_at);
+

@@ -9,7 +9,7 @@ import { View, Text, TouchableOpacity, useColorScheme } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import clsx from "clsx";
 import type { PrayerName, PrayerStatus } from "@/types/prayer-tracking";
-import { useUpdatePrayerStatus } from "@/lib/hooks/usePrayerTracking";
+import { useUpdatePrayerStatusLocal } from "@/lib/hooks/usePrayerTrackingLocal";
 
 type PrayerRowV2Props = {
   readonly prayerName: PrayerName;
@@ -39,7 +39,7 @@ export default function PrayerRow({
   const colorScheme = useColorScheme();
   const isDark = colorScheme === "dark";
   const [isExpanded, setIsExpanded] = useState(false);
-  const { mutate: updateStatus, isPending } = useUpdatePrayerStatus();
+  const { mutate: updateStatus, isPending } = useUpdatePrayerStatusLocal();
 
   const handleStatusUpdate = (newStatus: PrayerStatus) => {
     updateStatus(
@@ -47,6 +47,9 @@ export default function PrayerRow({
       {
         onSuccess: () => {
           setIsExpanded(false);
+          // Note: Sync happens automatically:
+          // 1. Daily reset (imsak time) adds previous day to sync queue
+          // 2. Auto sync processes queue periodically
         },
       }
     );
