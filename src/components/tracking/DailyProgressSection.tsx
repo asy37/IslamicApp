@@ -8,9 +8,8 @@ import { MaterialIcons } from "@expo/vector-icons";
 import clsx from "clsx";
 import type { PrayerTrackingData } from "@/types/prayer-tracking";
 import PrayerRow from "./PrayerRow";
-import { usePrayerTimes } from "@/lib/hooks/usePrayerTimes";
-import { useLocation } from "@/lib/hooks/useLocation";
 import { transformPrayerTimings } from "@/components/adhan/utils/utils-function";
+import { usePrayerTimesStore } from "@/lib/storage/prayerTimesStore";
 
 type DailyProgressSectionProps = {
   readonly data: PrayerTrackingData;
@@ -34,16 +33,8 @@ export default function DailyProgressSection({
 }: DailyProgressSectionProps) {
   const colorScheme = useColorScheme();
   const isDark = colorScheme === "dark";
-  const { location } = useLocation();
-  const latitude = location?.latitude ?? 41.0082;
-  const longitude = location?.longitude ?? 28.9784;
 
-  // Fetch prayer times
-  const { data: prayerTimesData } = usePrayerTimes({
-    latitude,
-    longitude,
-    method: 2,
-  });
+  const prayerTimesData = usePrayerTimesStore((state) => state.cache);
 
   // Get prayer times for display
   const prayerItems = prayerTimesData
@@ -67,9 +58,7 @@ export default function DailyProgressSection({
   };
 
   // Map prayer items to get times
-  const getPrayerTime = (
-    prayerName: PrayerName
-  ): string => {
+  const getPrayerTime = (prayerName: PrayerName): string => {
     const prayerItem = prayerItems.find((item) => {
       const key = item.key.toLowerCase();
       if (prayerName === "fajr") return key === "imsak" || key === "fajr";
@@ -79,9 +68,7 @@ export default function DailyProgressSection({
   };
 
   // Check if prayer time has passed
-  const isPrayerPast = (
-    prayerName: PrayerName
-  ): boolean => {
+  const isPrayerPast = (prayerName: PrayerName): boolean => {
     const prayerItem = prayerItems.find((item) => {
       const key = item.key.toLowerCase();
       if (prayerName === "fajr") return key === "imsak" || key === "fajr";

@@ -4,14 +4,21 @@
  */
 
 import { useQuery } from '@tanstack/react-query';
-import { fetchNextPrayerTimes, fetchPrayerTimes, type PrayerTimesParams } from '@/lib/api/services/prayerTimes';
+import { fetchPrayerTimes, type PrayerTimesParams } from '@/lib/api/services/prayerTimes';
 import { queryKeys } from '@/lib/query/queryKeys';
+import { useLocationStore } from '../storage/locationStore';
 
   export function usePrayerTimes(params: PrayerTimesParams) {  
+    const location = useLocationStore((state) => state.location);
+
+    // Manuel lokasyon varsa onu kullan, yoksa GPS lokasyonu, yoksa default (Istanbul)
+    const latitudeLocation = location?.latitude ?? 41.0082;
+    const longitudeLocation = location?.longitude ?? 28.9784;
+
     return useQuery({
       queryKey: queryKeys.prayerTimes.byLocation(
-        params.latitude,
-        params.longitude,
+        latitudeLocation,
+        longitudeLocation,
         params.date,
         params.method,
         params.calendarMethod,

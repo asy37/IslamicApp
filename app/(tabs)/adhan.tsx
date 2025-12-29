@@ -1,41 +1,19 @@
 import { ScrollView, useColorScheme, View } from "react-native";
-import { useState } from "react";
 import clsx from "clsx";
 import AdhanHeader from "@/components/adhan/AdhanHeader";
 import DateInfo from "@/components/adhan/DateInfo";
 import NextPrayerCard from "@/components/adhan/NextPrayerCard";
 import PrayerScheduleList from "@/components/adhan/PrayerScheduleList";
-import { usePrayerTimes } from "@/lib/hooks/usePrayerTimes";
 import { PrayerDate } from "@/components/adhan/types/date-info";
 import { PrayerTimings } from "@/components/adhan/types/prayer-timings";
-import { useLocation, type LocationData } from "@/lib/hooks/useLocation";
-import { useLocationStore } from "@/lib/storage/locationStore";
-function getLocalDateTR(): string {
-  const d = new Date();
-  const day = String(d.getDate()).padStart(2, "0");
-  const month = String(d.getMonth() + 1).padStart(2, "0");
-  const year = d.getFullYear();
 
-  return `${day}.${month}.${year}`;
-}
+import { usePrayerTimesStore } from "@/lib/storage/prayerTimesStore";
+
 export default function AdhanScreen() {
   const colorScheme = useColorScheme();
-  const { location: gpsLocation, requestLocation } = useLocation();
-  const [manualLocation, setManualLocation] = useState<LocationData | null>(
-    null
-  );
-  const { location, setLocation, clearLocation } = useLocationStore();
   const isDark = colorScheme === "dark";
 
-  // Manuel lokasyon varsa onu kullan, yoksa GPS lokasyonu, yoksa default (Istanbul)
-  const activeLocation = manualLocation || gpsLocation;
-  const latitudeLocation = activeLocation?.latitude ?? 41.0082;
-  const longitudeLocation = activeLocation?.longitude ?? 28.9784;
-
-  const { data } = usePrayerTimes({
-    latitude: latitudeLocation,
-    longitude: longitudeLocation,
-  });
+  const data = usePrayerTimesStore((state) => state.cache);
 
   const prayerDate = data?.data.date as PrayerDate;
   const prayerTimings = data?.data.timings as PrayerTimings;
@@ -52,12 +30,7 @@ export default function AdhanScreen() {
         contentContainerStyle={{ paddingBottom: 100 }}
         showsVerticalScrollIndicator={false}
       >
-        <AdhanHeader
-          isDark={isDark}
-          requestLocation={requestLocation}
-          location={activeLocation}
-          onLocationSelect={setManualLocation}
-        />
+        <AdhanHeader isDark={isDark} />
         <DateInfo isDark={isDark} data={prayerDate} />
         <NextPrayerCard isDark={isDark} data={prayerTimings} />
         <PrayerScheduleList isDark={isDark} data={prayerTimings} />

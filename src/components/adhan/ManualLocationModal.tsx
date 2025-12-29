@@ -1,31 +1,39 @@
 import { MaterialIcons } from "@expo/vector-icons";
-import { Modal, Pressable, ScrollView, Text, TextInput, View, useColorScheme } from "react-native";
+import {
+  Modal,
+  Pressable,
+  ScrollView,
+  Text,
+  TextInput,
+  View,
+  useColorScheme,
+} from "react-native";
 import { useState, useMemo } from "react";
 import clsx from "clsx";
 import { searchCities, type City } from "@/constants/popular-cities";
 import { type LocationData } from "@/lib/hooks/useLocation";
+import { useLocationStore } from "@/lib/storage/locationStore";
 
 type ManualLocationModalProps = {
   readonly visible: boolean;
-  readonly onSelectLocation: (location: LocationData) => void;
   readonly onClose: () => void;
 };
 
 export default function ManualLocationModal({
   visible,
-  onSelectLocation,
   onClose,
 }: ManualLocationModalProps) {
   const colorScheme = useColorScheme();
   const isDark = colorScheme === "dark";
   const [searchQuery, setSearchQuery] = useState("");
-
+  const setLocation = useLocationStore((state) => state.setLocation);
+  
   const filteredCities = useMemo(() => {
     return searchCities(searchQuery);
   }, [searchQuery]);
 
   const handleSelectCity = (city: City) => {
-    onSelectLocation({
+    setLocation({
       latitude: city.latitude,
       longitude: city.longitude,
       city: city.name,
@@ -148,7 +156,9 @@ export default function ManualLocationModal({
                 <Text
                   className={clsx(
                     "text-base font-medium mt-4 text-center",
-                    isDark ? "text-text-secondaryDark" : "text-text-secondaryLight"
+                    isDark
+                      ? "text-text-secondaryDark"
+                      : "text-text-secondaryLight"
                   )}
                 >
                   No cities found
@@ -156,7 +166,9 @@ export default function ManualLocationModal({
                 <Text
                   className={clsx(
                     "text-sm mt-2 text-center",
-                    isDark ? "text-text-secondaryDark" : "text-text-secondaryLight"
+                    isDark
+                      ? "text-text-secondaryDark"
+                      : "text-text-secondaryLight"
                   )}
                 >
                   Try a different search term
@@ -194,7 +206,9 @@ function CityItem({ city, isDark, onPress, isLast }: CityItemProps) {
       className={clsx(
         "flex-row items-center gap-4 px-6 py-4",
         !isLast &&
-          (isDark ? "border-b border-border-dark/20" : "border-b border-border-light/40")
+          (isDark
+            ? "border-b border-border-dark/20"
+            : "border-b border-border-light/40")
       )}
     >
       <View
@@ -235,4 +249,3 @@ function CityItem({ city, isDark, onPress, isLast }: CityItemProps) {
     </Pressable>
   );
 }
-

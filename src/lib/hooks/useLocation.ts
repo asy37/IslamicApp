@@ -1,10 +1,12 @@
 /**
  * Location Hook
  * Handles location permissions and fetching user location
+ * Writes resolved location into Zustand store (global source of truth)
  */
 
 import { useState, useEffect } from "react";
 import * as Location from "expo-location";
+import { useLocationStore } from "@/lib/storage/locationStore";
 
 export type LocationData = {
   readonly latitude: number;
@@ -13,8 +15,7 @@ export type LocationData = {
   readonly country?: string;
 };
 
-export type LocationState = {
-  readonly location: LocationData | null;
+type LocationState = {
   readonly loading: boolean;
   readonly error: string | null;
   readonly permissionStatus: Location.PermissionStatus | null;
@@ -22,14 +23,18 @@ export type LocationState = {
 
 /**
  * Hook to get user location with permission handling
+ * NOTE: This hook does NOT hold location state.
+ * Location is stored globally in Zustand.
  */
 export function useLocation() {
   const [state, setState] = useState<LocationState>({
-    location: null,
     loading: false,
     error: null,
     permissionStatus: null,
   });
+
+  const setLocation = useLocationStore((s) => s.setLocation);
+
   /**
    * Request location permission and get current location
    */
@@ -37,13 +42,13 @@ export function useLocation() {
     setState((prev) => ({ ...prev, loading: true, error: null }));
 
     try {
-      // Check if permission is already granted
+      // Check existing permission
       const { status: existingStatus } =
         await Location.getForegroundPermissionsAsync();
 
       let finalStatus = existingStatus;
 
-      // Request permission if not granted
+      // Request permission if needed
       if (existingStatus !== "granted") {
         const { status } = await Location.requestForegroundPermissionsAsync();
         finalStatus = status;
@@ -63,33 +68,36 @@ export function useLocation() {
         return;
       }
 
-      // Get current location
-      const location = await Location.getCurrentPositionAsync({
+      // Get current position
+      const position = await Location.getCurrentPositionAsync({
         accuracy: Location.Accuracy.Balanced,
       });
 
-      // Reverse geocode to get city and country
+      // Reverse geocode
       const [address] = await Location.reverseGeocodeAsync({
-        latitude: location.coords.latitude,
-        longitude: location.coords.longitude,
+        latitude: position.coords.latitude,
+        longitude: position.coords.longitude,
       });
 
-      setState({
-        location: {
-          latitude: location.coords.latitude,
-          longitude: location.coords.longitude,
-          city: address.city || address.subregion || undefined,
-          country: address.country || undefined,
-        },
+      // Save location into global store
+      setLocation({
+        latitude: position.coords.latitude,
+        longitude: position.coords.longitude,
+        city: address?.city || address?.subregion || undefined,
+        country: address?.country || undefined,
+      });
+
+      setState((prev) => ({
+        ...prev,
         loading: false,
         error: null,
-        permissionStatus: finalStatus,
-      });
+      }));
     } catch (error) {
       setState((prev) => ({
         ...prev,
         loading: false,
-        error: error instanceof Error ? error.message : "Failed to get location",
+        error:
+          error instanceof Error ? error.message : "Failed to get location",
       }));
     }
   };
@@ -117,9 +125,10 @@ export function useLocation() {
   }, []);
 
   return {
-    ...state,
+    loading: state.loading,
+    error: state.error,
+    permissionStatus: state.permissionStatus,
     requestLocation,
     checkPermission,
   };
 }
-

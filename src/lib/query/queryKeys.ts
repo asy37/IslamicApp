@@ -8,8 +8,8 @@ export const queryKeys = {
   prayerTimes: {
     all: ['prayerTimes'] as const,
     byLocation: (
-      latitude: number,
-      longitude: number,
+      latitude?: number,
+      longitude?: number,
       date?: string,
       method?: number,
       calendarMethod?: string

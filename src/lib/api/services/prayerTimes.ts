@@ -4,6 +4,7 @@
  */
 
 import { aladhanClient } from "../client";
+import { usePrayerTimesStore } from "@/lib/storage/prayerTimesStore";
 
 export interface AladhanPrayerTimesResponse {
   code: number;
@@ -125,6 +126,17 @@ export async function fetchPrayerTimes(
     timezone,
   } = params;
 
+  const cacheKey = `${date}_${latitude}_${longitude}_${method}`;
+  const cache = usePrayerTimesStore.getState().cache;
+
+  if (cache?.key === cacheKey) {
+    return {
+      code: 200,
+      status: "OK",
+      data: cache.data,
+    };
+  }
+
   try {
     const response = await aladhanClient.get<AladhanPrayerTimesResponse>(
       "/timings",
@@ -141,6 +153,12 @@ export async function fetchPrayerTimes(
     if (response.code !== 200) {
       throw new Error(response.status || "Failed to fetch prayer times");
     }
+
+    usePrayerTimesStore.getState().setCache({
+      key: cacheKey,
+      data: response.data,
+      cachedAt: Date.now(),
+    });
 
     return response;
   } catch (error) {

@@ -4,45 +4,31 @@ import { Pressable, Text, View } from "react-native";
 import { useState } from "react";
 import LocationPermissionModal from "./LocationPermissionModal";
 import ManualLocationModal from "./ManualLocationModal";
-import { type LocationData } from "@/lib/hooks/useLocation";
+
+import CalculationMethodModal from "./CalculationMethodModal";
+import { useLocationStore } from "@/lib/storage/locationStore";
 import { getLocationText } from "./utils/utils-function";
 
 type AdhanHeaderProps = {
   readonly isDark: boolean;
-  readonly requestLocation: () => Promise<void>;
-  readonly location: LocationData | null;
-  readonly onLocationSelect: (location: LocationData) => void;
 };
 
-export default function AdhanHeader({
-  isDark,
-  requestLocation,
-  location,
-  onLocationSelect,
-}: AdhanHeaderProps) {
+export default function AdhanHeader({ isDark }: AdhanHeaderProps) {
+  const location = useLocationStore((state) => state.location);
   const [showPermissionModal, setShowPermissionModal] = useState(false);
   const [showManualModal, setShowManualModal] = useState(false);
-
-  const handleSettingsPress = () => {
-    setShowPermissionModal(true);
-  };
-
-  const handleRequestPermission = async () => {
-    await requestLocation();
-    setShowPermissionModal(false);
-  };
+  const [showCalculationMethodModal, setShowCalculationMethodModal] =
+    useState(false);
 
   const handleManualEntry = () => {
+    console.log('work');
     setShowPermissionModal(false);
     setShowManualModal(true);
   };
 
-  const handleSelectLocation = (selectedLocation: LocationData) => {
-    onLocationSelect(selectedLocation);
-    setShowManualModal(false);
+  const handleSelectCalculationMethod = () => {
+    setShowCalculationMethodModal(true);
   };
-
-
 
   const locationText = getLocationText(location);
 
@@ -54,7 +40,10 @@ export default function AdhanHeader({
           isDark ? "bg-background-dark/95" : "bg-background-light/95"
         )}
       >
-        <View className="flex-col items-start w-full">
+        <Pressable
+          onPress={() => setShowPermissionModal(true)}
+          className="flex-col items-start w-full"
+        >
           <View className="flex-row items-center gap-2">
             <MaterialIcons
               name="location-on"
@@ -82,7 +71,7 @@ export default function AdhanHeader({
             <Pressable
               className="rounded-full p-2"
               hitSlop={10}
-              onPress={handleSettingsPress}
+              onPress={handleSelectCalculationMethod}
             >
               <MaterialIcons
                 name="settings"
@@ -91,20 +80,24 @@ export default function AdhanHeader({
               />
             </Pressable>
           </View>
-        </View>
+        </Pressable>
       </View>
 
       <LocationPermissionModal
         visible={showPermissionModal}
-        onRequestPermission={handleRequestPermission}
-        onManualEntry={handleManualEntry}
         onClose={() => setShowPermissionModal(false)}
+        onManualEntry={handleManualEntry}
       />
 
       <ManualLocationModal
         visible={showManualModal}
-        onSelectLocation={handleSelectLocation}
         onClose={() => setShowManualModal(false)}
+      />
+
+      <CalculationMethodModal
+        visible={showCalculationMethodModal}
+        onClose={() => setShowCalculationMethodModal(false)}
+        onSelect={handleSelectCalculationMethod}
       />
     </>
   );

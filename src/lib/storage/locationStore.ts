@@ -1,8 +1,8 @@
 import { create } from "zustand";
 
 export type UserLocation = {
-  city: string;
-  country: string;
+  city: string | undefined;
+  country: string | undefined;
   latitude: number;
   longitude: number;
 };
