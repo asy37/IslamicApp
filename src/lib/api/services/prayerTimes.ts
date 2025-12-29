@@ -105,6 +105,7 @@ export interface PrayerTimesParams {
   latitude: number;
   longitude: number;
   method?: number; // Prayer calculation method (default: 2 = ISNA)
+  calendarMethod?: string; // Calendar method (default: "ISNA")
   date?: string; // DD-MM-YYYY format
   timezone?: string;
 }
@@ -115,7 +116,7 @@ export interface PrayerTimesParams {
 export async function fetchPrayerTimes(
   params: PrayerTimesParams
 ): Promise<AladhanPrayerTimesResponse> {
-  const { latitude, longitude, method = 2, date, timezone } = params;
+  const { latitude, longitude, method = 13, calendarMethod = "DIYANET", date, timezone } = params;
 
   try {
     const response = await aladhanClient.get<AladhanPrayerTimesResponse>(
@@ -124,6 +125,7 @@ export async function fetchPrayerTimes(
         latitude: latitude.toString(),
         longitude: longitude.toString(),
         method: method.toString(),
+        calendarMethod: calendarMethod,
         ...(date && { date }),
         ...(timezone && { timezone }),
       }

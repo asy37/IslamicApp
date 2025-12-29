@@ -30,7 +30,6 @@ export function useLocation() {
     error: null,
     permissionStatus: null,
   });
-
   /**
    * Request location permission and get current location
    */
@@ -79,7 +78,7 @@ export function useLocation() {
         location: {
           latitude: location.coords.latitude,
           longitude: location.coords.longitude,
-          city: address.city || address.subAdministrativeArea || undefined,
+          city: address.city || address.subregion || undefined,
           country: address.country || undefined,
         },
         loading: false,

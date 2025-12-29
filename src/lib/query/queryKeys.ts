@@ -7,8 +7,14 @@ export const queryKeys = {
   // Prayer Times
   prayerTimes: {
     all: ['prayerTimes'] as const,
-    byLocation: (latitude: number, longitude: number, date?: string) =>
-      ['prayerTimes', latitude, longitude, date] as const,
+    byLocation: (
+      latitude: number,
+      longitude: number,
+      date?: string,
+      method?: number,
+      calendarMethod?: string
+    ) =>
+      ['prayerTimes', latitude, longitude, date, method, calendarMethod] as const,
   },
 
   // Daily Verse

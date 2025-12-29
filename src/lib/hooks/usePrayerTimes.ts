@@ -7,12 +7,14 @@ import { useQuery } from '@tanstack/react-query';
 import { fetchPrayerTimes, type PrayerTimesParams } from '@/lib/api/services/prayerTimes';
 import { queryKeys } from '@/lib/query/queryKeys';
 
-export function usePrayerTimes(params: PrayerTimesParams) {
+export function usePrayerTimes(params: PrayerTimesParams) {  
   return useQuery({
     queryKey: queryKeys.prayerTimes.byLocation(
       params.latitude,
       params.longitude,
-      params.date
+      params.date,
+      params.method,
+      params.calendarMethod,
     ),
     queryFn: () => fetchPrayerTimes(params),
     staleTime: 24 * 60 * 60 * 1000, // 24 saat (günlük veri)

@@ -13,7 +13,9 @@ import { useLocation, type LocationData } from "@/lib/hooks/useLocation";
 export default function AdhanScreen() {
   const colorScheme = useColorScheme();
   const { location: gpsLocation, requestLocation } = useLocation();
-  const [manualLocation, setManualLocation] = useState<LocationData | null>(null);
+  const [manualLocation, setManualLocation] = useState<LocationData | null>(
+    null
+  );
 
   const isDark = colorScheme === "dark";
 
@@ -21,11 +23,12 @@ export default function AdhanScreen() {
   const activeLocation = manualLocation || gpsLocation;
   const latitudeLocation = activeLocation?.latitude ?? 41.0082;
   const longitudeLocation = activeLocation?.longitude ?? 28.9784;
-
+//TODO: Add user settings for method and calendar method
   const { data } = usePrayerTimes({
     latitude: latitudeLocation,
     longitude: longitudeLocation,
-    method: 2,
+    method: 13,
+    calendarMethod: "DIYANET",
   });
 
   const prayerDate = data?.data.date as PrayerDate;
