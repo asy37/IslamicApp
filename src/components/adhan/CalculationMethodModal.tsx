@@ -6,14 +6,14 @@ import {
   useColorScheme,
   View,
 } from "react-native";
-import { PRAYER_CALCULATION_METHODS } from "@/constants/prayer-method";
+import { PRAYER_CALCULATION_METHODS, PrayerCalculationMethod } from "@/constants/prayer-method";
 import { MaterialIcons } from "@expo/vector-icons";
 import clsx from "clsx";
 
 type CalculationMethodModalProps = {
   readonly visible: boolean;
   readonly onClose: () => void;
-  readonly onSelect: (id: number) => void;
+  readonly onSelect: (method: PrayerCalculationMethod) => void;
 };
 
 type ModalHeaderProps = {
@@ -137,7 +137,7 @@ function MethodListItem({
 type MethodsListProps = {
   readonly methods: typeof PRAYER_CALCULATION_METHODS;
   readonly isDark: boolean;
-  readonly onSelectMethod: (id: number) => void;
+  readonly onSelectMethod: (method: PrayerCalculationMethod) => void;
 };
 
 function MethodsList({
@@ -152,7 +152,7 @@ function MethodsList({
           key={method.id}
           method={method}
           isDark={isDark}
-          onPress={() => onSelectMethod(method.id)}
+          onPress={() => onSelectMethod(method)}
           isLast={index === methods.length - 1}
         />
       ))}
@@ -168,8 +168,8 @@ export default function CalculationMethodModal({
   const colorScheme = useColorScheme();
   const isDark = colorScheme === "dark";
 
-  const handleSelect = (id: number) => {
-    onSelect(id);
+  const handleSelect = (method: PrayerCalculationMethod) => {
+    onSelect(method);
     onClose();
   };
 

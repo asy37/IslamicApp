@@ -15,8 +15,8 @@ import EmailConfirmationProvider from "@/components/auth/EmailConfirmationProvid
 import LocationPermissionProvider from "@/components/location/LocationPermissionProvider";
 import { queryKeys } from "@/lib/query/queryKeys";
 import { fetchPrayerTimes } from "@/lib/api/services/prayerTimes";
-import { useLocation } from "@/lib/hooks/useLocation";
 import { useLocationStore } from "@/lib/storage/locationStore";
+import { useMethodStore } from "@/lib/storage/useMethodStore";
 
 // Keep splash screen visible while loading fonts
 SplashScreen.preventAutoHideAsync();
@@ -74,22 +74,26 @@ export default function RootLayout() {
     }
   }, [fontsLoaded]);
 
-  // Prefetch prayer times on app start
+  // Prefetch prayer times on app start and when location changes
   const location = useLocationStore((state) => state.location);
+  const method = useMethodStore((state) => state.method?.id);
+  
   useEffect(() => {
+    if (!location || !method) return;
     const latitude = location?.latitude ?? 41.0082;
     const longitude = location?.longitude ?? 28.9784;
 
     queryClient.prefetchQuery({
-      queryKey: queryKeys.prayerTimes.byLocation(latitude, longitude),
+      queryKey: queryKeys.prayerTimes.byLocation(latitude, longitude, method?.toString()),
       queryFn: () =>
         fetchPrayerTimes({
           latitude,
           longitude,
+          method,
         }),
       staleTime: 24 * 60 * 60 * 1000, // 24 saat
     });
-  }, [location]);
+  }, [location, method]);
 
   if (!fontsLoaded && fontsLoaded !== undefined) {
     return null;

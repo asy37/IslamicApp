@@ -15,6 +15,13 @@ import { useLocationStore } from '../storage/locationStore';
     const latitudeLocation = location?.latitude ?? 41.0082;
     const longitudeLocation = location?.longitude ?? 28.9784;
 
+    // Location store'daki değerleri kullanarak params'ı güncelle
+    const updatedParams: PrayerTimesParams = {
+      ...params,
+      latitude: latitudeLocation,
+      longitude: longitudeLocation,
+    };
+
     return useQuery({
       queryKey: queryKeys.prayerTimes.byLocation(
         latitudeLocation,
@@ -23,7 +30,7 @@ import { useLocationStore } from '../storage/locationStore';
         params.method,
         params.calendarMethod,
       ),
-      queryFn: () => fetchPrayerTimes(params),
+      queryFn: () => fetchPrayerTimes(updatedParams),
       staleTime: 24 * 60 * 60 * 1000, // 24 saat (günlük veri)
       gcTime: 24 * 60 * 60 * 1000, // 24 saat cache
     });

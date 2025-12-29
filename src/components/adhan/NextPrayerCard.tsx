@@ -14,8 +14,6 @@ export default function NextPrayerCard({
   isDark,
   data,
 }: NextPrayerCardProps) {
-  console.log(data, 'data');
-  
   const [nextPrayerInfo, setNextPrayerInfo] = useState<NextPrayerInfo | null>(
     getNextPrayer(data)
   );

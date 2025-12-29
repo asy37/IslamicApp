@@ -225,18 +225,16 @@ export function getNextPrayer(
   ] as const;
 
   // Bugünkü vakitleri Date'e çevir
-  const prayersToday = PRAYER_ORDER
-    .filter((key) => timings[key])
-    .map((key) => ({
+  const prayersToday = PRAYER_ORDER.filter((key) => timings[key]).map(
+    (key) => ({
       name: key,
       time: timings[key],
       date: createPrayerTime(timings[key], today),
-    }));
+    })
+  );
 
   // Bir sonraki vakti bul
-  let nextPrayer = prayersToday.find(
-    (p) => p.date.getTime() > now.getTime()
-  );
+  let nextPrayer = prayersToday.find((p) => p.date.getTime() > now.getTime());
 
   // Eğer bugünkü tüm vakitler geçtiyse → yarının imsak vakti
   if (!nextPrayer) {
@@ -264,7 +262,6 @@ export function getNextPrayer(
     timeRemaining: `${pad(hours)}:${pad(minutes)}:${pad(seconds)}`,
   };
 }
-
 
 export function getLocationText(location: LocationData | null): string {
   if (location?.city && location?.country) {

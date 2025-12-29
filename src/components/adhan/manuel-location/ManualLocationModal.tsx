@@ -2,13 +2,13 @@ import { Modal, ScrollView, View, useColorScheme } from "react-native";
 import { useState, useMemo } from "react";
 import clsx from "clsx";
 import { searchCities, type City } from "@/constants/popular-cities";
-import { type LocationData } from "@/lib/hooks/useLocation";
 import { ManualLocationModalHeader } from "./ManualLocationModalHeader";
 import { CitiesList } from "./CityList";
+import { UserLocation } from "@/lib/storage/locationStore";
 
 type ManualLocationModalProps = {
   readonly visible: boolean;
-  readonly onSelectLocation: (location: LocationData) => void;
+  readonly onSelectLocation: (location: UserLocation) => void;
   readonly onClose: () => void;
 };
 
