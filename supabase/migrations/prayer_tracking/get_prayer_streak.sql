@@ -23,29 +23,45 @@ begin
 
   -- Check backwards from today
   loop
+    -- Safety: don't go back more than a year
+    if v_check_date < current_date - interval '365 days' then
+      exit;
+    end if;
+
     -- Get log for this date
-    select * into v_log_record
-    from public.prayer_logs
-    where user_id = v_user_id and date = v_check_date;
+    -- Wrap entire logic in exception handler to catch type errors
+    begin
+      select * into strict v_log_record
+      from public.prayer_logs
+      where user_id = v_user_id and date = v_check_date;
 
-    -- If no record exists, stop counting
-    exit when v_log_record is null;
+      -- Check if all 5 prayers were prayed (all booleans must be true)
+      -- If any column is not boolean, this will raise an error
+      v_all_prayed := (
+        v_log_record.fajr = true and
+        v_log_record.dhuhr = true and
+        v_log_record.asr = true and
+        v_log_record.maghrib = true and
+        v_log_record.isha = true
+      );
 
-    -- Check if all 5 prayers were prayed (all booleans must be true)
-    v_all_prayed := (
-      v_log_record.fajr = true and
-      v_log_record.dhuhr = true and
-      v_log_record.asr = true and
-      v_log_record.maghrib = true and
-      v_log_record.isha = true
-    );
+      -- If not all prayed, stop counting
+      exit when not v_all_prayed;
 
-    -- If not all prayed, stop counting
-    exit when not v_all_prayed;
+      -- Increment streak and go to previous day
+      v_streak := v_streak + 1;
+      v_check_date := v_check_date - interval '1 day';
 
-    -- Increment streak and go to previous day
-    v_streak := v_streak + 1;
-    v_check_date := v_check_date - interval '1 day';
+    exception
+      when no_data_found then
+        -- No record for this date, stop counting
+        exit;
+      when others then
+        -- Type mismatch or other error - skip this date
+        raise notice 'Skipping date % due to error (likely non-boolean data): %', v_check_date, sqlerrm;
+        v_check_date := v_check_date - interval '1 day';
+        -- Loop will continue with next date
+    end;
   end loop;
 
   return v_streak;

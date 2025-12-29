@@ -5,11 +5,18 @@ import AdhanHeader from "@/components/adhan/AdhanHeader";
 import DateInfo from "@/components/adhan/DateInfo";
 import NextPrayerCard from "@/components/adhan/NextPrayerCard";
 import PrayerScheduleList from "@/components/adhan/PrayerScheduleList";
-import { usePrayerTimes } from "@/lib/hooks/usePrayerTimes";
+import { useNextPrayerTimes, usePrayerTimes } from "@/lib/hooks/usePrayerTimes";
 import { PrayerDate } from "@/components/adhan/types/date-info";
 import { PrayerTimings } from "@/components/adhan/types/prayer-timings";
 import { useLocation, type LocationData } from "@/lib/hooks/useLocation";
+function getLocalDateTR(): string {
+  const d = new Date();
+  const day = String(d.getDate()).padStart(2, '0');
+  const month = String(d.getMonth() + 1).padStart(2, '0');
+  const year = d.getFullYear();
 
+  return `${day}.${month}.${year}`;
+}
 export default function AdhanScreen() {
   const colorScheme = useColorScheme();
   const { location: gpsLocation, requestLocation } = useLocation();
@@ -23,13 +30,17 @@ export default function AdhanScreen() {
   const activeLocation = manualLocation || gpsLocation;
   const latitudeLocation = activeLocation?.latitude ?? 41.0082;
   const longitudeLocation = activeLocation?.longitude ?? 28.9784;
-//TODO: Add user settings for method and calendar method
+//TODO: Add user settings for method and calendar method 
   const { data } = usePrayerTimes({
     latitude: latitudeLocation,
     longitude: longitudeLocation,
-    method: 13,
-    calendarMethod: "DIYANET",
   });
+  const { data: nextPrayerTimes } = useNextPrayerTimes({
+    latitude: latitudeLocation,
+    longitude: longitudeLocation,
+    date: getLocalDateTR(),
+  });
+console.log(nextPrayerTimes);
 
   const prayerDate = data?.data.date as PrayerDate;
   const prayerTimings = data?.data.timings as PrayerTimings;
