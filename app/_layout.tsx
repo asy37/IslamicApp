@@ -76,7 +76,6 @@ export default function RootLayout() {
 
   // Prefetch prayer times on app start
   const location = useLocationStore((state) => state.location);
-  console.log('location', location);
   useEffect(() => {
     const latitude = location?.latitude ?? 41.0082;
     const longitude = location?.longitude ?? 28.9784;
@@ -90,7 +89,7 @@ export default function RootLayout() {
         }),
       staleTime: 24 * 60 * 60 * 1000, // 24 saat
     });
-  }, []);
+  }, [location]);
 
   if (!fontsLoaded && fontsLoaded !== undefined) {
     return null;

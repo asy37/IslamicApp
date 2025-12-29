@@ -89,7 +89,7 @@ export default function LocationPermissionModal({
                 onPress={handleRequestPermission}
                 className={clsx(
                   "flex-row items-center justify-center gap-2 w-full max-w-[320px] h-14 px-6 rounded-full shadow-lg active:scale-95",
-                  isDark ? "bg-primary-500" : "bg-primary-500"
+                  isDark ? "bg-primary-800" : "bg-primary-500"
                 )}
                 style={{
                   shadowColor: isDark ? "#4CAF84" : "#1F8F5F",
