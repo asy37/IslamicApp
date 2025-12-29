@@ -198,17 +198,17 @@ export default function CalculationMethodModal({
             }}
           />
 
-          <ScrollView
+      <ScrollView
             className="flex-1"
-            contentContainerStyle={{ paddingBottom: 32 }}
-            showsVerticalScrollIndicator={false}
-          >
+        contentContainerStyle={{ paddingBottom: 32 }}
+        showsVerticalScrollIndicator={false}
+      >
             <MethodsList
               methods={PRAYER_CALCULATION_METHODS}
               isDark={isDark}
               onSelectMethod={handleSelect}
             />
-          </ScrollView>
+      </ScrollView>
         </View>
       </View>
     </Modal>

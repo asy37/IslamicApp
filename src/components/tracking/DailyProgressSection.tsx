@@ -4,6 +4,7 @@
  */
 
 import { View, Text, useColorScheme } from "react-native";
+import { MaterialIcons } from "@expo/vector-icons";
 import clsx from "clsx";
 import type { PrayerTrackingData } from "@/types/prayer-tracking";
 import PrayerRow from "./PrayerRow";
@@ -15,8 +16,10 @@ type DailyProgressSectionProps = {
   readonly data: PrayerTrackingData;
 };
 
+type PrayerName = "fajr" | "dhuhr" | "asr" | "maghrib" | "isha";
+
 const PRAYER_ORDER: Array<{
-  name: "fajr" | "dhuhr" | "asr" | "maghrib" | "isha";
+  name: PrayerName;
   displayName: string;
 }> = [
   { name: "fajr", displayName: "Sabah" },
@@ -50,15 +53,22 @@ export default function DailyProgressSection({
   // Format time for display
   const formatTime = (timeStr: string): string => {
     const [hours, minutes] = timeStr.split(":");
-    const hour = parseInt(hours, 10);
+    const hour = Number.parseInt(hours, 10);
     const period = hour >= 12 ? "PM" : "AM";
-    const displayHour = hour > 12 ? hour - 12 : hour === 0 ? 12 : hour;
+    let displayHour: number;
+    if (hour > 12) {
+      displayHour = hour - 12;
+    } else if (hour === 0) {
+      displayHour = 12;
+    } else {
+      displayHour = hour;
+    }
     return `${String(displayHour).padStart(2, "0")}:${minutes} ${period}`;
   };
 
   // Map prayer items to get times
   const getPrayerTime = (
-    prayerName: "fajr" | "dhuhr" | "asr" | "maghrib" | "isha"
+    prayerName: PrayerName
   ): string => {
     const prayerItem = prayerItems.find((item) => {
       const key = item.key.toLowerCase();
@@ -70,7 +80,7 @@ export default function DailyProgressSection({
 
   // Check if prayer time has passed
   const isPrayerPast = (
-    prayerName: "fajr" | "dhuhr" | "asr" | "maghrib" | "isha"
+    prayerName: PrayerName
   ): boolean => {
     const prayerItem = prayerItems.find((item) => {
       const key = item.key.toLowerCase();
@@ -86,6 +96,17 @@ export default function DailyProgressSection({
     prayerTime.setHours(hours, minutes, 0, 0);
 
     return prayerTime < now;
+  };
+
+  // Get icon for prayer
+  const getPrayerIcon = (
+    prayerName: PrayerName
+  ): keyof typeof MaterialIcons.glyphMap => {
+    if (prayerName === "fajr") return "wb-twilight";
+    if (prayerName === "dhuhr") return "light-mode";
+    if (prayerName === "asr") return "sunny";
+    if (prayerName === "maghrib") return "nights-stay";
+    return "dark-mode";
   };
 
   return (
@@ -118,17 +139,7 @@ export default function DailyProgressSection({
             time={getPrayerTime(prayer.name)}
             status={data.prayers[prayer.name]}
             isPast={isPrayerPast(prayer.name)}
-            icon={
-              prayer.name === "fajr"
-                ? "wb-twilight"
-                : prayer.name === "dhuhr"
-                ? "light-mode"
-                : prayer.name === "asr"
-                ? "sunny"
-                : prayer.name === "maghrib"
-                ? "nights-stay"
-                : "dark-mode"
-            }
+            icon={getPrayerIcon(prayer.name)}
           />
         ))}
       </View>

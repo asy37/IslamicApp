@@ -21,16 +21,3 @@ import { queryKeys } from '@/lib/query/queryKeys';
       gcTime: 24 * 60 * 60 * 1000, // 24 saat cache
     });
   }
-
-export function useNextPrayerTimes(params: PrayerTimesParams) {
-  return useQuery({
-    queryKey: queryKeys.prayerTimes.byLocation(
-      params.latitude,
-      params.longitude,
-      params.date,
-      params.method,
-      params.calendarMethod,
-    ),
-    queryFn: () => fetchNextPrayerTimes(params),
-  });
-}

@@ -116,39 +116,18 @@ export interface PrayerTimesParams {
 export async function fetchPrayerTimes(
   params: PrayerTimesParams
 ): Promise<AladhanPrayerTimesResponse> {
-  const { latitude, longitude, method = 13, calendarMethod = "DIYANET", date, timezone } = params;
+  const {
+    latitude,
+    longitude,
+    method = 13,
+    calendarMethod = "DIYANET",
+    date,
+    timezone,
+  } = params;
 
   try {
     const response = await aladhanClient.get<AladhanPrayerTimesResponse>(
       "/timings",
-      {
-        latitude: latitude.toString(),
-        longitude: longitude.toString(),
-        method: method.toString(),
-        calendarMethod: calendarMethod,
-        ...(date && { date }),
-        ...(timezone && { timezone }),
-      }
-    );
-
-    if (response.code !== 200) {
-      throw new Error(response.status || "Failed to fetch prayer times");
-    }
-
-    return response;
-  } catch (error) {
-    console.error("❌ Aladhan API hatası:", error);
-    throw error;
-  }
-}
-export async function fetchNextPrayerTimes(
-  params: PrayerTimesParams
-): Promise<AladhanPrayerTimesResponse> {
-  const { latitude, longitude, method = 13, calendarMethod = "DIYANET", date, timezone } = params;
-
-  try {
-    const response = await aladhanClient.get<AladhanPrayerTimesResponse>(
-      `/nextPrayer/${date}`,
       {
         latitude: latitude.toString(),
         longitude: longitude.toString(),
