@@ -3,9 +3,9 @@ import clsx from "clsx";
 import AdhanHeader from "@/components/adhan/AdhanHeader";
 import DateInfo from "@/components/adhan/DateInfo";
 import NextPrayerCard from "@/components/adhan/NextPrayerCard";
-import PrayerScheduleList from "@/components/adhan/PrayerScheduleList";
+import PrayerScheduleList from "@/components/prayer-list/PrayerList";
 import { PrayerDate } from "@/components/adhan/types/date-info";
-import { PrayerTimings } from "@/components/adhan/types/prayer-timings";
+import { PrayerTimings } from "@/components/prayer-list/prayer-timings";
 
 import { usePrayerTimesStore } from "@/lib/storage/prayerTimesStore";
 
@@ -33,7 +33,7 @@ export default function AdhanScreen() {
         <AdhanHeader isDark={isDark} />
         <DateInfo isDark={isDark} data={prayerDate} />
         <NextPrayerCard isDark={isDark} data={prayerTimings} />
-        <PrayerScheduleList isDark={isDark} data={prayerTimings} />
+        <PrayerScheduleList isDark={isDark} data={prayerTimings}extended={false}/>
       </ScrollView>
     </View>
   );

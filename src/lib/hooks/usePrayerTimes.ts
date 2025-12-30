@@ -8,7 +8,7 @@ import { fetchPrayerTimes, type PrayerTimesParams } from '@/lib/api/services/pra
 import { queryKeys } from '@/lib/query/queryKeys';
 import { useLocationStore } from '../storage/locationStore';
 
-  export function usePrayerTimes(params: PrayerTimesParams) {  
+export function usePrayerTimes(params: PrayerTimesParams) {
     const location = useLocationStore((state) => state.location);
 
     // Manuel lokasyon varsa onu kullan, yoksa GPS lokasyonu, yoksa default (Istanbul)
@@ -21,17 +21,17 @@ import { useLocationStore } from '../storage/locationStore';
       latitude: latitudeLocation,
       longitude: longitudeLocation,
     };
-
-    return useQuery({
-      queryKey: queryKeys.prayerTimes.byLocation(
+  
+  return useQuery({
+    queryKey: queryKeys.prayerTimes.byLocation(
         latitudeLocation,
         longitudeLocation,
-        params.date,
-        params.method,
-        params.calendarMethod,
-      ),
+      params.date,
+      params.method,
+      params.calendarMethod,
+    ),
       queryFn: () => fetchPrayerTimes(updatedParams),
-      staleTime: 24 * 60 * 60 * 1000, // 24 saat (günlük veri)
-      gcTime: 24 * 60 * 60 * 1000, // 24 saat cache
-    });
-  }
+    staleTime: 24 * 60 * 60 * 1000, // 24 saat (günlük veri)
+    gcTime: 24 * 60 * 60 * 1000, // 24 saat cache
+  });
+}

@@ -1,21 +1,20 @@
 import clsx from "clsx";
 import { Text, View } from "react-native";
-import PrayerScheduleItem from "./PrayerScheduleItem";
-import { PrayerTimings } from "./types/prayer-timings";
-import {
-  getPrayerStatus,
-  transformPrayerTimings,
-} from "./utils/utils-function";
+import PrayerScheduleItem from "./PrayerItem";
+import { PrayerTimings } from "./prayer-timings";
+import { getPrayerStatus, transformPrayerTimings } from "./utils";
 
-type PrayerScheduleListProps = {
+type PrayerListProps = {
   readonly isDark: boolean;
+  readonly extended?: boolean;
   readonly data: PrayerTimings | undefined;
 };
 
-export default function PrayerScheduleList({
+export default function PrayerList({
   isDark,
   data,
-}: PrayerScheduleListProps) {
+  extended,
+}: PrayerListProps) {
   const prayerItems = transformPrayerTimings(data);
 
   return (
@@ -32,6 +31,7 @@ export default function PrayerScheduleList({
         const { isPast, isActive } = getPrayerStatus(prayer.key, prayerItems);
         return (
           <PrayerScheduleItem
+            extended={extended}
             key={prayer.key}
             prayer={prayer}
             isDark={isDark}

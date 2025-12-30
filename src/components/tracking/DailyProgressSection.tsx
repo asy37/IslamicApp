@@ -4,29 +4,17 @@
  */
 
 import { View, Text, useColorScheme } from "react-native";
-import { MaterialIcons } from "@expo/vector-icons";
 import clsx from "clsx";
 import type { PrayerTrackingData } from "@/types/prayer-tracking";
-import PrayerRow from "./PrayerRow";
-import { transformPrayerTimings } from "@/components/adhan/utils/utils-function";
 import { usePrayerTimesStore } from "@/lib/storage/prayerTimesStore";
+import type { PrayerTimings } from "@/components/prayer-list/prayer-timings";
+import PrayerList from "@/components/prayer-list/PrayerList";
 
 type DailyProgressSectionProps = {
   readonly data: PrayerTrackingData;
 };
 
 type PrayerName = "fajr" | "dhuhr" | "asr" | "maghrib" | "isha";
-
-const PRAYER_ORDER: Array<{
-  name: PrayerName;
-  displayName: string;
-}> = [
-  { name: "fajr", displayName: "Sabah" },
-  { name: "dhuhr", displayName: "Öğle" },
-  { name: "asr", displayName: "İkindi" },
-  { name: "maghrib", displayName: "Akşam" },
-  { name: "isha", displayName: "Yatsı" },
-];
 
 export default function DailyProgressSection({
   data,
@@ -35,66 +23,6 @@ export default function DailyProgressSection({
   const isDark = colorScheme === "dark";
 
   const prayerTimesData = usePrayerTimesStore((state) => state.cache);
-
-  // Get prayer times for display
-  const prayerItems = prayerTimesData
-    ? transformPrayerTimings(prayerTimesData.data.timings)
-    : [];
-
-  // Format time for display
-  const formatTime = (timeStr: string): string => {
-    const [hours, minutes] = timeStr.split(":");
-    const hour = Number.parseInt(hours, 10);
-    const period = hour >= 12 ? "PM" : "AM";
-    let displayHour: number;
-    if (hour > 12) {
-      displayHour = hour - 12;
-    } else if (hour === 0) {
-      displayHour = 12;
-    } else {
-      displayHour = hour;
-    }
-    return `${String(displayHour).padStart(2, "0")}:${minutes} ${period}`;
-  };
-
-  // Map prayer items to get times
-  const getPrayerTime = (prayerName: PrayerName): string => {
-    const prayerItem = prayerItems.find((item) => {
-      const key = item.key.toLowerCase();
-      if (prayerName === "fajr") return key === "imsak" || key === "fajr";
-      return key === prayerName;
-    });
-    return prayerItem ? formatTime(prayerItem.time) : "--:--";
-  };
-
-  // Check if prayer time has passed
-  const isPrayerPast = (prayerName: PrayerName): boolean => {
-    const prayerItem = prayerItems.find((item) => {
-      const key = item.key.toLowerCase();
-      if (prayerName === "fajr") return key === "imsak" || key === "fajr";
-      return key === prayerName;
-    });
-
-    if (!prayerItem) return false;
-
-    const now = new Date();
-    const [hours, minutes] = prayerItem.time.split(":").map(Number);
-    const prayerTime = new Date();
-    prayerTime.setHours(hours, minutes, 0, 0);
-
-    return prayerTime < now;
-  };
-
-  // Get icon for prayer
-  const getPrayerIcon = (
-    prayerName: PrayerName
-  ): keyof typeof MaterialIcons.glyphMap => {
-    if (prayerName === "fajr") return "wb-twilight";
-    if (prayerName === "dhuhr") return "light-mode";
-    if (prayerName === "asr") return "sunny";
-    if (prayerName === "maghrib") return "nights-stay";
-    return "dark-mode";
-  };
 
   return (
     <View className="mt-6">
@@ -118,17 +46,11 @@ export default function DailyProgressSection({
       </View>
 
       <View className="gap-3">
-        {PRAYER_ORDER.map((prayer) => (
-          <PrayerRow
-            key={prayer.name}
-            prayerName={prayer.name}
-            displayName={prayer.displayName}
-            time={getPrayerTime(prayer.name)}
-            status={data.prayers[prayer.name]}
-            isPast={isPrayerPast(prayer.name)}
-            icon={getPrayerIcon(prayer.name)}
-          />
-        ))}
+        <PrayerList
+          extended={true}
+          isDark={isDark}
+          data={prayerTimesData?.data.timings}
+        />
       </View>
     </View>
   );
