@@ -1,19 +1,29 @@
 import { MaterialIcons } from "@expo/vector-icons";
-import { Image, Text, useColorScheme, View } from "react-native";
+import {
+  Image,
+  Modal,
+  Pressable,
+  Text,
+  useColorScheme,
+  View,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { colors } from "../theme/colors";
+import { usePrayerStreak } from "@/lib/hooks/usePrayerTracking";
+import StreakCounter from "../tracking/StreakCounter";
+import { useState } from "react";
 
 export default function PrayerHeader() {
+  const [isStreakModalVisible, setIsStreakModalVisible] = useState(false);
   const AVATAR_URL = "https://github.com/shadcn.png";
   const colorScheme = useColorScheme();
   const isDark = colorScheme === "dark";
+  const { data: streakData } = usePrayerStreak();
 
   return (
     <SafeAreaView
       edges={["top"]}
-      className={
-        isDark ? "bg-background-dark" : "bg-background-light"
-      }
+      className={isDark ? "bg-background-dark" : "bg-background-light"}
     >
       <View
         className={
@@ -51,7 +61,8 @@ export default function PrayerHeader() {
             </View>
           </View>
 
-          <View
+          <Pressable
+            onPress={() => setIsStreakModalVisible(true)}
             className={
               "flex-row items-center gap-2 rounded-full border px-3 py-1.5 shadow-sm " +
               (isDark
@@ -64,8 +75,33 @@ export default function PrayerHeader() {
               size={18}
               color={isDark ? colors.success : colors.primary[500]}
             />
-            <Text className="text-sm font-semibold text-success">3 Gün</Text>
-          </View>
+            <Text className="text-sm font-semibold text-success">
+              {streakData?.count ?? 0} Gün
+            </Text>
+          </Pressable>
+          <Modal
+            visible={isStreakModalVisible}
+            transparent
+            animationType="fade"
+            onRequestClose={() => setIsStreakModalVisible(false)}
+          >
+            <Pressable
+              className="flex-1 items-center justify-center bg-black/40"
+              onPress={() => setIsStreakModalVisible(false)}
+            >
+              <Pressable
+                onPress={() => {}}
+                className={
+                  "w-[90%] max-w-sm rounded-2xl p-4 shadow-lg " +
+                  (isDark
+                    ? "bg-background-cardDark"
+                    : "bg-background-cardLight")
+                }
+              >
+                {streakData && <StreakCounter streak={streakData} />}
+              </Pressable>
+            </Pressable>
+          </Modal>
         </View>
       </View>
     </SafeAreaView>

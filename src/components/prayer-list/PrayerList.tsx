@@ -8,14 +8,19 @@ type PrayerListProps = {
   readonly isDark: boolean;
   readonly extended?: boolean;
   readonly data: PrayerTimings | undefined;
+  readonly prayerMap: Record<
+    string,
+    { name: string; key: string; meaning: string; icon: string }
+  >;
 };
 
 export default function PrayerList({
   isDark,
   data,
+  prayerMap,
   extended,
 }: PrayerListProps) {
-  const prayerItems = transformPrayerTimings(data);
+  const prayerItems = transformPrayerTimings(prayerMap, data);
 
   return (
     <View className="flex-1 px-4 flex-col gap-3">

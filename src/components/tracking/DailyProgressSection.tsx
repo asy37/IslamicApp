@@ -7,14 +7,12 @@ import { View, Text, useColorScheme } from "react-native";
 import clsx from "clsx";
 import type { PrayerTrackingData } from "@/types/prayer-tracking";
 import { usePrayerTimesStore } from "@/lib/storage/prayerTimesStore";
-import type { PrayerTimings } from "@/components/prayer-list/prayer-timings";
 import PrayerList from "@/components/prayer-list/PrayerList";
+import { prayerMap } from "./utils";
 
 type DailyProgressSectionProps = {
   readonly data: PrayerTrackingData;
 };
-
-type PrayerName = "fajr" | "dhuhr" | "asr" | "maghrib" | "isha";
 
 export default function DailyProgressSection({
   data,
@@ -50,6 +48,7 @@ export default function DailyProgressSection({
           extended={true}
           isDark={isDark}
           data={prayerTimesData?.data.timings}
+          prayerMap={prayerMap}
         />
       </View>
     </View>

@@ -8,6 +8,8 @@ import { PrayerDate } from "@/components/adhan/types/date-info";
 import { PrayerTimings } from "@/components/prayer-list/prayer-timings";
 
 import { usePrayerTimesStore } from "@/lib/storage/prayerTimesStore";
+import { adhanMap } from "@/components/adhan/utils/utils-function";
+
 
 export default function AdhanScreen() {
   const colorScheme = useColorScheme();
@@ -33,7 +35,12 @@ export default function AdhanScreen() {
         <AdhanHeader isDark={isDark} />
         <DateInfo isDark={isDark} data={prayerDate} />
         <NextPrayerCard isDark={isDark} data={prayerTimings} />
-        <PrayerScheduleList isDark={isDark} data={prayerTimings}extended={false}/>
+        <PrayerScheduleList
+          prayerMap={adhanMap}
+          isDark={isDark}
+          data={prayerTimings}
+          extended={false}
+        />
       </ScrollView>
     </View>
   );

@@ -2,9 +2,7 @@ import { ScrollView, useColorScheme, View, Text, ActivityIndicator } from "react
 import clsx from "clsx";
 import TodayJourneyCard from "@/components/tracking/TodayJourneyCard";
 import DailyProgressSection from "@/components/tracking/DailyProgressSection";
-import StreakCounter from "@/components/tracking/StreakCounter";
 import { usePrayerTrackingLocal, convertToPrayerTrackingData } from "@/lib/hooks/usePrayerTrackingLocal";
-import { usePrayerStreak } from "@/lib/hooks/usePrayerTracking";
 import { useAutoSync } from "@/lib/hooks/usePrayerSync";
 
 export default function PrayerTrackingScreen() {
@@ -16,7 +14,6 @@ export default function PrayerTrackingScreen() {
   
   // Get local prayer state
   const { data: localState, isLoading, error } = usePrayerTrackingLocal();
-  const { data: streakData } = usePrayerStreak();
   
   // Convert local state to PrayerTrackingData format
   const data = localState ? convertToPrayerTrackingData(localState) : null;
@@ -68,8 +65,7 @@ export default function PrayerTrackingScreen() {
       contentContainerStyle={{ paddingBottom: 32 }}
       showsVerticalScrollIndicator={false}
     >
-      {/* Streak Counter */}
-      {streakData && <StreakCounter streak={streakData} />}
+
 
       {/* Today's Journey Card */}
       <View className="mt-6">
