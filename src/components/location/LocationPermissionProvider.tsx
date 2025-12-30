@@ -9,17 +9,54 @@ import * as Location from "expo-location";
 import { useAuth } from "@/lib/hooks/useAuth";
 import { storage } from "@/lib/storage/mmkv";
 import LocationPermissionModal from "@/components/adhan/LocationPermissionModal";
+import { useLocationStore } from "@/lib/storage/locationStore";
 
 const LOCATION_PERMISSION_ASKED_KEY = "location_permission_asked";
 const LOCATION_PERMISSION_GRANTED_KEY = "location_permission_granted";
 
 export default function LocationPermissionProvider() {
-  const { session, isLoading: isAuthLoading } = useAuth();
+  const { session, user, isLoading: isAuthLoading } = useAuth();
   const [showModal, setShowModal] = useState(false);
   const [isChecking, setIsChecking] = useState(true);
+  const setLocation = useLocationStore((state) => state.setLocation);
+  const location = useLocationStore((state) => state.location);
+
+  // Helper function to fetch and set location
+  const fetchAndSetLocation = async () => {
+    try {
+      const position = await Location.getCurrentPositionAsync({
+        accuracy: Location.Accuracy.Balanced,
+      });
+
+      // Reverse geocode
+      const [address] = await Location.reverseGeocodeAsync({
+        latitude: position.coords.latitude,
+        longitude: position.coords.longitude,
+      });
+
+      // Save location into global store
+      setLocation({
+        latitude: position.coords.latitude,
+        longitude: position.coords.longitude,
+        city: address?.city || address?.subregion || undefined,
+        country: address?.country || undefined,
+      });
+    } catch (error) {
+      console.error("[LocationPermissionProvider] Error fetching location:", error);
+    }
+  };
 
   useEffect(() => {
-    if (isAuthLoading || !session) {
+    // Wait for auth to finish loading and session to be available
+    if (isAuthLoading) {
+      return;
+    }
+
+    // Don't check if there's no user yet (user not logged in)
+    // Allow both registered users (even if session is null due to email confirmation)
+    // and anonymous users (they have a session)
+    if (!user && !session) {
+      setIsChecking(false);
       return;
     }
 
@@ -31,12 +68,6 @@ export default function LocationPermissionProvider() {
         const hasAsked = await storage.getString(LOCATION_PERMISSION_ASKED_KEY);
         const hasGranted = await storage.getString(LOCATION_PERMISSION_GRANTED_KEY);
 
-        // If already asked and granted, don't show modal
-        if (hasAsked === "true" && hasGranted === "true") {
-          setIsChecking(false);
-          return;
-        }
-
         // Check current permission status
         const { status } = await Location.getForegroundPermissionsAsync();
 
@@ -44,6 +75,18 @@ export default function LocationPermissionProvider() {
         if (status === "granted") {
           await storage.set(LOCATION_PERMISSION_ASKED_KEY, "true");
           await storage.set(LOCATION_PERMISSION_GRANTED_KEY, "true");
+          
+          // If location is not set, fetch it automatically
+          if (!location) {
+            await fetchAndSetLocation();
+          }
+          
+          setIsChecking(false);
+          return;
+        }
+
+        // If already asked and granted (but permission might have been revoked), don't show modal
+        if (hasAsked === "true" && hasGranted === "true") {
           setIsChecking(false);
           return;
         }
@@ -55,6 +98,7 @@ export default function LocationPermissionProvider() {
         }
 
         // First time - show modal after a short delay
+        // This works for both registered and anonymous users
         if (!hasAsked || hasAsked !== "true") {
           setTimeout(() => {
             setShowModal(true);
@@ -68,28 +112,15 @@ export default function LocationPermissionProvider() {
     };
 
     checkLocationPermission();
-  }, [session, isAuthLoading]);
+  }, [session, isAuthLoading]); // Removed 'location' from dependencies to avoid unnecessary re-runs
 
-  const handleRequestPermission = async () => {
+  const handlePermissionGranted = async () => {
     try {
-      const { status } = await Location.requestForegroundPermissionsAsync();
-
-      // Mark as asked
+      // Mark as asked and granted
       await storage.set(LOCATION_PERMISSION_ASKED_KEY, "true");
-
-      if (status === "granted") {
-        // Mark as granted
-        await storage.set(LOCATION_PERMISSION_GRANTED_KEY, "true");
-        setShowModal(false);
-      } else {
-        // Permission denied
-        await storage.set(LOCATION_PERMISSION_GRANTED_KEY, "false");
-        setShowModal(false);
-      }
+      await storage.set(LOCATION_PERMISSION_GRANTED_KEY, "true");
     } catch (error) {
-      console.error("[LocationPermissionProvider] Error requesting permission:", error);
-      await storage.set(LOCATION_PERMISSION_ASKED_KEY, "true");
-      setShowModal(false);
+      console.error("[LocationPermissionProvider] Error saving permission status:", error);
     }
   };
 
@@ -107,16 +138,17 @@ export default function LocationPermissionProvider() {
   };
 
   // Don't show modal while checking or if auth is loading
-  if (isChecking || isAuthLoading || !session) {
+  // But allow showing modal even if session is null (will be handled by useEffect)
+  if (isChecking || isAuthLoading) {
     return null;
   }
 
   return (
     <LocationPermissionModal
       visible={showModal}
-      onRequestPermission={handleRequestPermission}
       onManualEntry={handleManualEntry}
       onClose={handleClose}
+      onPermissionGranted={handlePermissionGranted}
     />
   );
 }

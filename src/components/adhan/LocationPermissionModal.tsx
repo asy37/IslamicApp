@@ -14,19 +14,26 @@ type LocationPermissionModalProps = {
   readonly visible: boolean;
   readonly onManualEntry: () => void;
   readonly onClose: () => void;
+  readonly onPermissionGranted?: () => void;
 };
 
 export default function LocationPermissionModal({
   visible,
   onManualEntry,
   onClose,
+  onPermissionGranted,
 }: LocationPermissionModalProps) {
   const colorScheme = useColorScheme();
   const isDark = colorScheme === "dark";
 
-  const { requestLocation } = useLocation();
+  const { requestLocation, permissionStatus } = useLocation();
   const handleRequestPermission = async () => {
     await requestLocation();
+    // Notify parent that permission was granted (for storage flags)
+    // Only call if permission was actually granted
+    if (permissionStatus === "granted") {
+      onPermissionGranted?.();
+    }
     onClose();
   };
 

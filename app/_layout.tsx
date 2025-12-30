@@ -79,12 +79,15 @@ export default function RootLayout() {
   const method = useMethodStore((state) => state.method?.id);
   
   useEffect(() => {
-    if (!location || !method) return;
+    // Method is always available (has default value), but we need to wait for it
+    if (!method) return;
+    
+    // Use location if available, otherwise use default Istanbul coordinates
     const latitude = location?.latitude ?? 41.0082;
     const longitude = location?.longitude ?? 28.9784;
 
     queryClient.prefetchQuery({
-      queryKey: queryKeys.prayerTimes.byLocation(latitude, longitude, method?.toString()),
+      queryKey: queryKeys.prayerTimes.byLocation(latitude, longitude, method.toString()),
       queryFn: () =>
         fetchPrayerTimes({
           latitude,

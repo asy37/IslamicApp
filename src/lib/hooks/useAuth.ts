@@ -25,8 +25,11 @@ export function useAuth(): AuthState {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    let mounted = true;
+
     // Get initial session
     supabase.auth.getSession().then(({ data: { session } }) => {
+      if (!mounted) return;
       setSession(session);
       setUser(session?.user ?? null);
       setIsLoading(false);
@@ -35,13 +38,25 @@ export function useAuth(): AuthState {
     // Listen for auth changes
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session);
-      setUser(session?.user ?? null);
+    } = supabase.auth.onAuthStateChange(async (event, session) => {
+      if (!mounted) return;
+      
+      // For SIGNED_IN and SIGNED_UP events, ensure we have the latest session
+      if (event === 'SIGNED_IN' || event === 'SIGNED_UP' || event === 'TOKEN_REFRESHED') {
+        // Double-check session to ensure it's up to date
+        const { data: { session: latestSession } } = await supabase.auth.getSession();
+        setSession(latestSession);
+        setUser(latestSession?.user ?? null);
+      } else {
+        setSession(session);
+        setUser(session?.user ?? null);
+      }
+      
       setIsLoading(false);
     });
 
     return () => {
+      mounted = false;
       subscription.unsubscribe();
     };
   }, []);
@@ -66,9 +81,10 @@ export function useAuthFlow() {
   const { user, session, isLoading, isAnonymous, isEmailConfirmed } = useAuth();
 
   // Determine what screen to show
-  const shouldShowRegister = !isLoading && !session;
+  const shouldShowRegister = !isLoading && !user && !session;
   // Email confirmation is optional - users can access app without confirming email
-  const canAccessApp = !isLoading && !!session;
+  // Allow access if user exists (even if session is null due to email confirmation)
+  const canAccessApp = !isLoading && (!!session || !!user);
 
   return {
     shouldShowRegister,

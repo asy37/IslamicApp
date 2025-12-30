@@ -78,12 +78,21 @@ export default function RegisterScreen() {
 
       if (result.error) {
         Alert.alert("Kayıt Hatası", result.error.message);
+        setIsLoading(false);
         return;
       }
 
-      if (result.user || result.session) {
-        // Navigate directly to app - email confirmation is optional
-        router.replace("/(tabs)");
+      // If user is created, navigate to app (even if session is null due to email confirmation)
+      // The session will be available after email confirmation or immediately if confirmation is disabled
+      if (result.user) {
+        // Wait a bit for session to be available via onAuthStateChange
+        // If session is null (email confirmation required), user can still access app
+        setTimeout(() => {
+          router.replace("/(tabs)");
+        }, 500);
+      } else {
+        Alert.alert("Hata", "Kayıt olurken bir sorun oluştu. Lütfen tekrar deneyin.");
+        setIsLoading(false);
       }
     } catch (error) {
       Alert.alert(
@@ -105,9 +114,15 @@ export default function RegisterScreen() {
         return;
       }
 
-      if (result.session) {
-        // Navigate to app
-        router.replace("/(tabs)");
+      // Anonymous sign-in should always create a session
+      if (result.user || result.session) {
+        // Wait a bit for session to be available via onAuthStateChange
+        setTimeout(() => {
+          router.replace("/(tabs)");
+        }, 500);
+      } else {
+        Alert.alert("Hata", "Misafir girişi yapılırken bir sorun oluştu. Lütfen tekrar deneyin.");
+        setIsLoading(false);
       }
     } catch (error) {
       Alert.alert("Hata", "Misafir girişi yapılırken bir hata oluştu.");
