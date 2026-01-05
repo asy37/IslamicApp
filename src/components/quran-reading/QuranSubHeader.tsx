@@ -5,19 +5,25 @@ import { colors } from "../theme/colors";
 type QuranSubHeaderProps = {
   readonly isDark: boolean;
   readonly onOpenSurahModal: () => void;
+  readonly surahName: string;
+  readonly surahTranslation: string;
+  readonly juz: number;
 };
 
 export default function QuranSubHeader({
   isDark,
   onOpenSurahModal,
+  surahName,
+  surahTranslation,
+  juz,
 }: QuranSubHeaderProps) {
   return (
     <View
       className={
         "z-10 flex-row items-center justify-between border-b px-5 py-3 " +
         (isDark
-          ? "border-border-dark bg-background-dark/95"
-          : "border-border-light bg-background-light/95")
+          ? "border-b border-primary-100"
+          : " border-b border-primary-500")
       }
     >
       <Pressable
@@ -39,10 +45,10 @@ export default function QuranSubHeader({
             (isDark ? "text-text-primaryDark" : "text-text-primaryLight")
           }
         >
-          Surah Al-Mulk
+          {surahTranslation} / {surahName}
         </Text>
         <Text className="text-xs font-medium uppercase tracking-wide text-primary-500">
-          Juz 29
+          {juz ? `Juz ${juz}` : ""}
         </Text>
       </View>
 

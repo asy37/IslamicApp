@@ -2,31 +2,35 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { Pressable, Text, View } from "react-native";
 import { colors } from "../theme/colors";
 import { Ayah } from "@/types/quran";
+import clsx from "clsx";
 
-export default function AyahBlock({
-  ayah,
-  isDark,
-}: {
+type AyahBlockProps = Readonly<{
   ayah: Ayah;
   isDark: boolean;
-}) {
+}>;
+
+export default function AyahBlock({ ayah, isDark }: AyahBlockProps) {
   return (
     <View
       className={
         "group relative flex flex-col gap-6 border-b py-8 " +
-        (isDark ? "border-border-dark/30" : "border-border-light")
+        (isDark ? "bg-border- border-white" : "border-primary-400")
       }
     >
       <View className="flex flex-row items-center justify-between">
         <View
           className={
-            "flex size-9 items-center justify-center rounded-xl text-sm font-bold shadow-sm " +
+            "flex p-2 items-center justify-center rounded-full text-sm font-bold shadow-sm " +
             (isDark
               ? "bg-background-cardDark text-text-secondaryDark"
-              : "bg-primary-100 text-text-primaryLight")
+              : "bg-primary-400 text-white")
           }
         >
-          <Text>{ayah.number}</Text>
+          <Text
+            className={clsx(isDark ? colors.background.light : "text-white")}
+          >
+            {ayah.number}
+          </Text>
         </View>
 
         <View className="flex flex-row gap-1 opacity-80">
@@ -57,7 +61,7 @@ export default function AyahBlock({
           (isDark ? "text-text-primaryDark" : "text-text-primaryLight")
         }
       >
-        {ayah.arabic}
+        {ayah.text}
       </Text>
       <Text
         className={
@@ -65,7 +69,7 @@ export default function AyahBlock({
           (isDark ? "text-text-secondaryDark" : "text-text-secondaryLight")
         }
       >
-        {ayah.translation}
+        {ayah.text}
       </Text>
     </View>
   );

@@ -1,0 +1,1028 @@
+[
+  {
+    "id": 1,
+    "surahArabicName": "الفاتحة",
+    "surahEnglishName": "Al-Fatihah",
+    "surahTurkishName": "Fâtiha",
+    "ayahCount": 7,
+    "surahNumber": 1,
+    "startPage": 1
+  },
+  {
+    "id": 2,
+    "surahArabicName": "البقرة",
+    "surahEnglishName": "Al-Baqarah",
+    "surahTurkishName": "Bakara",
+    "ayahCount": 286,
+    "surahNumber": 2,
+    "startPage": 2
+  },
+  {
+    "id": 3,
+    "surahArabicName": "آل عمران",
+    "surahEnglishName": "Ali 'Imran",
+    "surahTurkishName": "Âl-i İmrân",
+    "ayahCount": 200,
+    "surahNumber": 3,
+    "startPage": 50
+  },
+  {
+    "id": 4,
+    "surahArabicName": "النساء",
+    "surahEnglishName": "An-Nisa",
+    "surahTurkishName": "Nisâ",
+    "ayahCount": 176,
+    "surahNumber": 4,
+    "startPage": 77
+  },
+  {
+    "id": 5,
+    "surahArabicName": "المائدة",
+    "surahEnglishName": "Al-Ma'idah",
+    "surahTurkishName": "Mâide",
+    "ayahCount": 120,
+    "surahNumber": 5,
+    "startPage": 106
+  },
+  {
+    "id": 6,
+    "surahArabicName": "الأنعام",
+    "surahEnglishName": "Al-An'am",
+    "surahTurkishName": "En'âm",
+    "ayahCount": 165,
+    "surahNumber": 6,
+    "startPage": 128
+  },
+  {
+    "id": 7,
+    "surahArabicName": "الأعراف",
+    "surahEnglishName": "Al-A'raf",
+    "surahTurkishName": "A'râf",
+    "ayahCount": 206,
+    "surahNumber": 7,
+    "startPage": 151
+  },
+  {
+    "id": 8,
+    "surahArabicName": "الأنفال",
+    "surahEnglishName": "Al-Anfal",
+    "surahTurkishName": "Enfâl",
+    "ayahCount": 75,
+    "surahNumber": 8,
+    "startPage": 177
+  },
+  {
+    "id": 9,
+    "surahArabicName": "التوبة",
+    "surahEnglishName": "At-Tawbah",
+    "surahTurkishName": "Tevbe",
+    "ayahCount": 129,
+    "surahNumber": 9,
+    "startPage": 187
+  },
+  {
+    "id": 10,
+    "surahArabicName": "يونس",
+    "surahEnglishName": "Yunus",
+    "surahTurkishName": "Yûnus",
+    "ayahCount": 109,
+    "surahNumber": 10,
+    "startPage": 208
+  },
+  {
+    "id": 11,
+    "surahArabicName": "هود",
+    "surahEnglishName": "Hud",
+    "surahTurkishName": "Hûd",
+    "ayahCount": 123,
+    "surahNumber": 11,
+    "startPage": 221
+  },
+  {
+    "id": 12,
+    "surahArabicName": "يوسف",
+    "surahEnglishName": "Yusuf",
+    "surahTurkishName": "Yûsuf",
+    "ayahCount": 111,
+    "surahNumber": 12,
+    "startPage": 235
+  },
+  {
+    "id": 13,
+    "surahArabicName": "الرعد",
+    "surahEnglishName": "Ar-Ra'd",
+    "surahTurkishName": "Ra'd",
+    "ayahCount": 43,
+    "surahNumber": 13,
+    "startPage": 249
+  },
+  {
+    "id": 14,
+    "surahArabicName": "ابراهيم",
+    "surahEnglishName": "Ibrahim",
+    "surahTurkishName": "İbrâhîm",
+    "ayahCount": 52,
+    "surahNumber": 14,
+    "startPage": 255
+  },
+  {
+    "id": 15,
+    "surahArabicName": "الحجر",
+    "surahEnglishName": "Al-Hijr",
+    "surahTurkishName": "Hicr",
+    "ayahCount": 99,
+    "surahNumber": 15,
+    "startPage": 262
+  },
+  {
+    "id": 16,
+    "surahArabicName": "النحل",
+    "surahEnglishName": "An-Nahl",
+    "surahTurkishName": "Nahl",
+    "ayahCount": 128,
+    "surahNumber": 16,
+    "startPage": 267
+  },
+  {
+    "id": 17,
+    "surahArabicName": "الإسراء",
+    "surahEnglishName": "Al-Isra",
+    "surahTurkishName": "İsrâ",
+    "ayahCount": 111,
+    "surahNumber": 17,
+    "startPage": 282
+  },
+  {
+    "id": 18,
+    "surahArabicName": "الكهف",
+    "surahEnglishName": "Al-Kahf",
+    "surahTurkishName": "Kehf",
+    "ayahCount": 110,
+    "surahNumber": 18,
+    "startPage": 293
+  },
+  {
+    "id": 19,
+    "surahArabicName": "مريم",
+    "surahEnglishName": "Maryam",
+    "surahTurkishName": "Meryem",
+    "ayahCount": 98,
+    "surahNumber": 19,
+    "startPage": 305
+  },
+  {
+    "id": 20,
+    "surahArabicName": "طه",
+    "surahEnglishName": "Taha",
+    "surahTurkishName": "Tâhâ",
+    "ayahCount": 135,
+    "surahNumber": 20,
+    "startPage": 312
+  },
+  {
+    "id": 21,
+    "surahArabicName": "الأنبياء",
+    "surahEnglishName": "Al-Anbiya",
+    "surahTurkishName": "Enbiyâ",
+    "ayahCount": 112,
+    "surahNumber": 21,
+    "startPage": 322
+  },
+  {
+    "id": 22,
+    "surahArabicName": "الحج",
+    "surahEnglishName": "Al-Hajj",
+    "surahTurkishName": "Hac",
+    "ayahCount": 78,
+    "surahNumber": 22,
+    "startPage": 332
+  },
+  {
+    "id": 23,
+    "surahArabicName": "المؤمنون",
+    "surahEnglishName": "Al-Mu'minun",
+    "surahTurkishName": "Mü'minûn",
+    "ayahCount": 118,
+    "surahNumber": 23,
+    "startPage": 342
+  },
+  {
+    "id": 24,
+    "surahArabicName": "النور",
+    "surahEnglishName": "An-Nur",
+    "surahTurkishName": "Nûr",
+    "ayahCount": 64,
+    "surahNumber": 24,
+    "startPage": 350
+  },
+  {
+    "id": 25,
+    "surahArabicName": "الفرقان",
+    "surahEnglishName": "Al-Furqan",
+    "surahTurkishName": "Furkân",
+    "ayahCount": 77,
+    "surahNumber": 25,
+    "startPage": 359
+  },
+  {
+    "id": 26,
+    "surahArabicName": "الشعراء",
+    "surahEnglishName": "Ash-Shu'ara",
+    "surahTurkishName": "Şuarâ",
+    "ayahCount": 227,
+    "surahNumber": 26,
+    "startPage": 367
+  },
+  {
+    "id": 27,
+    "surahArabicName": "النمل",
+    "surahEnglishName": "An-Naml",
+    "surahTurkishName": "Neml",
+    "ayahCount": 93,
+    "surahNumber": 27,
+    "startPage": 377
+  },
+  {
+    "id": 28,
+    "surahArabicName": "القصص",
+    "surahEnglishName": "Al-Qasas",
+    "surahTurkishName": "Kasas",
+    "ayahCount": 88,
+    "surahNumber": 28,
+    "startPage": 385
+  },
+  {
+    "id": 29,
+    "surahArabicName": "العنكبوت",
+    "surahEnglishName": "Al-'Ankabut",
+    "surahTurkishName": "Ankebût",
+    "ayahCount": 69,
+    "surahNumber": 29,
+    "startPage": 396
+  },
+  {
+    "id": 30,
+    "surahArabicName": "الروم",
+    "surahEnglishName": "Ar-Rum",
+    "surahTurkishName": "Rûm",
+    "ayahCount": 60,
+    "surahNumber": 30,
+    "startPage": 404
+  },
+  {
+    "id": 31,
+    "surahArabicName": "لقمان",
+    "surahEnglishName": "Luqman",
+    "surahTurkishName": "Lokmân",
+    "ayahCount": 34,
+    "surahNumber": 31,
+    "startPage": 411
+  },
+  {
+    "id": 32,
+    "surahArabicName": "السجدة",
+    "surahEnglishName": "As-Sajdah",
+    "surahTurkishName": "Secde",
+    "ayahCount": 30,
+    "surahNumber": 32,
+    "startPage": 415
+  },
+  {
+    "id": 33,
+    "surahArabicName": "الأحزاب",
+    "surahEnglishName": "Al-Ahzab",
+    "surahTurkishName": "Ahzâb",
+    "ayahCount": 73,
+    "surahNumber": 33,
+    "startPage": 418
+  },
+  {
+    "id": 34,
+    "surahArabicName": "سبإ",
+    "surahEnglishName": "Saba",
+    "surahTurkishName": "Sebe'",
+    "ayahCount": 54,
+    "surahNumber": 34,
+    "startPage": 428
+  },
+  {
+    "id": 35,
+    "surahArabicName": "فاطر",
+    "surahEnglishName": "Fatir",
+    "surahTurkishName": "Fâtır",
+    "ayahCount": 45,
+    "surahNumber": 35,
+    "startPage": 434
+  },
+  {
+    "id": 36,
+    "surahArabicName": "يس",
+    "surahEnglishName": "Ya-Sin",
+    "surahTurkishName": "Yâsîn",
+    "ayahCount": 83,
+    "surahNumber": 36,
+    "startPage": 440
+  },
+  {
+    "id": 37,
+    "surahArabicName": "الصافات",
+    "surahEnglishName": "As-Saffat",
+    "surahTurkishName": "Sâffât",
+    "ayahCount": 182,
+    "surahNumber": 37,
+    "startPage": 446
+  },
+  {
+    "id": 38,
+    "surahArabicName": "ص",
+    "surahEnglishName": "Sad",
+    "surahTurkishName": "Sâd",
+    "ayahCount": 88,
+    "surahNumber": 38,
+    "startPage": 453
+  },
+  {
+    "id": 39,
+    "surahArabicName": "الزمر",
+    "surahEnglishName": "Az-Zumar",
+    "surahTurkishName": "Zümer",
+    "ayahCount": 75,
+    "surahNumber": 39,
+    "startPage": 458
+  },
+  {
+    "id": 40,
+    "surahArabicName": "غافر",
+    "surahEnglishName": "Ghafir",
+    "surahTurkishName": "Mü'min (Gâfir)",
+    "ayahCount": 85,
+    "surahNumber": 40,
+    "startPage": 467
+  },
+  {
+    "id": 41,
+    "surahArabicName": "فصلت",
+    "surahEnglishName": "Fussilat",
+    "surahTurkishName": "Fussilet",
+    "ayahCount": 54,
+    "surahNumber": 41,
+    "startPage": 477
+  },
+  {
+    "id": 42,
+    "surahArabicName": "الشورى",
+    "surahEnglishName": "Ash-Shura",
+    "surahTurkishName": "Şûrâ",
+    "ayahCount": 53,
+    "surahNumber": 42,
+    "startPage": 483
+  },
+  {
+    "id": 43,
+    "surahArabicName": "الزخرف",
+    "surahEnglishName": "Az-Zukhruf",
+    "surahTurkishName": "Zuhruf",
+    "ayahCount": 89,
+    "surahNumber": 43,
+    "startPage": 489
+  },
+  {
+    "id": 44,
+    "surahArabicName": "الدخان",
+    "surahEnglishName": "Ad-Dukhan",
+    "surahTurkishName": "Duhân",
+    "ayahCount": 59,
+    "surahNumber": 44,
+    "startPage": 496
+  },
+  {
+    "id": 45,
+    "surahArabicName": "الجاثية",
+    "surahEnglishName": "Al-Jathiyah",
+    "surahTurkishName": "Câsiye",
+    "ayahCount": 37,
+    "surahNumber": 45,
+    "startPage": 499
+  },
+  {
+    "id": 46,
+    "surahArabicName": "الأحقاف",
+    "surahEnglishName": "Al-Ahqaf",
+    "surahTurkishName": "Ahkâf",
+    "ayahCount": 35,
+    "surahNumber": 46,
+    "startPage": 502
+  },
+  {
+    "id": 47,
+    "surahArabicName": "محمد",
+    "surahEnglishName": "Muhammad",
+    "surahTurkishName": "Muhammed",
+    "ayahCount": 38,
+    "surahNumber": 47,
+    "startPage": 507
+  },
+  {
+    "id": 48,
+    "surahArabicName": "الفتح",
+    "surahEnglishName": "Al-Fath",
+    "surahTurkishName": "Fetih",
+    "ayahCount": 29,
+    "surahNumber": 48,
+    "startPage": 511
+  },
+  {
+    "id": 49,
+    "surahArabicName": "الحجرات",
+    "surahEnglishName": "Al-Hujurat",
+    "surahTurkishName": "Hucurât",
+    "ayahCount": 18,
+    "surahNumber": 49,
+    "startPage": 515
+  },
+  {
+    "id": 50,
+    "surahArabicName": "ق",
+    "surahEnglishName": "Qaf",
+    "surahTurkishName": "Kâf",
+    "ayahCount": 45,
+    "surahNumber": 50,
+    "startPage": 518
+  },
+  {
+    "id": 51,
+    "surahArabicName": "الذاريات",
+    "surahEnglishName": "Adh-Dhariyat",
+    "surahTurkishName": "Zâriyât",
+    "ayahCount": 60,
+    "surahNumber": 51,
+    "startPage": 520
+  },
+  {
+    "id": 52,
+    "surahArabicName": "الطور",
+    "surahEnglishName": "At-Tur",
+    "surahTurkishName": "Tûr",
+    "ayahCount": 49,
+    "surahNumber": 52,
+    "startPage": 523
+  },
+  {
+    "id": 53,
+    "surahArabicName": "النجم",
+    "surahEnglishName": "An-Najm",
+    "surahTurkishName": "Necm",
+    "ayahCount": 62,
+    "surahNumber": 53,
+    "startPage": 526
+  },
+  {
+    "id": 54,
+    "surahArabicName": "القمر",
+    "surahEnglishName": "Al-Qamar",
+    "surahTurkishName": "Kamer",
+    "ayahCount": 55,
+    "surahNumber": 54,
+    "startPage": 528
+  },
+  {
+    "id": 55,
+    "surahArabicName": "الرحمن",
+    "surahEnglishName": "Ar-Rahman",
+    "surahTurkishName": "Rahmân",
+    "ayahCount": 78,
+    "surahNumber": 55,
+    "startPage": 531
+  },
+  {
+    "id": 56,
+    "surahArabicName": "الواقعة",
+    "surahEnglishName": "Al-Waqi'ah",
+    "surahTurkishName": "Vâkıa",
+    "ayahCount": 96,
+    "surahNumber": 56,
+    "startPage": 534
+  },
+  {
+    "id": 57,
+    "surahArabicName": "الحديد",
+    "surahEnglishName": "Al-Hadid",
+    "surahTurkishName": "Hadîd",
+    "ayahCount": 29,
+    "surahNumber": 57,
+    "startPage": 537
+  },
+  {
+    "id": 58,
+    "surahArabicName": "المجادلة",
+    "surahEnglishName": "Al-Mujadila",
+    "surahTurkishName": "Mücâdele",
+    "ayahCount": 22,
+    "surahNumber": 58,
+    "startPage": 542
+  },
+  {
+    "id": 59,
+    "surahArabicName": "الحشر",
+    "surahEnglishName": "Al-Hashr",
+    "surahTurkishName": "Haşr",
+    "ayahCount": 24,
+    "surahNumber": 59,
+    "startPage": 545
+  },
+  {
+    "id": 60,
+    "surahArabicName": "الممتحنة",
+    "surahEnglishName": "Al-Mumtahanah",
+    "surahTurkishName": "Mümtehine",
+    "ayahCount": 13,
+    "surahNumber": 60,
+    "startPage": 549
+  },
+  {
+    "id": 61,
+    "surahArabicName": "الصف",
+    "surahEnglishName": "As-Saff",
+    "surahTurkishName": "Saf",
+    "ayahCount": 14,
+    "surahNumber": 61,
+    "startPage": 551
+  },
+  {
+    "id": 62,
+    "surahArabicName": "الجمعة",
+    "surahEnglishName": "Al-Jumu'ah",
+    "surahTurkishName": "Cuma",
+    "ayahCount": 11,
+    "surahNumber": 62,
+    "startPage": 553
+  },
+  {
+    "id": 63,
+    "surahArabicName": "المنافقون",
+    "surahEnglishName": "Al-Munafiqun",
+    "surahTurkishName": "Münâfikûn",
+    "ayahCount": 11,
+    "surahNumber": 63,
+    "startPage": 554
+  },
+  {
+    "id": 64,
+    "surahArabicName": "التغابن",
+    "surahEnglishName": "At-Taghabun",
+    "surahTurkishName": "Tegâbun",
+    "ayahCount": 18,
+    "surahNumber": 64,
+    "startPage": 556
+  },
+  {
+    "id": 65,
+    "surahArabicName": "الطلاق",
+    "surahEnglishName": "At-Talaq",
+    "surahTurkishName": "Talâk",
+    "ayahCount": 12,
+    "surahNumber": 65,
+    "startPage": 558
+  },
+  {
+    "id": 66,
+    "surahArabicName": "التحريم",
+    "surahEnglishName": "At-Tahrim",
+    "surahTurkishName": "Tahrîm",
+    "ayahCount": 12,
+    "surahNumber": 66,
+    "startPage": 560
+  },
+  {
+    "id": 67,
+    "surahArabicName": "الملك",
+    "surahEnglishName": "Al-Mulk",
+    "surahTurkishName": "Mülk",
+    "ayahCount": 30,
+    "surahNumber": 67,
+    "startPage": 562
+  },
+  {
+    "id": 68,
+    "surahArabicName": "القلم",
+    "surahEnglishName": "Al-Qalam",
+    "surahTurkishName": "Kalem",
+    "ayahCount": 52,
+    "surahNumber": 68,
+    "startPage": 564
+  },
+  {
+    "id": 69,
+    "surahArabicName": "الحاقة",
+    "surahEnglishName": "Al-Haqqah",
+    "surahTurkishName": "Hâkka",
+    "ayahCount": 52,
+    "surahNumber": 69,
+    "startPage": 566
+  },
+  {
+    "id": 70,
+    "surahArabicName": "المعارج",
+    "surahEnglishName": "Al-Ma'arij",
+    "surahTurkishName": "Meâric",
+    "ayahCount": 44,
+    "surahNumber": 70,
+    "startPage": 568
+  },
+  {
+    "id": 71,
+    "surahArabicName": "نوح",
+    "surahEnglishName": "Nuh",
+    "surahTurkishName": "Nûh",
+    "ayahCount": 28,
+    "surahNumber": 71,
+    "startPage": 570
+  },
+  {
+    "id": 72,
+    "surahArabicName": "الجن",
+    "surahEnglishName": "Al-Jinn",
+    "surahTurkishName": "Cin",
+    "ayahCount": 28,
+    "surahNumber": 72,
+    "startPage": 572
+  },
+  {
+    "id": 73,
+    "surahArabicName": "المزمل",
+    "surahEnglishName": "Al-Muzzammil",
+    "surahTurkishName": "Müzzemmil",
+    "ayahCount": 20,
+    "surahNumber": 73,
+    "startPage": 574
+  },
+  {
+    "id": 74,
+    "surahArabicName": "المدثر",
+    "surahEnglishName": "Al-Muddathir",
+    "surahTurkishName": "Müddessir",
+    "ayahCount": 56,
+    "surahNumber": 74,
+    "startPage": 575
+  },
+  {
+    "id": 75,
+    "surahArabicName": "القيامة",
+    "surahEnglishName": "Al-Qiyamah",
+    "surahTurkishName": "Kıyâmet",
+    "ayahCount": 40,
+    "surahNumber": 75,
+    "startPage": 577
+  },
+  {
+    "id": 76,
+    "surahArabicName": "الانسان",
+    "surahEnglishName": "Al-Insan",
+    "surahTurkishName": "İnsân",
+    "ayahCount": 31,
+    "surahNumber": 76,
+    "startPage": 578
+  },
+  {
+    "id": 77,
+    "surahArabicName": "المرسلات",
+    "surahEnglishName": "Al-Mursalat",
+    "surahTurkishName": "Mürselât",
+    "ayahCount": 50,
+    "surahNumber": 77,
+    "startPage": 580
+  },
+  {
+    "id": 78,
+    "surahArabicName": "النبإ",
+    "surahEnglishName": "An-Naba",
+    "surahTurkishName": "Nebe'",
+    "ayahCount": 40,
+    "surahNumber": 78,
+    "startPage": 582
+  },
+  {
+    "id": 79,
+    "surahArabicName": "النازعات",
+    "surahEnglishName": "An-Nazi'at",
+    "surahTurkishName": "Nâziât",
+    "ayahCount": 46,
+    "surahNumber": 79,
+    "startPage": 583
+  },
+  {
+    "id": 80,
+    "surahArabicName": "عبس",
+    "surahEnglishName": "'Abasa",
+    "surahTurkishName": "Abese",
+    "ayahCount": 42,
+    "surahNumber": 80,
+    "startPage": 585
+  },
+  {
+    "id": 81,
+    "surahArabicName": "التكوير",
+    "surahEnglishName": "At-Takwir",
+    "surahTurkishName": "Tekvîr",
+    "ayahCount": 29,
+    "surahNumber": 81,
+    "startPage": 586
+  },
+  {
+    "id": 82,
+    "surahArabicName": "الانفطار",
+    "surahEnglishName": "Al-Infitar",
+    "surahTurkishName": "İnfitâr",
+    "ayahCount": 19,
+    "surahNumber": 82,
+    "startPage": 587
+  },
+  {
+    "id": 83,
+    "surahArabicName": "المطففين",
+    "surahEnglishName": "Al-Mutaffifin",
+    "surahTurkishName": "Mutaffifîn",
+    "ayahCount": 36,
+    "surahNumber": 83,
+    "startPage": 587
+  },
+  {
+    "id": 84,
+    "surahArabicName": "الانشقاق",
+    "surahEnglishName": "Al-Inshiqaq",
+    "surahTurkishName": "İnşikâk",
+    "ayahCount": 25,
+    "surahNumber": 84,
+    "startPage": 589
+  },
+  {
+    "id": 85,
+    "surahArabicName": "البروج",
+    "surahEnglishName": "Al-Buruj",
+    "surahTurkishName": "Burûc",
+    "ayahCount": 22,
+    "surahNumber": 85,
+    "startPage": 590
+  },
+  {
+    "id": 86,
+    "surahArabicName": "الطارق",
+    "surahEnglishName": "At-Tariq",
+    "surahTurkishName": "Târık",
+    "ayahCount": 17,
+    "surahNumber": 86,
+    "startPage": 591
+  },
+  {
+    "id": 87,
+    "surahArabicName": "الأعلى",
+    "surahEnglishName": "Al-A'la",
+    "surahTurkishName": "A'lâ",
+    "ayahCount": 19,
+    "surahNumber": 87,
+    "startPage": 591
+  },
+  {
+    "id": 88,
+    "surahArabicName": "الغاشية",
+    "surahEnglishName": "Al-Ghashiyah",
+    "surahTurkishName": "Gâşiye",
+    "ayahCount": 26,
+    "surahNumber": 88,
+    "startPage": 592
+  },
+  {
+    "id": 89,
+    "surahArabicName": "الفجر",
+    "surahEnglishName": "Al-Fajr",
+    "surahTurkishName": "Fecr",
+    "ayahCount": 30,
+    "surahNumber": 89,
+    "startPage": 593
+  },
+  {
+    "id": 90,
+    "surahArabicName": "البلد",
+    "surahEnglishName": "Al-Balad",
+    "surahTurkishName": "Beled",
+    "ayahCount": 20,
+    "surahNumber": 90,
+    "startPage": 594
+  },
+  {
+    "id": 91,
+    "surahArabicName": "الشمس",
+    "surahEnglishName": "Ash-Shams",
+    "surahTurkishName": "Şems",
+    "ayahCount": 15,
+    "surahNumber": 91,
+    "startPage": 595
+  },
+  {
+    "id": 92,
+    "surahArabicName": "الليل",
+    "surahEnglishName": "Al-Layl",
+    "surahTurkishName": "Leyl",
+    "ayahCount": 21,
+    "surahNumber": 92,
+    "startPage": 595
+  },
+  {
+    "id": 93,
+    "surahArabicName": "الضحى",
+    "surahEnglishName": "Ad-Duha",
+    "surahTurkishName": "Duhâ",
+    "ayahCount": 11,
+    "surahNumber": 93,
+    "startPage": 596
+  },
+  {
+    "id": 94,
+    "surahArabicName": "الشرح",
+    "surahEnglishName": "Ash-Sharh",
+    "surahTurkishName": "İnşirâh",
+    "ayahCount": 8,
+    "surahNumber": 94,
+    "startPage": 596
+  },
+  {
+    "id": 95,
+    "surahArabicName": "التين",
+    "surahEnglishName": "At-Tin",
+    "surahTurkishName": "Tîn",
+    "ayahCount": 8,
+    "surahNumber": 95,
+    "startPage": 597
+  },
+  {
+    "id": 96,
+    "surahArabicName": "العلق",
+    "surahEnglishName": "Al-'Alaq",
+    "surahTurkishName": "Alak",
+    "ayahCount": 19,
+    "surahNumber": 96,
+    "startPage": 597
+  },
+  {
+    "id": 97,
+    "surahArabicName": "القدر",
+    "surahEnglishName": "Al-Qadr",
+    "surahTurkishName": "Kadir",
+    "ayahCount": 5,
+    "surahNumber": 97,
+    "startPage": 598
+  },
+  {
+    "id": 98,
+    "surahArabicName": "البينة",
+    "surahEnglishName": "Al-Bayyinah",
+    "surahTurkishName": "Beyyine",
+    "ayahCount": 8,
+    "surahNumber": 98,
+    "startPage": 598
+  },
+  {
+    "id": 99,
+    "surahArabicName": "الزلزلة",
+    "surahEnglishName": "Az-Zalzalah",
+    "surahTurkishName": "Zilzâl",
+    "ayahCount": 8,
+    "surahNumber": 99,
+    "startPage": 599
+  },
+  {
+    "id": 100,
+    "surahArabicName": "العاديات",
+    "surahEnglishName": "Al-'Adiyat",
+    "surahTurkishName": "Âdiyât",
+    "ayahCount": 11,
+    "surahNumber": 100,
+    "startPage": 599
+  },
+  {
+    "id": 101,
+    "surahArabicName": "القارعة",
+    "surahEnglishName": "Al-Qari'ah",
+    "surahTurkishName": "Kâria",
+    "ayahCount": 11,
+    "surahNumber": 101,
+    "startPage": 600
+  },
+  {
+    "id": 102,
+    "surahArabicName": "التكاثر",
+    "surahEnglishName": "At-Takathur",
+    "surahTurkishName": "Tekâsür",
+    "ayahCount": 8,
+    "surahNumber": 102,
+    "startPage": 600
+  },
+  {
+    "id": 103,
+    "surahArabicName": "العصر",
+    "surahEnglishName": "Al-'Asr",
+    "surahTurkishName": "Asr",
+    "ayahCount": 3,
+    "surahNumber": 103,
+    "startPage": 601
+  },
+  {
+    "id": 104,
+    "surahArabicName": "الهمزة",
+    "surahEnglishName": "Al-Humazah",
+    "surahTurkishName": "Hümeze",
+    "ayahCount": 9,
+    "surahNumber": 104,
+    "startPage": 601
+  },
+  {
+    "id": 105,
+    "surahArabicName": "الفيل",
+    "surahEnglishName": "Al-Fil",
+    "surahTurkishName": "Fîl",
+    "ayahCount": 5,
+    "surahNumber": 105,
+    "startPage": 601
+  },
+  {
+    "id": 106,
+    "surahArabicName": "قريش",
+    "surahEnglishName": "Quraysh",
+    "surahTurkishName": "Kureyş",
+    "ayahCount": 4,
+    "surahNumber": 106,
+    "startPage": 602
+  },
+  {
+    "id": 107,
+    "surahArabicName": "الماعون",
+    "surahEnglishName": "Al-Ma'un",
+    "surahTurkishName": "Mâûn",
+    "ayahCount": 7,
+    "surahNumber": 107,
+    "startPage": 602
+  },
+  {
+    "id": 108,
+    "surahArabicName": "الكوثر",
+    "surahEnglishName": "Al-Kawthar",
+    "surahTurkishName": "Kevser",
+    "ayahCount": 3,
+    "surahNumber": 108,
+    "startPage": 602
+  },
+  {
+    "id": 109,
+    "surahArabicName": "الكافرون",
+    "surahEnglishName": "Al-Kafirun",
+    "surahTurkishName": "Kâfirûn",
+    "ayahCount": 6,
+    "surahNumber": 109,
+    "startPage": 603
+  },
+  {
+    "id": 110,
+    "surahArabicName": "النصر",
+    "surahEnglishName": "An-Nasr",
+    "surahTurkishName": "Nasr",
+    "ayahCount": 3,
+    "surahNumber": 110,
+    "startPage": 603
+  },
+  {
+    "id": 111,
+    "surahArabicName": "المسد",
+    "surahEnglishName": "Al-Masad",
+    "surahTurkishName": "Mesed",
+    "ayahCount": 5,
+    "surahNumber": 111,
+    "startPage": 603
+  },
+  {
+    "id": 112,
+    "surahArabicName": "الإخلاص",
+    "surahEnglishName": "Al-Ikhlas",
+    "surahTurkishName": "İhlâs",
+    "ayahCount": 4,
+    "surahNumber": 112,
+    "startPage": 604
+  },
+  {
+    "id": 113,
+    "surahArabicName": "الفلق",
+    "surahEnglishName": "Al-Falaq",
+    "surahTurkishName": "Felak",
+    "ayahCount": 5,
+    "surahNumber": 113,
+    "startPage": 604
+  },
+  {
+    "id": 114,
+    "surahArabicName": "الناس",
+    "surahEnglishName": "An-Nas",
+    "surahTurkishName": "Nâs",
+    "ayahCount": 6,
+    "surahNumber": 114,
+    "startPage": 604
+  }
+]

@@ -1,49 +1,52 @@
-import { ScrollView, Text, View } from "react-native";
+import { FlatList } from "react-native";
 import AyahBlock from "./AyahBlock";
 import { Ayah } from "@/types/quran";
+import PageIndicator from "./PageIndicator";
+import { useEffect, useRef } from "react";
 
+type QuranContentProps = Readonly<{
+  ayahs: Ayah[];
+  isDark: boolean;
+  goNext: () => void;
+  goPrev: () => void;
+  numberOfSurah: number;
+}>;
 export default function QuranContent({
   isDark,
-  ayats,
-}: {
-  isDark: boolean;
-  ayats: Ayah[];
-}) {
+  ayahs,
+  goNext,
+  goPrev,
+  numberOfSurah,
+}: QuranContentProps) {
+  const listRef = useRef<FlatList<Ayah>>(null);
+  useEffect(() => {
+    listRef.current?.scrollToOffset({
+      offset: 0,
+      animated: true,
+    });
+  }, [ayahs]);
+
   return (
-    <ScrollView
-      className="flex-1 px-5"
-      contentContainerStyle={{ paddingBottom: 140 }}
+    <FlatList
+      ref={listRef}
+      data={ayahs}
+      keyExtractor={(item) => `${item.number}-${item.numberInSurah}`}
+      renderItem={({ item }) => <AyahBlock ayah={item} isDark={isDark} />}
+      contentContainerStyle={{ paddingBottom: 100, paddingHorizontal: 20 }}
       showsVerticalScrollIndicator={false}
-    >
-      {/* Bismillah */}
-      <View className="select-none items-center py-10 opacity-90">
-        <Text
-          className={
-            "text-3xl " +
-            (isDark ? "text-text-primaryDark" : "text-text-primaryLight")
-          }
-        >
-          بِسْمِ ٱللَّهِ ٱلرَّحْمَـٰنِ ٱلرَّحِيمِ
-        </Text>
-      </View>
-
-      {/* Ayetler */}
-      {ayats.map((ayah) => (
-        <AyahBlock key={ayah.number} ayah={ayah} isDark={isDark} />
-      ))}
-
-      <View className="py-10">
-        <Text
-          className={
-            "text-center text-sm font-medium tracking-[0.2em] uppercase " +
-            (isDark
-              ? "text-text-secondaryDark/40"
-              : "text-text-secondaryLight/60")
-          }
-        >
-          Page 562 / 604
-        </Text>
-      </View>
-    </ScrollView>
+      initialNumToRender={12}
+      maxToRenderPerBatch={12}
+      windowSize={5}
+      removeClippedSubviews
+      scrollsToTop={true}
+      ListFooterComponent={() => (
+        <PageIndicator
+          goPrev={goPrev}
+          goNext={goNext}
+          isDark={isDark}
+          numberOfSurah={numberOfSurah}
+        />
+      )}
+    />
   );
 }
