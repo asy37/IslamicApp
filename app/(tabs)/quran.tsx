@@ -44,6 +44,7 @@ export default function QuranScreen() {
         setCurrentPage={setCurrentSurahNumber}
         visible={isSurahModalVisible}
         onClose={() => setIsSurahModalVisible(false)}
+        numberOfSurah={numberOfSurah}
       />
     </View>
   );

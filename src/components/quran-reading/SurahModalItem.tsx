@@ -1,52 +1,42 @@
 import { MaterialIcons } from "@expo/vector-icons";
+import clsx from "clsx";
 import { Pressable, Text, View } from "react-native";
+import { colors } from "../theme/colors";
+import { SurahType } from "./types";
 
-type SurahType = {
-  readonly id: number;
-  readonly surahArabicName: string;
-  readonly surahEnglishName: string;
-  readonly surahTurkishName: string;
-  readonly ayahCount: number;
-  readonly surahNumber: number;
-  readonly startPage: number;
-};
+
 type SurahListItemProps = {
   readonly surah: SurahType;
   readonly isDark: boolean;
   readonly setCurrentPage: (page: number) => void;
   readonly onClose: () => void;
+  readonly numberOfSurah: number;
+  readonly setSearch: (value: string) => void;
 };
 
 export function SurahListItem({
+  numberOfSurah,
   surah,
   isDark,
   setCurrentPage,
   onClose,
+  setSearch,
 }: SurahListItemProps) {
-  const isActive = surah.surahNumber;
-
-  const getBorderColor = () => {
-    if (isActive) return "transparent";
-    return isDark ? "rgba(34, 56, 51, 0.2)" : "rgba(226, 236, 232, 0.4)";
-  };
-
-  const getBackgroundColor = () => {
-    if (!isActive) return "transparent";
-    return isDark ? "rgba(31, 143, 95, 0.1)" : "rgba(31, 143, 95, 0.05)";
-  };
+  const isActive = surah.surahNumber === numberOfSurah;
 
   const handlePress = () => {
     setCurrentPage(surah.surahNumber);
     onClose();
+    setSearch("");
   };
   return (
     <Pressable
       onPress={handlePress}
-      className="w-full flex-row items-center gap-4 px-6 py-4 border-b relative overflow-hidden"
-      style={{
-        borderBottomColor: getBorderColor(),
-        backgroundColor: getBackgroundColor(),
-      }}
+      className={clsx(
+        "w-full flex-row items-center gap-4 px-6 py-4 relative overflow-hidden",
+        isDark && isActive && "bg-primary-400/50",
+        !isDark && isActive && "bg-primary-200/50"
+      )}
     >
       {isActive && (
         <View className="absolute left-0 top-0 bottom-0 w-1 bg-primary-500" />
@@ -54,22 +44,17 @@ export function SurahListItem({
 
       {/* Number */}
       <View
-        className="flex h-10 w-10 items-center justify-center rounded-lg"
-        style={{
-          backgroundColor: isActive
-            ? isDark
-              ? "rgba(0,0,0,0.2)"
-              : "#F8FAF9"
-            : isDark
-            ? "rgba(255,255,255,0.05)"
-            : "#F3F4F6",
-        }}
+        className={clsx(
+          "flex h-10 w-10 items-center justify-center rounded-lg",
+          isDark && isActive && "bg-primary-800/50",
+          !isDark && isActive && "bg-primary-400/50 "
+        )}
       >
         <Text
-          className="text-sm font-semibold"
-          style={{
-            color: isActive ? "#1F8F5F" : isDark ? "#8FA6A0" : "#6B7F78",
-          }}
+          className={clsx(
+            "text-sm font-semibold",
+            isActive ? "text-white" : "text-text-primaryLight"
+          )}
         >
           {surah.surahNumber}
         </Text>
@@ -113,7 +98,7 @@ export function SurahListItem({
         <MaterialIcons
           name={isActive ? "play-circle" : "chevron-right"}
           size={isActive ? 26 : 20}
-          color={isActive ? "#1F8F5F" : isDark ? "#8FA6A0" : "#9CA3AF"}
+          color={isActive ? colors.primary[500] : colors.text.secondaryLight}
         />
       </View>
     </Pressable>
