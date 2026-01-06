@@ -3,13 +3,14 @@
  * Handles common API request logic, error handling, and response parsing
  */
 
-type RequestMethod = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
-
-type RequestOptions = {
+type RequestMethod = "GET" | "POST" | "PUT" | "DELETE" | "PATCH";
+export type QueryParamValue = string | number | boolean | undefined;
+type QueryParams = Record<string, QueryParamValue>;
+type RequestOptions<TParams extends QueryParams | undefined = QueryParams> = {
   method?: RequestMethod;
   headers?: Record<string, string>;
   body?: unknown;
-  params?: Record<string, string | number | boolean>;
+  params?: TParams;
 };
 
 type ApiError = {
@@ -19,18 +20,23 @@ type ApiError = {
 };
 
 class ApiClient {
-  private baseUrl: string;
+  private readonly baseUrl: string;
 
   constructor(baseUrl?: string) {
-    this.baseUrl = baseUrl || '';
+    this.baseUrl = baseUrl || "";
   }
 
   /**
    * Build URL with query parameters
    */
-  private buildUrl(endpoint: string, params?: Record<string, string | number | boolean>): string {
-    const url = endpoint.startsWith('http') ? endpoint : `${this.baseUrl}${endpoint}`;
-    
+  private buildUrl(
+    endpoint: string,
+    params?: QueryParams
+  ): string {
+    const url = endpoint.startsWith("http")
+      ? endpoint
+      : `${this.baseUrl}${endpoint}`;
+
     if (!params || Object.keys(params).length === 0) {
       return url;
     }
@@ -49,23 +55,26 @@ class ApiClient {
   /**
    * Make API request
    */
-  private async request<T>(
-    endpoint: string,
-    options: RequestOptions = {}
-  ): Promise<T> {
-    const { method = 'GET', headers = {}, body, params } = options;
+  private async request<
+  TResponse,
+  TParams extends QueryParams | undefined = QueryParams
+>(
+  endpoint: string,
+  options: RequestOptions<TParams> = {}
+): Promise<TResponse> {
+  const { method = "GET", headers = {}, body, params } = options;
 
-    const url = this.buildUrl(endpoint, params);
+  const url = this.buildUrl(endpoint, params);
 
     const config: RequestInit = {
       method,
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
         ...headers,
       },
     };
 
-    if (body && method !== 'GET') {
+    if (body && method !== "GET") {
       config.body = JSON.stringify(body);
     }
 
@@ -74,11 +83,11 @@ class ApiClient {
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({
-          message: response.statusText || 'An error occurred',
+          message: response.statusText || "An error occurred",
         }));
 
         const error: ApiError = {
-          message: errorData.message || 'An error occurred',
+          message: errorData.message || "An error occurred",
           code: errorData.code,
           status: response.status,
         };
@@ -87,17 +96,17 @@ class ApiClient {
       }
 
       // Handle empty responses
-      const contentType = response.headers.get('content-type');
-      if (contentType && contentType.includes('application/json')) {
+      const contentType = response.headers.get("content-type");
+      if (contentType?.includes("application/json")) {
         return await response.json();
       }
 
-      return null as T;
+      return null as unknown as TResponse;
     } catch (error) {
       if (error instanceof Error) {
         const apiError: ApiError = {
-          message: error.message || 'Network error occurred',
-          code: 'NETWORK_ERROR',
+          message: error.message || "Network error occurred",
+          code: "NETWORK_ERROR",
         };
         throw apiError;
       }
@@ -108,36 +117,57 @@ class ApiClient {
   /**
    * GET request
    */
-  async get<T>(endpoint: string, params?: Record<string, string | number | boolean>): Promise<T> {
-    return this.request<T>(endpoint, { method: 'GET', params });
+  async get<
+    TResponse,
+    TParams extends QueryParams | undefined = QueryParams
+  >(
+    endpoint: string,
+    params?: TParams
+  ): Promise<TResponse> {
+    return this.request<TResponse, TParams>(endpoint, { method: "GET", params });
   }
 
   /**
    * POST request
    */
-  async post<T>(endpoint: string, body?: unknown, params?: Record<string, string | number | boolean>): Promise<T> {
-    return this.request<T>(endpoint, { method: 'POST', body, params });
+  async post<T>(
+    endpoint: string,
+    body?: unknown,
+    params?: QueryParams
+  ): Promise<T> {
+    return this.request<T>(endpoint, { method: "POST", body, params });
   }
 
   /**
    * PUT request
    */
-  async put<T>(endpoint: string, body?: unknown, params?: Record<string, string | number | boolean>): Promise<T> {
-    return this.request<T>(endpoint, { method: 'PUT', body, params });
+  async put<T>(
+    endpoint: string,
+    body?: unknown,
+    params?: QueryParams
+  ): Promise<T> {
+    return this.request<T>(endpoint, { method: "PUT", body, params });
   }
 
   /**
    * PATCH request
    */
-  async patch<T>(endpoint: string, body?: unknown, params?: Record<string, string | number | boolean>): Promise<T> {
-    return this.request<T>(endpoint, { method: 'PATCH', body, params });
+  async patch<T>(
+    endpoint: string,
+    body?: unknown,
+    params?: QueryParams
+  ): Promise<T> {
+    return this.request<T>(endpoint, { method: "PATCH", body, params });
   }
 
   /**
    * DELETE request
    */
-  async delete<T>(endpoint: string, params?: Record<string, string | number | boolean>): Promise<T> {
-    return this.request<T>(endpoint, { method: 'DELETE', params });
+  async delete<T>(
+    endpoint: string,
+    params?: QueryParams
+  ): Promise<T> {
+    return this.request<T>(endpoint, { method: "DELETE", params });
   }
 }
 
@@ -145,7 +175,6 @@ class ApiClient {
 export const apiClient = new ApiClient();
 
 // External API clients (Aladhan, etc.)
-export const aladhanClient = new ApiClient('https://api.aladhan.com/v1');
-
+export const aladhanClient = new ApiClient(process.env.EXPO_PUBLIC_ALADHAN_URL);
+export const alQuranClient = new ApiClient(process.env.EXPO_PUBLIC_AL_QURAN_URL);
 export default apiClient;
-

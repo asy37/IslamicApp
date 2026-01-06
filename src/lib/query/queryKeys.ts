@@ -57,5 +57,11 @@ export const queryKeys = {
     history: (userId?: string) => ['dhikr', 'history', userId] as const,
     stats: (userId?: string) => ['dhikr', 'stats', userId] as const,
   },
+
+  // Language
+  language: {
+    all: ['language'] as const,
+    list: () => ['language', 'list'] as const,
+  },
 } as const;
 
