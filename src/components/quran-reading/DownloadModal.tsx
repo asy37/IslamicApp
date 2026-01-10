@@ -1,5 +1,6 @@
 import {
   ActivityIndicator,
+  Alert,
   Modal,
   Pressable,
   Text,
@@ -19,6 +20,7 @@ import { LanguageSelect } from "./LanguageSelect";
 import { EditionsSelect } from "./EditionsSelect";
 import { ModalHeader } from "../modal/ModalHeader";
 import clsx from "clsx";
+import { saveQuranTranslation } from "@/lib/database/sqlite/translation/repository";
 
 type DownloadModalType = {
   readonly visible: boolean;
@@ -47,8 +49,21 @@ export const DownloadModal = ({
   const { mutate: fetchTranslationQuran, isPending: isQuranPending } =
     useMutation({
       mutationFn: (identifier: string) => getCompleteQuran(identifier),
-      onSuccess: (res) => {},
+      onSuccess: async (res) => {
+        console.log(res);
+        
+        await saveQuranTranslation({
+          edition_identifier: res.data.edition.identifier,
+          language: res.data.edition.language,
+          name: res.data.edition.name,
+          direction: res.data.edition.direction ?? "ltr",
+          data: res.data, // surahs array
+        });
+
+        Alert.alert("Başarılı", "Meal indirildi");
+      },
     });
+
   const { mutate: fetchEditions, isPending } = useMutation({
     mutationFn: (language: string) =>
       getEditions({
@@ -65,6 +80,8 @@ export const DownloadModal = ({
     setLanguageText(item.label);
     setSelectedLanguage(item.code);
     setOpenLanguage(false);
+    setSelectedIde(null);
+    setEditionsText(null);
   };
   const handleSelectIde = (item: QuranEdition) => {
     setEditionsText(item.name);

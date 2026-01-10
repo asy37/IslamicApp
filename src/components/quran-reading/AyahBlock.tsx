@@ -69,7 +69,7 @@ export default function AyahBlock({ ayah, isDark }: AyahBlockProps) {
           (isDark ? "text-text-secondaryDark" : "text-text-secondaryLight")
         }
       >
-        {ayah.text}
+        {ayah.translationText ?? ""}
       </Text>
     </View>
   );

@@ -1,33 +1,59 @@
 import { useMemo, useState } from "react";
-import QuranData from "@/lib/quran/arabic/ar.json";
 import { Surah, Ayah } from "@/types/quran";
 
 const AYAH_PER_PAGE = 10;
 
-export function useQuran(initialSurahNumber = 1) {
+export function useQuran(
+  quranData: unknown,
+  initialSurahNumber = 1,
+  translationData?: { surahs: Surah[] }
+) {
   const [currentSurahNumber, setCurrentSurahNumber] =
     useState(initialSurahNumber);
   const [currentPageIndex, setCurrentPageIndex] = useState(0);
   /** Aktif sure */
   const surah: Surah | undefined = useMemo(() => {
-    return QuranData.surahs.find(
-      (s) => s.number === currentSurahNumber
-    ) as Surah | undefined;
-  }, [currentSurahNumber]);
+    const data = quranData as {
+      surahs: Array<{
+        number: number;
+        ayahs: Ayah[];
+      }>;
+    };
+    const found = data.surahs.find((s) => s.number === currentSurahNumber);
+    return found as unknown as Surah | undefined;
+  }, [currentSurahNumber, quranData]);
 
   /** Sure yoksa (edge case) */
   if (!surah) {
     throw new Error("Surah not found");
   }
 
+  /** Ayetleri çevirilerle eşleştir */
+  const enrichedAyahs: Ayah[] = useMemo(() => {
+    const translationSurah = translationData?.surahs.find(
+      (ts) => ts.number === currentSurahNumber
+    );
+
+    return surah.ayahs.map((arabicAyah) => {
+      const translationAyah = translationSurah?.ayahs.find(
+        (ta) => ta.numberInSurah === arabicAyah.numberInSurah
+      );
+
+      return {
+        ...arabicAyah,
+        translationText: translationAyah?.text,
+      };
+    });
+  }, [surah, translationData, currentSurahNumber]);
+
   /** Ayetleri sayfalara böl */
   const pages: Ayah[][] = useMemo(() => {
     const result: Ayah[][] = [];
-    for (let i = 0; i < surah.ayahs.length; i += AYAH_PER_PAGE) {
-      result.push(surah.ayahs.slice(i, i + AYAH_PER_PAGE));
+    for (let i = 0; i < enrichedAyahs.length; i += AYAH_PER_PAGE) {
+      result.push(enrichedAyahs.slice(i, i + AYAH_PER_PAGE));
     }
     return result;
-  }, [surah]);
+  }, [enrichedAyahs]);
 
   /** Ekranda gösterilecek ayetler */
   const visibleAyahs = pages[currentPageIndex] ?? [];
@@ -40,7 +66,13 @@ export function useQuran(initialSurahNumber = 1) {
     }
 
     // Sure sonu → sonraki sure
-    if (currentSurahNumber < QuranData.surahs.length) {
+    const data = quranData as {
+      surahs: Array<{
+        number: number;
+        ayahs: Ayah[];
+      }>;
+    };
+    if (currentSurahNumber < data.surahs.length) {
       setCurrentSurahNumber((s) => s + 1);
       setCurrentPageIndex(0);
     }
@@ -55,9 +87,15 @@ export function useQuran(initialSurahNumber = 1) {
 
     // Sure başı → önceki sure (son sayfa)
     if (currentSurahNumber > 1) {
-      const prevSurah = QuranData.surahs.find(
+      const data = quranData as {
+        surahs: Array<{
+          number: number;
+          ayahs: Ayah[];
+        }>;
+      };
+      const prevSurah = data.surahs.find(
         (s) => s.number === currentSurahNumber - 1
-      ) as Surah | undefined;
+      ) as unknown as Surah | undefined;
 
       if (!prevSurah) return;
 
@@ -69,7 +107,10 @@ export function useQuran(initialSurahNumber = 1) {
   };
 
   return {
-    surah,
+    surah: {
+      ...surah,
+      ayahs: enrichedAyahs,
+    },
     surahNumber: currentSurahNumber,
     pageIndex: currentPageIndex,
     totalPages: pages.length,

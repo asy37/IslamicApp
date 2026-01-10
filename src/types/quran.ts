@@ -30,6 +30,7 @@ export interface Ayah {
   surahArabicName: string;
   surahTranslation: string;
   text: string;
+  translationText?: string; // Translation text for the ayah
   numberInSurah: number;
   juz: number;
   manzil: number;

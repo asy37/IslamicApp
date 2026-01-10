@@ -31,3 +31,15 @@ CREATE TABLE IF NOT EXISTS prayer_sync_queue (
 CREATE INDEX IF NOT EXISTS idx_prayer_sync_queue_date ON prayer_sync_queue(date);
 CREATE INDEX IF NOT EXISTS idx_prayer_sync_queue_created ON prayer_sync_queue(created_at);
 
+-- 3️⃣ Quran Translations Table (ONE ROW PER EDITION, FULL JSON PAYLOAD)
+-- Stores full Quran translation JSON for offline usage
+CREATE TABLE IF NOT EXISTS quran_translations (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  edition_identifier TEXT NOT NULL UNIQUE,
+  language TEXT NOT NULL,
+  name TEXT NOT NULL,
+  direction TEXT NOT NULL, -- 'rtl' | 'ltr'
+  data TEXT NOT NULL,      -- FULL QURAN JSON STRING (JSON.stringify)
+  created_at INTEGER NOT NULL -- milliseconds (Date.now())
+);
+

@@ -1,0 +1,67 @@
+import * as SQLite from "expo-sqlite";
+
+let dbPromise: Promise<SQLite.SQLiteDatabase> | null = null;
+
+// NOTE:
+// Metro bundler React Native ortamında .sql dosyalarını doğrudan import etmeyi
+// desteklemediği için, runtime'da kullanılan schema'yı burada string olarak
+// tanımlıyoruz. Aynı içerik ayrıca `schema.sql` içinde de mevcut ve
+// "source of truth" dokümantasyonu olarak duruyor.
+const SCHEMA_SQL = `
+-- 1️⃣ Daily Prayer State Table (SINGLE ROW ONLY)
+CREATE TABLE IF NOT EXISTS daily_prayer_state (
+  id INTEGER PRIMARY KEY CHECK (id = 1),
+  date TEXT NOT NULL,
+  fajr TEXT NOT NULL DEFAULT 'upcoming',
+  dhuhr TEXT NOT NULL DEFAULT 'upcoming',
+  asr TEXT NOT NULL DEFAULT 'upcoming',
+  maghrib TEXT NOT NULL DEFAULT 'upcoming',
+  isha TEXT NOT NULL DEFAULT 'upcoming',
+  updated_at INTEGER NOT NULL
+);
+
+-- 2️⃣ Sync Queue Table (PERSISTENT UNTIL SYNCED)
+CREATE TABLE IF NOT EXISTS prayer_sync_queue (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  date TEXT NOT NULL,
+  payload TEXT NOT NULL,
+  created_at INTEGER NOT NULL
+);
+
+-- Indexes
+CREATE INDEX IF NOT EXISTS idx_prayer_sync_queue_date ON prayer_sync_queue(date);
+CREATE INDEX IF NOT EXISTS idx_prayer_sync_queue_created ON prayer_sync_queue(created_at);
+
+-- 3️⃣ Quran Translations Table (ONE ROW PER EDITION, FULL JSON PAYLOAD)
+CREATE TABLE IF NOT EXISTS quran_translations (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  edition_identifier TEXT NOT NULL UNIQUE,
+  language TEXT NOT NULL,
+  name TEXT NOT NULL,
+  direction TEXT NOT NULL,
+  data TEXT NOT NULL,
+  created_at INTEGER NOT NULL
+);
+`;
+
+/**
+ * SQLite connection & schema initialization
+ *
+ * - Uses single DB file for all local features (prayer tracking + Quran translations)
+ * - Runs `schema.sql` exactly once on first access
+ * - Only async Expo SQLite API is used
+ */
+export async function getDb(): Promise<SQLite.SQLiteDatabase> {
+  if (!dbPromise) {
+    dbPromise = (async () => {
+      // Using a more general name since this DB contains both prayer tracking and Quran translations
+      const db = await SQLite.openDatabaseAsync("islamic_app.db");
+      await db.execAsync(SCHEMA_SQL);
+      return db;
+    })();
+  }
+
+  return dbPromise;
+}
+
+

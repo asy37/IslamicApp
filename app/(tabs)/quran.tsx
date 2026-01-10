@@ -6,12 +6,20 @@ import QuranContent from "@/components/quran-reading/QuranContent";
 import AudioPlayer from "@/components/quran-reading/QuranAudioPlayer";
 import SurahSelectionModal from "@/components/quran-reading/SurahSelectionModal";
 import { useQuran } from "@/lib/hooks/useQuran";
+import QuranData from "@/lib/quran/arabic/ar.json";
+import { useTranslationByIdentifier } from "@/lib/hooks/useTranslationByIdentifier";
 
 export default function QuranScreen() {
   const colorScheme = useColorScheme();
   const isDark = colorScheme === "dark";
+  const { translation: quran } = useTranslationByIdentifier("tr.yazir");
   const [isSurahModalVisible, setIsSurahModalVisible] = useState(false);
-  const { surah, ayahs, goNext, goPrev, setCurrentSurahNumber } = useQuran();
+
+  const { surah, ayahs, goNext, goPrev, setCurrentSurahNumber } = useQuran(
+    QuranData,
+    1,
+    quran?.surahs ? { surahs: quran.surahs } : undefined
+  );
   const juz = surah?.ayahs[0]?.juz;
   const surahName = surah?.name;
   const surahTranslation = surah?.englishNameTranslation;

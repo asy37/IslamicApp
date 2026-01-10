@@ -43,7 +43,8 @@ class PrayerTrackingRepository {
   async initialize(): Promise<void> {
     if (this.db) return;
 
-    this.db = await SQLite.openDatabaseAsync('prayer_tracking.db');
+    // Using the same database name as getDb() for consistency
+    this.db = await SQLite.openDatabaseAsync('islamic_app.db');
     
     // Create tables
     const schema = `
