@@ -36,7 +36,6 @@ export default function QuranContent({
       offset: 0,
       animated: true,
     });
-    // Sayfa değiştiğinde animasyonu sıfırla
     translateX.setValue(0);
   }, [ayahs, translateX]);
 
@@ -45,25 +44,21 @@ export default function QuranContent({
       PanResponder.create({
         onStartShouldSetPanResponder: () => false,
         onMoveShouldSetPanResponder: (_, gestureState) => {
-          // Yatay hareket dikey hareketten fazlaysa swipe olarak algıla
           return (
             Math.abs(gestureState.dx) > Math.abs(gestureState.dy) &&
             Math.abs(gestureState.dx) > 10
           );
         },
         onPanResponderMove: (_, gestureState) => {
-          // Swipe sırasında sayfayı kaydır
           translateX.setValue(gestureState.dx);
         },
         onPanResponderRelease: (_, gestureState) => {
-          // Swipe threshold kontrolü
           const swipeDistance = gestureState.dx;
-          const isSwipeLeft = swipeDistance < 0; // Sola kaydırma (negatif) = sonraki sayfa
+          const isSwipeLeft = swipeDistance < 0;
 
           if (Math.abs(swipeDistance) > SWIPE_THRESHOLD) {
             Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
 
-            // Sayfa değişimi animasyonu
             const targetX = isSwipeLeft ? -SCREEN_WIDTH : SCREEN_WIDTH;
             Animated.timing(translateX, {
               toValue: targetX,
@@ -71,15 +66,13 @@ export default function QuranContent({
               useNativeDriver: true,
             }).start(() => {
               if (isSwipeLeft) {
-                goPrev(); // Sağa kaydırma = önceki sayfa
+                goPrev();
               } else {
-                goNext(); // Sola kaydırma = sonraki sayfa
+                goNext();
               }
-              // Animasyonu sıfırla
               translateX.setValue(0);
             });
           } else {
-            // Threshold'a ulaşılmadıysa geri dön
             Animated.spring(translateX, {
               toValue: 0,
               tension: 50,
