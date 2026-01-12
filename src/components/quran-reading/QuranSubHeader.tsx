@@ -1,8 +1,8 @@
-import { MaterialIcons } from "@expo/vector-icons";
-import { Pressable, Text, View } from "react-native";
-import { colors } from "../theme/colors";
+import { Text, View } from "react-native";
 import { useState } from "react";
 import QuranSettings from "./modals/QuranSettings";
+import Button from "../button/Button";
+import { TranslationMetadata } from "@/lib/database/sqlite/translation/repository";
 
 type QuranSubHeaderProps = {
   readonly isDark: boolean;
@@ -10,6 +10,8 @@ type QuranSubHeaderProps = {
   readonly surahName: string;
   readonly surahTranslation: string;
   readonly juz: number;
+  readonly setSelectTranslation: (item: TranslationMetadata) => void;
+  readonly selectedTranslation: string | null;
 };
 
 export default function QuranSubHeader({
@@ -18,10 +20,10 @@ export default function QuranSubHeader({
   surahName,
   surahTranslation,
   juz,
+  setSelectTranslation,
+  selectedTranslation,
 }: QuranSubHeaderProps) {
   const [settingsModal, setSettingsModal] = useState(false);
-
-
 
   return (
     <>
@@ -33,18 +35,7 @@ export default function QuranSubHeader({
             : " border-b border-primary-500")
         }
       >
-        <Pressable
-          className="flex items-center justify-center rounded-full p-2"
-          hitSlop={10}
-          onPress={onOpenSurahModal}
-        >
-          <MaterialIcons
-            name="menu-open"
-            size={22}
-            color={isDark ? "#EAF3F0" : "#1C2A26"}
-          />
-        </Pressable>
-
+        <Button onPress={onOpenSurahModal} isDark={isDark} icon="menu-open" />
         <View className="items-center">
           <Text
             className={
@@ -59,19 +50,15 @@ export default function QuranSubHeader({
           </Text>
         </View>
 
-        <Pressable
+        <Button
           onPress={() => setSettingsModal(true)}
-          className="flex items-center justify-center rounded-full p-2"
-          hitSlop={10}
-        >
-          <MaterialIcons
-            name="settings"
-            size={22}
-            color={isDark ? colors.text.primaryDark : colors.text.primaryLight}
-          />
-        </Pressable>
+          isDark={isDark}
+          icon="settings"
+        />
       </View>
       <QuranSettings
+        setSelectTranslation={setSelectTranslation}
+        selectedTranslation={selectedTranslation}
         isDark={isDark}
         visible={settingsModal}
         onClose={() => setSettingsModal(false)}

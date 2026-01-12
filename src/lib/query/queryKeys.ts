@@ -4,6 +4,11 @@
  */
 
 export const queryKeys = {
+  // Translation
+  translation: {
+    all: ['translation'] as const,
+    downloaded: () => ['translation', 'downloaded'] as const,
+  },
   // Prayer Times
   prayerTimes: {
     all: ['prayerTimes'] as const,

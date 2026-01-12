@@ -8,13 +8,18 @@ import { useQuran } from "@/lib/hooks/useQuran";
 import QuranData from "@/lib/quran/arabic/ar.json";
 import { useTranslationByIdentifier } from "@/lib/hooks/useTranslationByIdentifier";
 import SurahSelectionModal from "@/components/quran-reading/modals/SurahSelectionModal";
+import { TranslationMetadata } from "@/lib/database/sqlite/translation/repository";
 
 export default function QuranScreen() {
   const colorScheme = useColorScheme();
   const isDark = colorScheme === "dark";
-  const { translation: quran } = useTranslationByIdentifier("az.musayev");
   const [isSurahModalVisible, setIsSurahModalVisible] = useState(false);
+  const [selectedTranslation, setSelectedTranslation] =
+    useState<TranslationMetadata | null>(null);
 
+  const { translation: quran } = useTranslationByIdentifier(
+    selectedTranslation?.edition_identifier || null
+  );
   const { surah, ayahs, goNext, goPrev, setCurrentSurahNumber } = useQuran(
     QuranData,
     1,
@@ -33,6 +38,8 @@ export default function QuranScreen() {
       )}
     >
       <QuranSubHeader
+        setSelectTranslation={setSelectedTranslation}
+        selectedTranslation={selectedTranslation?.edition_identifier || null}
         isDark={isDark}
         onOpenSurahModal={() => setIsSurahModalVisible(true)}
         surahName={surahName}

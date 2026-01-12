@@ -1,22 +1,28 @@
 import ModalComponent from "@/components/modal/ModalComponent";
-import { MaterialIcons } from "@expo/vector-icons";
 import React from "react";
-import { Text, TouchableOpacity } from "react-native";
 import { DownloadModal } from "./DownloadModal";
 import Button from "@/components/button/Button";
+import TranslationSelect from "./TranslationSelect";
+import { TranslationMetadata } from "@/lib/database/sqlite/translation/repository";
 
 type QuranSettingsProps = {
   readonly isDark: boolean;
   readonly visible: boolean;
   readonly onClose: () => void;
+  readonly selectedTranslation: string | null;
+  readonly setSelectTranslation: (edition: TranslationMetadata) => void;
 };
 
 export default function QuranSettings({
   isDark,
   visible,
   onClose,
+  selectedTranslation,
+  setSelectTranslation,
 }: QuranSettingsProps) {
   const [showDownloadModal, setShowDownloadModal] = React.useState(false);
+  const [showTranslationSelect, setShowTranslationSelect] =
+    React.useState(false);
   return (
     <ModalComponent
       isDark={isDark}
@@ -34,7 +40,7 @@ export default function QuranSettings({
       <Button
         className="w-full py-4"
         text="Select Translation"
-        onPress={() => setShowDownloadModal(true)}
+        onPress={() => setShowTranslationSelect(true)}
         isDark={isDark}
         icon="chevron-right"
       />
@@ -43,6 +49,13 @@ export default function QuranSettings({
         visible={showDownloadModal}
         isDark={isDark}
         onClose={() => setShowDownloadModal(false)}
+      />
+      <TranslationSelect
+        onSelect={setSelectTranslation}
+        selectedTranslation={selectedTranslation}
+        isDark={isDark}
+        visible={showTranslationSelect}
+        onClose={() => setShowTranslationSelect(false)}
       />
     </ModalComponent>
   );

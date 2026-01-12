@@ -1,10 +1,10 @@
 import { MaterialIcons } from "@expo/vector-icons";
-import { Pressable, Text } from "react-native";
+import { Pressable, Text, View } from "react-native";
 import { colors } from "@/components/theme/colors";
 import clsx from "clsx";
 
 type ButtonProps = {
-  readonly text: string | number | undefined;
+  readonly text?: string | number;
   readonly onPress: () => void;
   readonly isDark: boolean;
   readonly icon?: string;
@@ -12,6 +12,8 @@ type ButtonProps = {
   readonly iconSide?: "left" | "right";
   readonly disabled?: boolean;
   readonly size?: "small" | "medium" | "large";
+  readonly isActive?: boolean;
+  readonly children?: React.ReactNode;
 };
 export default function Button({
   className,
@@ -22,20 +24,21 @@ export default function Button({
   iconSide = "left",
   disabled = false,
   size,
+  isActive = false,
+  children,
 }: ButtonProps) {
   return (
     <Pressable
       disabled={disabled}
       onPress={onPress}
       className={clsx(
-        "items-center gap-2 rounded-full border px-3 py-1.5 shadow-sm justify-between",
-        isDark
-          ? "border-border-dark bg-background-cardDark"
-          : "border-border-light bg-background-cardLight",
+        "items-center gap-2 rounded-full px-3 py-1.5 shadow-sm justify-between relative",
+        isDark ? " bg-background-cardDark" : " bg-background-cardLight",
         iconSide === "left" ? "flex-row-reverse " : "flex-row",
         size === "large" && "w-full py-4",
         size === "medium" && "w-full py-2",
         size === "small" && "w-full py-1",
+        isActive && 'border-l-8 border-primary-500',
         className
       )}
     >
@@ -46,7 +49,10 @@ export default function Button({
           color={isDark ? colors.success : colors.primary[500]}
         />
       )}
-      <Text className="text-sm font-semibold text-success">{text}</Text>
+      {text && (
+        <Text className="text-sm font-semibold text-success">{text}</Text>
+      )}
+      {children}
     </Pressable>
   );
 }

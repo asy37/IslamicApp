@@ -40,8 +40,6 @@ export const DownloadModal = ({
   const [selectedLanguage, setSelectedLanguage] = useState<string | null>(null);
   const [languageText, setLanguageText] = useState<string | null>(null);
 
-
-
   const { mutate: fetchTranslationQuran, isPending: isQuranPending } =
     useMutation({
       mutationFn: (identifier: string) => getCompleteQuran(identifier),
@@ -77,7 +75,7 @@ export const DownloadModal = ({
     setSelectedIde(null);
     setEditionsText(null);
   };
-  
+
   const handleSelectIde = (item: QuranEdition) => {
     setEditionsText(item.name);
     setSelectedIde(item.identifier);
@@ -126,9 +124,11 @@ export const DownloadModal = ({
             selectedIde ? "bg-primary-500" : "bg-primary-200"
           )}
         >
-          <Text className="text-white text-center">
-            {isQuranPending ? <ActivityIndicator /> : "İndir"}
-          </Text>
+          {isQuranPending ? (
+            <ActivityIndicator />
+          ) : (
+            <Text className="text-white text-center">İndir</Text>
+          )}
         </TouchableOpacity>
       </View>
       {openLanguage && (

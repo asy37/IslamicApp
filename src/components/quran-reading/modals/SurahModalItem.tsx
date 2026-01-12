@@ -1,9 +1,9 @@
 import { MaterialIcons } from "@expo/vector-icons";
 import clsx from "clsx";
-import { Pressable, Text, View } from "react-native";
+import { Text, View } from "react-native";
 import { colors } from "../../theme/colors";
 import { SurahType } from "../types";
-
+import Button from "@/components/button/Button";
 
 type SurahListItemProps = {
   readonly surah: SurahType;
@@ -30,24 +30,19 @@ export function SurahListItem({
     setSearch("");
   };
   return (
-    <Pressable
+    <Button
       onPress={handlePress}
-      className={clsx(
-        "w-full flex-row items-center gap-4 px-6 py-4 relative overflow-hidden",
-        isDark && isActive && "bg-primary-400/50",
-        !isDark && isActive && "bg-primary-200/50"
-      )}
+      isDark={isDark}
+      iconSide="right"
+      size="large"
+      isActive={isActive}
     >
-      {isActive && (
-        <View className="absolute left-0 top-0 bottom-0 w-1 bg-primary-500" />
-      )}
-
       {/* Number */}
       <View
         className={clsx(
-          "flex h-10 w-10 items-center justify-center rounded-lg",
-          isDark && isActive && "bg-primary-800/50",
-          !isDark && isActive && "bg-primary-400/50 "
+          "flex h-10 w-10 items-center justify-center rounded-full",
+          isDark && isActive && "bg-primary-800",
+          !isDark && isActive && "bg-primary-500 "
         )}
       >
         <Text
@@ -85,7 +80,7 @@ export function SurahListItem({
           <Text
             className={
               "text-xs " +
-              (isDark ? "text-text-secondaryDark" : "text-text-secondaryLight")
+              (isDark ? "text-text-secondaryDark" : "text-blue-400")
             }
           >
             • {surah.ayahCount} Ayet
@@ -101,6 +96,6 @@ export function SurahListItem({
           color={isActive ? colors.primary[500] : colors.text.secondaryLight}
         />
       </View>
-    </Pressable>
+    </Button>
   );
 }
