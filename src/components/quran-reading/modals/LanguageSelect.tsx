@@ -46,7 +46,7 @@ export const LanguageSelect = ({
             text={item.label}
             onPress={() => handleSelectLanguage(item)}
             isDark={isDark}
-            icon="chevron-right"
+            rightIcon="chevron-right"
             size="large"
           />
         )}

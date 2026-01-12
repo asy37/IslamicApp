@@ -64,8 +64,7 @@ export default function PrayerHeader() {
             text={`${streakData?.count ?? 0} Gün`}
             onPress={() => setIsStreakModalVisible(true)}
             isDark={isDark}
-            icon="local-fire-department"
-            iconSide="right"
+            rightIcon="local-fire-department"
           />
 
           <Modal

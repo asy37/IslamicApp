@@ -37,7 +37,7 @@ export const EditionsSelect = ({
             text={item.name}
             onPress={() => handleSelectIde(item)}
             isDark={isDark}
-            icon="chevron-right"
+            rightIcon="chevron-right"
             size="large"
           />
         )}

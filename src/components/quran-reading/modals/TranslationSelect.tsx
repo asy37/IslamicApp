@@ -50,7 +50,7 @@ export default function TranslationSelect({
               <Button
                 onPress={() => handleSelect(item)}
                 isDark={isDark}
-                icon={isSelected ? "check" : "chevron-right"}
+                rightIcon={isSelected ? "check" : "chevron-right"}
                 text={item.name}
                 size="large"
               />

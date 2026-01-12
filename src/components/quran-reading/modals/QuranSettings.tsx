@@ -35,14 +35,14 @@ export default function QuranSettings({
         text="Download Translation"
         onPress={() => setShowDownloadModal(true)}
         isDark={isDark}
-        icon="chevron-right"
+        rightIcon="chevron-right"
       />
       <Button
         className="w-full py-4"
         text="Select Translation"
         onPress={() => setShowTranslationSelect(true)}
         isDark={isDark}
-        icon="chevron-right"
+        rightIcon="chevron-right"
       />
 
       <DownloadModal

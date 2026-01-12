@@ -105,14 +105,14 @@ export const DownloadModal = ({
           text={languageText ?? "Select Language"}
           onPress={() => setOpenLanguage(true)}
           isDark={isDark}
-          icon="chevron-right"
+          rightIcon="chevron-right"
           size="large"
         />
         <Button
           text={editionsText ?? "Select Author"}
           onPress={handleGetTranslation}
           isDark={isDark}
-          icon="chevron-right"
+          rightIcon="chevron-right"
           size="large"
         />
 

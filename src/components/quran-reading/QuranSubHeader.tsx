@@ -3,6 +3,7 @@ import { useState } from "react";
 import QuranSettings from "./modals/QuranSettings";
 import Button from "../button/Button";
 import { TranslationMetadata } from "@/lib/database/sqlite/translation/repository";
+import clsx from "clsx";
 
 type QuranSubHeaderProps = {
   readonly isDark: boolean;
@@ -28,14 +29,18 @@ export default function QuranSubHeader({
   return (
     <>
       <View
-        className={
-          "z-10 flex-row items-center justify-between border-b px-5 py-3 " +
-          (isDark
+        className={clsx(
+          "z-10 flex-row items-center justify-between border-b px-5 py-3 ",
+          isDark
             ? "border-b border-primary-100"
-            : " border-b border-primary-500")
-        }
+            : " border-b border-primary-500"
+        )}
       >
-        <Button onPress={onOpenSurahModal} isDark={isDark} icon="menu-open" />
+        <Button
+          onPress={onOpenSurahModal}
+          isDark={isDark}
+          leftIcon="menu-open"
+        />
         <View className="items-center">
           <Text
             className={
@@ -53,7 +58,7 @@ export default function QuranSubHeader({
         <Button
           onPress={() => setSettingsModal(true)}
           isDark={isDark}
-          icon="settings"
+          rightIcon="settings"
         />
       </View>
       <QuranSettings
