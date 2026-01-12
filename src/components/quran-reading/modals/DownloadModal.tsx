@@ -1,8 +1,6 @@
 import {
   ActivityIndicator,
   Alert,
-  Modal,
-  Pressable,
   Text,
   TouchableOpacity,
   View,
@@ -16,11 +14,12 @@ import {
   getCompleteQuran,
 } from "@/lib/api/services/quranApi";
 import { QuranEdition } from "@/types/quran";
-import { LanguageSelect } from "./LanguageSelect";
-import { EditionsSelect } from "./EditionsSelect";
-import { ModalHeader } from "../modal/ModalHeader";
+import { LanguageSelect } from "@/components/quran-reading/modals/LanguageSelect";
+import { EditionsSelect } from "@/components/quran-reading/modals/EditionsSelect";
 import clsx from "clsx";
 import { saveQuranTranslation } from "@/lib/database/sqlite/translation/repository";
+import ModalComponent from "@/components/modal/ModalComponent";
+import Button from "@/components/button/Button";
 
 type DownloadModalType = {
   readonly visible: boolean;
@@ -41,17 +40,12 @@ export const DownloadModal = ({
   const [selectedLanguage, setSelectedLanguage] = useState<string | null>(null);
   const [languageText, setLanguageText] = useState<string | null>(null);
 
-  const { data: languageData, isLoading } = useQuery({
-    queryKey: queryKeys.language.all,
-    queryFn: getLanguages,
-  });
+
 
   const { mutate: fetchTranslationQuran, isPending: isQuranPending } =
     useMutation({
       mutationFn: (identifier: string) => getCompleteQuran(identifier),
       onSuccess: async (res) => {
-        console.log(res);
-        
         await saveQuranTranslation({
           edition_identifier: res.data.edition.identifier,
           language: res.data.edition.language,
@@ -83,6 +77,7 @@ export const DownloadModal = ({
     setSelectedIde(null);
     setEditionsText(null);
   };
+  
   const handleSelectIde = (item: QuranEdition) => {
     setEditionsText(item.name);
     setSelectedIde(item.identifier);
@@ -101,78 +96,59 @@ export const DownloadModal = ({
   };
 
   return (
-    <Modal
+    <ModalComponent
+      isDark={isDark}
       visible={visible}
-      transparent
-      animationType="slide"
-      onRequestClose={onClose}
+      onClose={onClose}
+      title="Download Translation"
     >
-      <View className="flex-1">
-        <Pressable onPress={onClose} className="absolute inset-0">
-          <View className="absolute inset-0 bg-black/40" />
-        </Pressable>
-        <View className="flex-1 absolute"></View>
-      </View>
+      <View className="flex-1 items-center gap-2 w-full">
+        <Button
+          text={languageText ?? "Select Language"}
+          onPress={() => setOpenLanguage(true)}
+          isDark={isDark}
+          icon="chevron-right"
+          size="large"
+        />
+        <Button
+          text={editionsText ?? "Select Author"}
+          onPress={handleGetTranslation}
+          isDark={isDark}
+          icon="chevron-right"
+          size="large"
+        />
 
-      <View
-        className={clsx(
-          "absolute left-0 right-0 bottom-0 rounded-t-3xl shadow-2xl h-[700px]",
-          isDark ? "bg-background-cardDark" : "bg-background-light"
-        )}
-      >
-        <ModalHeader isDark={isDark} onClose={onClose} title="Meal İndir" />
-        <View className="flex-1 items-center gap-2">
-          <Pressable
-            onPress={() => setOpenLanguage(true)}
-            className="w-11/12 rounded border border-border-dark mx-auto p-4 bg-primary-200 text-white"
-          >
-            <Text className="text-white">{languageText ?? "Dil seç"}</Text>
-          </Pressable>
-          <Pressable
-            disabled={selectedLanguage === null}
-            onPress={handleGetTranslation}
-            className="w-11/12 rounded border border-border-dark mx-auto p-4 bg-primary-200 text-white"
-          >
-            <Text className="text-white">{editionsText ?? "Yazar seç"}</Text>
-          </Pressable>
-          <TouchableOpacity
-            onPress={handleDownloadQuran}
-            disabled={!selectedIde || isQuranPending}
-            className={clsx(
-              "w-6/12 mx-auto p-4  rounded-full",
-              selectedIde ? "bg-primary-500" : "bg-primary-200"
-            )}
-          >
-            <Text className="text-white text-center">
-              {isQuranPending ? <ActivityIndicator /> : "İndir"}
-            </Text>
-          </TouchableOpacity>
-        </View>
+        <TouchableOpacity
+          onPress={handleDownloadQuran}
+          disabled={!selectedIde || isQuranPending}
+          className={clsx(
+            "w-6/12 mx-auto p-4  rounded-full",
+            selectedIde ? "bg-primary-500" : "bg-primary-200"
+          )}
+        >
+          <Text className="text-white text-center">
+            {isQuranPending ? <ActivityIndicator /> : "İndir"}
+          </Text>
+        </TouchableOpacity>
       </View>
       {openLanguage && (
         <LanguageSelect
           isDark={isDark}
-          onClose={onClose}
-          isLoading={isLoading}
           openLanguage={openLanguage}
           setOpenLanguage={setOpenLanguage}
-          languageData={languageData}
           handleSelectLanguage={handleSelectLanguage}
-          languageText={languageText}
         />
       )}
       {openEditions && (
         <EditionsSelect
           isDark={isDark}
-          onClose={onClose}
           isLoading={isPending}
           openEditions={openEditions}
           setOpenEditions={setOpenEditions}
           editionsData={editionsData}
           handleSelectIde={handleSelectIde}
-          editionsText={editionsText}
         />
       )}
-    </Modal>
+    </ModalComponent>
   );
 };

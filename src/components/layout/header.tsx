@@ -8,10 +8,10 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { colors } from "../theme/colors";
 import { usePrayerStreak } from "@/lib/hooks/usePrayerTracking";
 import StreakCounter from "../tracking/StreakCounter";
 import { useState } from "react";
+import Button from "../button/Button";
 
 export default function PrayerHeader() {
   const [isStreakModalVisible, setIsStreakModalVisible] = useState(false);
@@ -60,25 +60,14 @@ export default function PrayerHeader() {
               </Text>
             </View>
           </View>
-
-          <Pressable
+          <Button
+            text={`${streakData?.count ?? 0} Gün`}
             onPress={() => setIsStreakModalVisible(true)}
-            className={
-              "flex-row items-center gap-2 rounded-full border px-3 py-1.5 shadow-sm " +
-              (isDark
-                ? "border-border-dark bg-background-cardDark"
-                : "border-border-light bg-background-cardLight")
-            }
-          >
-            <MaterialIcons
-              name="local-fire-department"
-              size={18}
-              color={isDark ? colors.success : colors.primary[500]}
-            />
-            <Text className="text-sm font-semibold text-success">
-              {streakData?.count ?? 0} Gün
-            </Text>
-          </Pressable>
+            isDark={isDark}
+            icon="local-fire-department"
+            iconSide="right"
+          />
+
           <Modal
             visible={isStreakModalVisible}
             transparent

@@ -9,11 +9,11 @@ import {
   View,
 } from "react-native";
 import SurahData from "@/lib/quran/surah/surah.json";
-import { SurahListItem } from "./SurahModalItem";
 import { useState } from "react";
-import { useFilteredSurahs, useSearchableSurahs } from "./utils";
 import clsx from "clsx";
-import { colors } from "../theme/colors";
+import { useFilteredSurahs, useSearchableSurahs } from "../utils";
+import { colors } from "@/components/theme/colors";
+import { SurahListItem } from "./SurahModalItem";
 
 type SurahSelectionModalProps = {
   readonly visible: boolean;

@@ -1,8 +1,8 @@
 import { MaterialIcons } from "@expo/vector-icons";
 import clsx from "clsx";
 import { Pressable, Text, View } from "react-native";
-import { colors } from "../theme/colors";
-import { SurahType } from "./types";
+import { colors } from "../../theme/colors";
+import { SurahType } from "../types";
 
 
 type SurahListItemProps = {

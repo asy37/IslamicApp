@@ -1,13 +1,8 @@
 import { MaterialIcons } from "@expo/vector-icons";
-import { Modal, Pressable, ScrollView, Text, View } from "react-native";
+import { Pressable, Text, View } from "react-native";
 import { colors } from "../theme/colors";
-import { getLanguages } from "@/lib/api/services/quranApi";
-import { queryClient } from "@/lib/query/queryClient";
-import { queryKeys } from "@/lib/query/queryKeys";
-import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
-import clsx from "clsx";
-import { DownloadModal } from "./DownloadModal";
+import QuranSettings from "./modals/QuranSettings";
 
 type QuranSubHeaderProps = {
   readonly isDark: boolean;
@@ -76,7 +71,7 @@ export default function QuranSubHeader({
           />
         </Pressable>
       </View>
-      <DownloadModal
+      <QuranSettings
         isDark={isDark}
         visible={settingsModal}
         onClose={() => setSettingsModal(false)}

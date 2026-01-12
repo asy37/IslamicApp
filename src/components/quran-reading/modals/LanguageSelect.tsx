@@ -1,0 +1,56 @@
+import { FlatList } from "react-native";
+import { LANGUAGE_LABELS } from "@/components/quran-reading/utils";
+import ModalComponent from "@/components/modal/ModalComponent";
+import Button from "@/components/button/Button";
+import { useQuery } from "@tanstack/react-query";
+import { getLanguages } from "@/lib/api/services/quranApi";
+import { queryKeys } from "@/lib/query/queryKeys";
+
+type LanguageSelectType = {
+  isDark: boolean;
+  openLanguage: boolean;
+  setOpenLanguage: (value: boolean) => void;
+  handleSelectLanguage: (item: { code: string; label: string }) => void;
+};
+export const LanguageSelect = ({
+  isDark,
+  openLanguage,
+  setOpenLanguage,
+  handleSelectLanguage,
+}: LanguageSelectType) => {
+  const { data: languageData, isLoading } = useQuery({
+    queryKey: queryKeys.language.all,
+    queryFn: getLanguages,
+  });
+
+  const languages =
+    languageData?.data?.map((code) => ({
+      code,
+      label: LANGUAGE_LABELS[code] ?? code.toUpperCase(),
+    })) ?? [];
+  return (
+    <ModalComponent
+      isDark={isDark}
+      visible={openLanguage}
+      onClose={() => setOpenLanguage(false)}
+      title="Select Language"
+      isLoading={isLoading}
+    >
+      <FlatList
+        className="flex-1"
+        contentContainerClassName="gap-2 pb-4"
+        data={languages}
+        keyExtractor={(item) => item.code}
+        renderItem={({ item }) => (
+          <Button
+            text={item.label}
+            onPress={() => handleSelectLanguage(item)}
+            isDark={isDark}
+            icon="chevron-right"
+            size="large"
+          />
+        )}
+      />
+    </ModalComponent>
+  );
+};

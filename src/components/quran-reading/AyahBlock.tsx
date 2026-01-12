@@ -1,5 +1,5 @@
 import { MaterialIcons } from "@expo/vector-icons";
-import { Pressable, Text, View } from "react-native";
+import { Pressable, Text, TouchableOpacity, View } from "react-native";
 import { colors } from "../theme/colors";
 import { Ayah } from "@/types/quran";
 import clsx from "clsx";
@@ -34,6 +34,18 @@ export default function AyahBlock({ ayah, isDark }: AyahBlockProps) {
         </View>
 
         <View className="flex flex-row gap-1 opacity-80">
+          <TouchableOpacity
+            onPress={() => {
+              console.log("ayah", ayah.number);
+            }}
+            className="rounded-full p-2 bg-primary-500/20"
+          >
+            <MaterialIcons 
+            name="play-arrow"
+            size={20}
+            color={colors.success}
+            />
+          </TouchableOpacity>
           <Pressable className="rounded-full p-2">
             <MaterialIcons
               name="bookmark-border"
