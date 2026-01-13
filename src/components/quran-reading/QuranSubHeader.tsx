@@ -40,6 +40,8 @@ export default function QuranSubHeader({
           onPress={onOpenSurahModal}
           isDark={isDark}
           leftIcon="menu-open"
+          size="small"
+          backgroundColor="primary"
         />
         <View className="items-center">
           <Text
@@ -54,11 +56,12 @@ export default function QuranSubHeader({
             {juz ? `Juz ${juz}` : ""}
           </Text>
         </View>
-
         <Button
           onPress={() => setSettingsModal(true)}
           isDark={isDark}
-          rightIcon="settings"
+          leftIcon="settings"
+          size="small"
+          backgroundColor="primary"
         />
       </View>
       <QuranSettings

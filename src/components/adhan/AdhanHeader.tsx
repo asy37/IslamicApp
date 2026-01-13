@@ -74,7 +74,7 @@ export default function AdhanHeader({ isDark }: AdhanHeaderProps) {
               rightIcon="settings"
               backgroundColor="transparent"
               onPress={handleSelectCalculationMethod}
-            ></Button>
+            />
           </View>
           <Text className="text-sm text-text-secondaryDark">
             {method?.description ?? method?.label}
