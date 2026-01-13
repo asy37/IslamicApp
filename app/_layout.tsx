@@ -110,6 +110,7 @@ export default function RootLayout() {
       </View>
     );
   }
+console.log(isLoading, isNavigationReady);
 
   return (
     <QueryClientProvider client={queryClient}>

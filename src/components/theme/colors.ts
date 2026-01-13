@@ -22,5 +22,6 @@ export const colors = {
     primaryDark: "#EAF3F0",
     secondaryDark: "#8FA6A0",
     muted: "#A8BDB6",
+    white: "#FFFFFF",
   },
 };

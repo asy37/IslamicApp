@@ -1,4 +1,3 @@
-import { MaterialIcons } from "@expo/vector-icons";
 import {
   Image,
   Modal,
@@ -12,6 +11,7 @@ import { usePrayerStreak } from "@/lib/hooks/usePrayerTracking";
 import StreakCounter from "../tracking/StreakCounter";
 import { useState } from "react";
 import Button from "../button/Button";
+import clsx from "clsx";
 
 export default function PrayerHeader() {
   const [isStreakModalVisible, setIsStreakModalVisible] = useState(false);
@@ -26,12 +26,12 @@ export default function PrayerHeader() {
       className={isDark ? "bg-background-dark" : "bg-background-light"}
     >
       <View
-        className={
-          "border-b px-4 py-2 " +
-          (isDark
+        className={clsx(
+          "border-b px-4 py-2 ",
+          isDark
             ? "border-border-dark bg-background-dark/95"
-            : "border-border-light bg-background-light/95")
-        }
+            : "border-border-light bg-background-light/95"
+        )}
       >
         <View className="flex-row items-center justify-between">
           <View className="flex-row items-center gap-3">
@@ -41,20 +41,20 @@ export default function PrayerHeader() {
             />
             <View>
               <Text
-                className={
-                  "text-base font-bold " +
-                  (isDark ? "text-text-primaryDark" : "text-text-primaryLight")
-                }
+                className={clsx(
+                  "text-base font-bold ",
+                  isDark ? "text-text-primaryDark" : "text-text-primaryLight"
+                )}
               >
                 Selam, Ahmet
               </Text>
               <Text
-                className={
-                  "text-xs " +
-                  (isDark
+                className={clsx(
+                  "text-xs ",
+                  isDark
                     ? "text-text-secondaryDark"
-                    : "text-text-secondaryLight")
-                }
+                    : "text-text-secondaryLight"
+                )}
               >
                 14 Ramazan 1445
               </Text>
@@ -65,6 +65,7 @@ export default function PrayerHeader() {
             onPress={() => setIsStreakModalVisible(true)}
             isDark={isDark}
             rightIcon="local-fire-department"
+            size="small"
           />
 
           <Modal
@@ -79,12 +80,10 @@ export default function PrayerHeader() {
             >
               <Pressable
                 onPress={() => {}}
-                className={
-                  "w-[90%] max-w-sm rounded-2xl p-4 shadow-lg " +
-                  (isDark
-                    ? "bg-background-cardDark"
-                    : "bg-background-cardLight")
-                }
+                className={clsx(
+                  "w-[90%] max-w-sm rounded-2xl p-4 shadow-lg ",
+                  isDark ? "bg-background-cardDark" : "bg-background-cardLight"
+                )}
               >
                 {streakData && <StreakCounter streak={streakData} />}
               </Pressable>

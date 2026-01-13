@@ -13,7 +13,6 @@ import { useLocationStore } from "@/lib/storage/locationStore";
 
 const LOCATION_PERMISSION_ASKED_KEY = "location_permission_asked";
 const LOCATION_PERMISSION_GRANTED_KEY = "location_permission_granted";
-
 export default function LocationPermissionProvider() {
   const { session, user, isLoading: isAuthLoading } = useAuth();
   const [showModal, setShowModal] = useState(false);
@@ -42,7 +41,10 @@ export default function LocationPermissionProvider() {
         country: address?.country || undefined,
       });
     } catch (error) {
-      console.error("[LocationPermissionProvider] Error fetching location:", error);
+      console.error(
+        "[LocationPermissionProvider] Error fetching location:",
+        error
+      );
     }
   };
 
@@ -66,7 +68,9 @@ export default function LocationPermissionProvider() {
 
         // Check if we've already asked for permission
         const hasAsked = await storage.getString(LOCATION_PERMISSION_ASKED_KEY);
-        const hasGranted = await storage.getString(LOCATION_PERMISSION_GRANTED_KEY);
+        const hasGranted = await storage.getString(
+          LOCATION_PERMISSION_GRANTED_KEY
+        );
 
         // Check current permission status
         const { status } = await Location.getForegroundPermissionsAsync();
@@ -75,12 +79,12 @@ export default function LocationPermissionProvider() {
         if (status === "granted") {
           await storage.set(LOCATION_PERMISSION_ASKED_KEY, "true");
           await storage.set(LOCATION_PERMISSION_GRANTED_KEY, "true");
-          
+
           // If location is not set, fetch it automatically
           if (!location) {
             await fetchAndSetLocation();
           }
-          
+
           setIsChecking(false);
           return;
         }
@@ -105,7 +109,10 @@ export default function LocationPermissionProvider() {
           }, 1500); // Show after 1.5 seconds to let app load
         }
       } catch (error) {
-        console.error("[LocationPermissionProvider] Error checking permission:", error);
+        console.error(
+          "[LocationPermissionProvider] Error checking permission:",
+          error
+        );
       } finally {
         setIsChecking(false);
       }
@@ -120,15 +127,11 @@ export default function LocationPermissionProvider() {
       await storage.set(LOCATION_PERMISSION_ASKED_KEY, "true");
       await storage.set(LOCATION_PERMISSION_GRANTED_KEY, "true");
     } catch (error) {
-      console.error("[LocationPermissionProvider] Error saving permission status:", error);
+      console.error(
+        "[LocationPermissionProvider] Error saving permission status:",
+        error
+      );
     }
-  };
-
-  const handleManualEntry = async () => {
-    // Mark as asked (user chose manual entry)
-    await storage.set(LOCATION_PERMISSION_ASKED_KEY, "true");
-    await storage.set(LOCATION_PERMISSION_GRANTED_KEY, "false");
-    setShowModal(false);
   };
 
   const handleClose = async () => {
@@ -146,10 +149,8 @@ export default function LocationPermissionProvider() {
   return (
     <LocationPermissionModal
       visible={showModal}
-      onManualEntry={handleManualEntry}
       onClose={handleClose}
       onPermissionGranted={handlePermissionGranted}
     />
   );
 }
-
