@@ -74,7 +74,6 @@ export function useAudioPlayer() {
 
       try {
         const audioUrl = getAudioUrl(audioMode, audioNumber);
-
         const { sound } = await Audio.Sound.createAsync(
           { uri: audioUrl },
           { shouldPlay: true },

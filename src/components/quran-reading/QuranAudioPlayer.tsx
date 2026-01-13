@@ -3,25 +3,17 @@ import { Pressable, StyleSheet, Text, View } from "react-native";
 import { colors } from "../theme/colors";
 import { useAudioStore, useSurahStore } from "@/lib/storage/useQuranStore";
 import { useAudioPlayer } from "@/lib/hooks/useAudioPlayer";
+import { formatTime, progressPercentage } from "./utils";
 
-type AudioPlayerProps = Readonly<{
+type QuranAudioPlayerProps = Readonly<{
   isDark: boolean;
 }>;
 
-export default function AudioPlayer({ isDark }: AudioPlayerProps) {
+export default function QuranAudioPlayer({ isDark }: QuranAudioPlayerProps) {
   const { audioNumber, setAudioNumber } = useAudioStore();
   const { surahName, surahEnglishName } = useSurahStore();
 
   const { playAudio, isPlaying, position, duration } = useAudioPlayer();
-
-  const formatTime = (millis: number) => {
-    const totalSeconds = Math.floor(millis / 1000);
-    const minutes = Math.floor(totalSeconds / 60);
-    const seconds = totalSeconds % 60;
-    return `${minutes}:${seconds.toString().padStart(2, "0")}`;
-  };
-
-  const progressPercentage = duration > 0 ? (position / duration) * 100 : 0;
 
   const handleTogglePlayPause = () => {
     playAudio("ayah", audioNumber);
@@ -107,7 +99,7 @@ export default function AudioPlayer({ isDark }: AudioPlayerProps) {
           >
             <View
               className="absolute left-0 top-0 h-full rounded-full bg-primary-500"
-              style={StyleSheet.flatten([{ width: `${progressPercentage}%` }])}
+              style={StyleSheet.flatten([{ width: `${progressPercentage(duration, position)}%` }])}
             />
           </View>
           <View className="mt-1.5 flex flex-row justify-between">

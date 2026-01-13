@@ -5,6 +5,7 @@ import Button from "../button/Button";
 import { TranslationMetadata } from "@/lib/database/sqlite/translation/repository";
 import clsx from "clsx";
 import { useSurahStore } from "@/lib/storage/useQuranStore";
+import { useAudioPlayer } from "@/lib/hooks/useAudioPlayer";
 
 type QuranSubHeaderProps = {
   readonly isDark: boolean;
@@ -20,7 +21,11 @@ export default function QuranSubHeader({
   selectedTranslation,
 }: QuranSubHeaderProps) {
   const [settingsModal, setSettingsModal] = useState(false);
-  const { surahName, surahEnglishName, juz } = useSurahStore();
+  const { surahName, surahEnglishName, juz, surahNumber } = useSurahStore();
+  const { playAudio, isPlaying } = useAudioPlayer();
+  const handlePlayAudio = (surahNumber: number) => {
+    playAudio("surah", surahNumber);
+  };
   return (
     <>
       <View
@@ -50,6 +55,13 @@ export default function QuranSubHeader({
           <Text className="text-xs font-medium uppercase tracking-wide text-primary-500">
             {juz ? `Juz ${juz}` : ""}
           </Text>
+          <Button
+            onPress={() => handlePlayAudio(surahNumber)}
+            isDark={isDark}
+            leftIcon={isPlaying ? "pause" : "play-arrow"}
+            size="small"
+            backgroundColor="primary"
+          />
         </View>
         <Button
           onPress={() => setSettingsModal(true)}

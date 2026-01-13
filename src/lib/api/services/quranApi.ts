@@ -393,8 +393,8 @@ export function getAudioUrl(
   audioMode === "surah"
       ? "https://cdn.islamic.network/quran/audio-surah"
       : "https://cdn.islamic.network/quran/audio";
-  const edition = options?.edition ?? "ar.abdulbasitmurattal";
-  const bitrate = options?.bitrate ?? 64;
+  const edition = options?.edition ?? "ar.alafasy";
+  const bitrate = options?.bitrate ?? 128;
   const url = `${baseUrl}/${bitrate}/${edition}/${number}.mp3`;
 
   return url;

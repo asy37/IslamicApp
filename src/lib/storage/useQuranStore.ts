@@ -10,8 +10,6 @@ type AudioStateType = {
   isPlaying: boolean;
   position: number;
   duration: number;
-  autoPlayEnabled: boolean;
-  setAutoPlayEnabled: (autoPlayEnabled: boolean) => void;
   setIsPlaying: (isPlaying: boolean) => void;
   setPosition: (position: number) => void;
   setDuration: (duration: number) => void;
@@ -49,9 +47,7 @@ export const useAudioStore = create<AudioStateType>()(
       isPlaying: false,
       position: 0,
       duration: 0,
-      autoPlayEnabled: false,
-      setAutoPlayEnabled: (autoPlayEnabled: boolean) =>
-        set({ autoPlayEnabled: autoPlayEnabled }),
+
       setIsPlaying: (isPlaying: boolean) => set({ isPlaying: isPlaying }),
       setPosition: (position: number) => set({ position: position }),
       setDuration: (duration: number) => set({ duration: duration }),
@@ -64,7 +60,6 @@ export const useAudioStore = create<AudioStateType>()(
       partialize: (state) => ({
         audioNumber: state.audioNumber,
         audioMode: state.audioMode,
-        autoPlayEnabled: state.autoPlayEnabled,
       }),
     }
   )

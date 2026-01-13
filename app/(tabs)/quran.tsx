@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import clsx from "clsx";
 import QuranSubHeader from "@/components/quran-reading/QuranSubHeader";
 import QuranContent from "@/components/quran-reading/QuranContent";
-import AudioPlayer from "@/components/quran-reading/QuranAudioPlayer";
+import QuranAudioPlayer from "@/components/quran-reading/QuranAudioPlayer";
 import { useQuran } from "@/lib/hooks/useQuran";
 import QuranData from "@/lib/quran/arabic/ar.json";
 import { useTranslationByIdentifier } from "@/lib/hooks/useTranslationByIdentifier";
@@ -46,7 +46,7 @@ export default function QuranScreen() {
         goNext={goNext}
         goPrev={goPrev}
       />
-      <AudioPlayer
+      <QuranAudioPlayer
         isDark={isDark}
       />
       <SurahSelectionModal

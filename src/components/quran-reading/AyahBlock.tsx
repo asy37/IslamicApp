@@ -12,10 +12,11 @@ type AyahBlockProps = Readonly<{
 }>;
 
 export default function AyahBlock({ ayah, isDark }: AyahBlockProps) {
-  const { setAudioNumber, audioNumber } = useAudioStore();
+  const { setAudioNumber, audioNumber, setAudioMode } = useAudioStore();
   const { playAudio, isPlaying } = useAudioPlayer();
   
   const handlePress = (number: number) => {
+    setAudioMode("ayah");
     // Eğer aynı ayet seçiliyse play/pause toggle, değilse yeni ayet çal
     if (audioNumber === number) {
       playAudio("ayah", number);
