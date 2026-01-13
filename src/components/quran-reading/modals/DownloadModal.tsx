@@ -6,13 +6,8 @@ import {
   View,
 } from "react-native";
 import { useState } from "react";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { queryKeys } from "@/lib/query/queryKeys";
-import {
-  getLanguages,
-  getEditions,
-  getCompleteQuran,
-} from "@/lib/api/services/quranApi";
+import { useMutation } from "@tanstack/react-query";
+import { getEditions, getCompleteQuran } from "@/lib/api/services/quranApi";
 import { QuranEdition } from "@/types/quran";
 import { LanguageSelect } from "@/components/quran-reading/modals/LanguageSelect";
 import { EditionsSelect } from "@/components/quran-reading/modals/EditionsSelect";

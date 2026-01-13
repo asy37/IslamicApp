@@ -4,13 +4,11 @@ import QuranSettings from "./modals/QuranSettings";
 import Button from "../button/Button";
 import { TranslationMetadata } from "@/lib/database/sqlite/translation/repository";
 import clsx from "clsx";
+import { useSurahStore } from "@/lib/storage/useQuranStore";
 
 type QuranSubHeaderProps = {
   readonly isDark: boolean;
   readonly onOpenSurahModal: () => void;
-  readonly surahName: string;
-  readonly surahTranslation: string;
-  readonly juz: number;
   readonly setSelectTranslation: (item: TranslationMetadata) => void;
   readonly selectedTranslation: string | null;
 };
@@ -18,14 +16,11 @@ type QuranSubHeaderProps = {
 export default function QuranSubHeader({
   isDark,
   onOpenSurahModal,
-  surahName,
-  surahTranslation,
-  juz,
   setSelectTranslation,
   selectedTranslation,
 }: QuranSubHeaderProps) {
   const [settingsModal, setSettingsModal] = useState(false);
-
+  const { surahName, surahEnglishName, juz } = useSurahStore();
   return (
     <>
       <View
@@ -50,7 +45,7 @@ export default function QuranSubHeader({
               (isDark ? "text-text-primaryDark" : "text-text-primaryLight")
             }
           >
-            {surahTranslation} / {surahName}
+            {surahEnglishName} / {surahName}
           </Text>
           <Text className="text-xs font-medium uppercase tracking-wide text-primary-500">
             {juz ? `Juz ${juz}` : ""}

@@ -372,3 +372,30 @@ export async function getSajda(
 export async function getMeta(): Promise<QuranApiResponse<MetaResponse>> {
   return alQuranClient.get<QuranApiResponse<MetaResponse>>("/meta");
 }
+
+// --------------------
+// Audio Endpoints
+// --------------------
+
+export function getAudioUrl(
+  audioMode: "surah" | "ayah",
+  number: number | null,
+  options?: {
+    edition?: string;
+    bitrate?: number;
+  }
+) {
+  if (number === null) {
+    throw new Error("Ayah number cannot be null");
+  }
+
+  const baseUrl =
+  audioMode === "surah"
+      ? "https://cdn.islamic.network/quran/audio-surah"
+      : "https://cdn.islamic.network/quran/audio";
+  const edition = options?.edition ?? "ar.abdulbasitmurattal";
+  const bitrate = options?.bitrate ?? 64;
+  const url = `${baseUrl}/${bitrate}/${edition}/${number}.mp3`;
+
+  return url;
+}

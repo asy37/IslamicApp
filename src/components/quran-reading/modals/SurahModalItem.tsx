@@ -4,25 +4,26 @@ import { Text, View } from "react-native";
 import { colors } from "@/components/theme/colors";
 import { SurahType } from "@/components/quran-reading/types";
 import Button from "@/components/button/Button";
+import { useSurahStore } from "@/lib/storage/useQuranStore";
 
 type SurahListItemProps = {
   readonly surah: SurahType;
   readonly isDark: boolean;
   readonly setCurrentPage: (page: number) => void;
   readonly onClose: () => void;
-  readonly numberOfSurah: number;
   readonly setSearch: (value: string) => void;
 };
 
 export function SurahListItem({
-  numberOfSurah,
   surah,
   isDark,
   setCurrentPage,
   onClose,
   setSearch,
 }: SurahListItemProps) {
-  const isActive = surah.surahNumber === numberOfSurah;
+  const { surahNumber } = useSurahStore();
+
+  const isActive = surah.surahNumber === surahNumber;
 
   const handlePress = () => {
     setCurrentPage(surah.surahNumber);

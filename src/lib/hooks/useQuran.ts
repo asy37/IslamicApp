@@ -1,5 +1,10 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo } from "react";
 import { Surah, Ayah } from "@/types/quran";
+import {
+  useAudioStore,
+  usePageStore,
+  useSurahStore,
+} from "@/lib/storage/useQuranStore";
 
 const AYAH_PER_PAGE = 10;
 
@@ -8,13 +13,26 @@ export function useQuran(
   initialSurahNumber = 1,
   translationData?: { surahs: Surah[] }
 ) {
-  const [currentSurahNumber, setCurrentSurahNumber] =
-    useState(initialSurahNumber);
-  const [currentPageIndex, setCurrentPageIndex] = useState(0);
+  const {
+    currentSurahNumber: storeSurahNumber,
+    currentPageIndex: storePageIndex,
+    setCurrentSurahNumber: setStoreSurahNumber,
+    setCurrentPageIndex: setStorePageIndex,
+  } = usePageStore();
+
+  const { setJuz, setSurahName, setSurahEnglishName, setSurahNumber } =
+    useSurahStore();
+
+  const { setAudioNumber, setIsPlaying } = useAudioStore();
+  // Store'dan değer al, yoksa initial değeri kullan
+  const currentSurahNumber = storeSurahNumber ?? initialSurahNumber;
+  const currentPageIndex = storePageIndex ?? 0;
   /** Aktif sure */
   const surah: Surah | undefined = useMemo(() => {
     const data = quranData as {
       surahs: Array<{
+        name: string;
+        englishName: string;
         number: number;
         ayahs: Ayah[];
       }>;
@@ -22,6 +40,16 @@ export function useQuran(
     const found = data.surahs.find((s) => s.number === currentSurahNumber);
     return found as unknown as Surah | undefined;
   }, [currentSurahNumber, quranData]);
+
+  // Store'u useEffect ile güncelle (render sırasında değil)
+  useEffect(() => {
+    if (surah) {
+      setJuz(surah.ayahs[0]?.juz ?? 1);
+      setSurahName(surah.name ?? "");
+      setSurahEnglishName(surah.englishName ?? "");
+      setSurahNumber(surah.number ?? 1);
+    }
+  }, [surah, setJuz, setSurahName, setSurahEnglishName, setSurahNumber]);
 
   /** Sure yoksa (edge case) */
   if (!surah) {
@@ -56,12 +84,13 @@ export function useQuran(
   }, [enrichedAyahs]);
 
   /** Ekranda gösterilecek ayetler */
-  const visibleAyahs = pages[currentPageIndex] ?? [];
-
+  const visibleAyahs = useMemo(() => {
+    return pages[currentPageIndex] ?? [];
+  }, [pages, currentPageIndex]);
   /** Next */
   const goNext = () => {
     if (currentPageIndex < pages.length - 1) {
-      setCurrentPageIndex((p) => p + 1);
+      setStorePageIndex(currentPageIndex + 1);
       return;
     }
 
@@ -73,15 +102,15 @@ export function useQuran(
       }>;
     };
     if (currentSurahNumber < data.surahs.length) {
-      setCurrentSurahNumber((s) => s + 1);
-      setCurrentPageIndex(0);
+      setStoreSurahNumber(currentSurahNumber + 1);
+      setStorePageIndex(0);
     }
   };
 
   /** Prev */
   const goPrev = () => {
     if (currentPageIndex > 0) {
-      setCurrentPageIndex((p) => p - 1);
+      setStorePageIndex(currentPageIndex - 1);
       return;
     }
 
@@ -101,9 +130,21 @@ export function useQuran(
 
       const prevPageCount = Math.ceil(prevSurah.ayahs.length / AYAH_PER_PAGE);
 
-      setCurrentSurahNumber((s) => s - 1);
-      setCurrentPageIndex(prevPageCount - 1);
+      setStoreSurahNumber(currentSurahNumber - 1);
+      setStorePageIndex(prevPageCount - 1);
     }
+  };
+
+  useEffect(() => {
+    if (visibleAyahs.length > 0) {
+      setAudioNumber(visibleAyahs[0].number);
+    }
+  }, [visibleAyahs, setAudioNumber]);
+
+  // setCurrentSurahNumber wrapper'ı - store'u günceller
+  const setCurrentSurahNumber = (surahNumber: number) => {
+    setStoreSurahNumber(surahNumber);
+    setStorePageIndex(0); // Yeni sure'ye geçildiğinde ilk sayfaya dön
   };
 
   return {

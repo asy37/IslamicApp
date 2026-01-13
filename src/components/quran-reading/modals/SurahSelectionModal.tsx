@@ -1,14 +1,5 @@
 import { MaterialIcons } from "@expo/vector-icons";
-import {
-  FlatList,
-  Modal,
-  Pressable,
-  ScrollView,
-  Text,
-  TextInput,
-  useColorScheme,
-  View,
-} from "react-native";
+import { FlatList, TextInput, useColorScheme, View } from "react-native";
 import SurahData from "@/lib/quran/surah/surah.json";
 import { useState } from "react";
 import clsx from "clsx";
@@ -21,14 +12,12 @@ type SurahSelectionModalProps = {
   readonly visible: boolean;
   readonly onClose: () => void;
   readonly setCurrentPage: (surahNumber: number) => void;
-  readonly numberOfSurah: number;
 };
 
 export default function SurahSelectionModal({
   visible,
   onClose,
   setCurrentPage,
-  numberOfSurah,
 }: SurahSelectionModalProps) {
   const colorScheme = useColorScheme();
   const isDark = colorScheme === "dark";
@@ -76,7 +65,6 @@ export default function SurahSelectionModal({
             surah={item}
             isDark={isDark}
             onClose={onClose}
-            numberOfSurah={numberOfSurah}
           />
         )}
         keyExtractor={(item) => item.id.toString()}

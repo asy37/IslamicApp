@@ -10,13 +10,13 @@ import { Ayah } from "@/types/quran";
 import PageIndicator from "./PageIndicator";
 import { useEffect, useRef, useMemo } from "react";
 import * as Haptics from "expo-haptics";
+import { useSurahStore } from "@/lib/storage/useQuranStore";
 
 type QuranContentProps = Readonly<{
   ayahs: Ayah[];
   isDark: boolean;
   goNext: () => void;
   goPrev: () => void;
-  numberOfSurah: number;
 }>;
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
 const SWIPE_THRESHOLD = SCREEN_WIDTH * 0.5;
@@ -26,10 +26,10 @@ export default function QuranContent({
   ayahs,
   goNext,
   goPrev,
-  numberOfSurah,
 }: QuranContentProps) {
   const listRef = useRef<FlatList<Ayah>>(null);
   const translateX = useRef(new Animated.Value(0)).current;
+  const { surahNumber } = useSurahStore();
 
   useEffect(() => {
     listRef.current?.scrollToOffset({
@@ -91,10 +91,10 @@ export default function QuranContent({
         goPrev={goPrev}
         goNext={goNext}
         isDark={isDark}
-        numberOfSurah={numberOfSurah}
+        numberOfSurah={surahNumber}
       />
     ),
-    [goPrev, goNext, isDark, numberOfSurah]
+    [goPrev, goNext, isDark, surahNumber]
   );
 
   return (

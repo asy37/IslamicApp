@@ -68,3 +68,5 @@ web-build/
 *.swo
 *~
 
+# Agent
+agents/

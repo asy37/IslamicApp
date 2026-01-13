@@ -1,5 +1,5 @@
 import { View, useColorScheme } from "react-native";
-import { useState } from "react";
+import React, { useState } from "react";
 import clsx from "clsx";
 import QuranSubHeader from "@/components/quran-reading/QuranSubHeader";
 import QuranContent from "@/components/quran-reading/QuranContent";
@@ -20,15 +20,11 @@ export default function QuranScreen() {
   const { translation: quran } = useTranslationByIdentifier(
     selectedTranslation?.edition_identifier || null
   );
-  const { surah, ayahs, goNext, goPrev, setCurrentSurahNumber } = useQuran(
+  const { ayahs, goNext, goPrev, setCurrentSurahNumber } = useQuran(
     QuranData,
     1,
     quran?.surahs ? { surahs: quran.surahs } : undefined
   );
-  const juz = surah?.ayahs[0]?.juz;
-  const surahName = surah?.name;
-  const surahTranslation = surah?.englishNameTranslation;
-  const numberOfSurah = surah?.number;
 
   return (
     <View
@@ -42,24 +38,21 @@ export default function QuranScreen() {
         selectedTranslation={selectedTranslation?.edition_identifier || null}
         isDark={isDark}
         onOpenSurahModal={() => setIsSurahModalVisible(true)}
-        surahName={surahName}
-        surahTranslation={surahTranslation}
-        juz={juz}
       />
 
       <QuranContent
         isDark={isDark}
         ayahs={ayahs}
-        numberOfSurah={numberOfSurah}
         goNext={goNext}
         goPrev={goPrev}
       />
-      <AudioPlayer isDark={isDark} />
+      <AudioPlayer
+        isDark={isDark}
+      />
       <SurahSelectionModal
         setCurrentPage={setCurrentSurahNumber}
         visible={isSurahModalVisible}
         onClose={() => setIsSurahModalVisible(false)}
-        numberOfSurah={numberOfSurah}
       />
     </View>
   );

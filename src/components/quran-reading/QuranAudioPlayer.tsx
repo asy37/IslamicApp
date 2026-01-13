@@ -1,75 +1,18 @@
 import { MaterialIcons } from "@expo/vector-icons";
-import { Audio } from "expo-av";
-import { useEffect, useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { colors } from "../theme/colors";
+import { useAudioStore, useSurahStore } from "@/lib/storage/useQuranStore";
+import { useAudioPlayer } from "@/lib/hooks/useAudioPlayer";
 
-export default function AudioPlayer({ isDark }: { isDark: boolean }) {
-  const [sound, setSound] = useState<Audio.Sound | null>(null);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [position, setPosition] = useState(0);
-  const [duration, setDuration] = useState(0);
+type AudioPlayerProps = Readonly<{
+  isDark: boolean;
+}>;
 
-  // Örnek audio URL - gerçek uygulamada props veya state'den gelecek
-  const audioUrl =
-    "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3";
+export default function AudioPlayer({ isDark }: AudioPlayerProps) {
+  const { audioNumber, setAudioNumber } = useAudioStore();
+  const { surahName, surahEnglishName } = useSurahStore();
 
-  useEffect(() => {
-    // Audio modunu ayarla
-    Audio.setAudioModeAsync({
-      playsInSilentModeIOS: true,
-      staysActiveInBackground: true,
-    });
-
-    return () => {
-      // Cleanup: ses dosyasını unload et
-      if (sound) {
-        sound.unloadAsync();
-      }
-    };
-  }, [sound]);
-
-  const loadAudio = async () => {
-    try {
-      const { sound: newSound } = await Audio.Sound.createAsync(
-        { uri: audioUrl },
-        { shouldPlay: false },
-        (status) => {
-          if (status.isLoaded) {
-            setPosition(status.positionMillis || 0);
-            setDuration(status.durationMillis || 0);
-            setIsPlaying(status.isPlaying || false);
-
-            // Oynatma bittiğinde
-            if (status.didJustFinish) {
-              setIsPlaying(false);
-              setPosition(0);
-            }
-          }
-        }
-      );
-      setSound(newSound);
-    } catch (error) {
-      console.error("Audio yükleme hatası:", error);
-    }
-  };
-
-  const togglePlayPause = async () => {
-    if (!sound) {
-      await loadAudio();
-      return;
-    }
-
-    try {
-      if (isPlaying) {
-        await sound.pauseAsync();
-      } else {
-        await sound.playAsync();
-      }
-    } catch (error) {
-      console.error("Oynatma hatası:", error);
-    }
-  };
+  const { playAudio, isPlaying, position, duration } = useAudioPlayer();
 
   const formatTime = (millis: number) => {
     const totalSeconds = Math.floor(millis / 1000);
@@ -79,6 +22,14 @@ export default function AudioPlayer({ isDark }: { isDark: boolean }) {
   };
 
   const progressPercentage = duration > 0 ? (position / duration) * 100 : 0;
+
+  const handleTogglePlayPause = () => {
+    playAudio("ayah", audioNumber);
+  };
+  // audioNumber null ise player'ı gizle
+  if (audioNumber === null) {
+    return null;
+  }
 
   return (
     <View className="absolute left-4 right-4 bottom-6 z-20">
@@ -92,7 +43,7 @@ export default function AudioPlayer({ isDark }: { isDark: boolean }) {
       >
         <View className="mb-3 flex flex-row items-center gap-4">
           <Pressable
-            onPress={togglePlayPause}
+            onPress={handleTogglePlayPause}
             className="flex size-12 items-center justify-center rounded-full bg-primary-500 shadow-[0_4px_12px_rgba(31,143,95,0.3)] active:scale-95"
           >
             <MaterialIcons
@@ -109,7 +60,7 @@ export default function AudioPlayer({ isDark }: { isDark: boolean }) {
                 (isDark ? "text-text-primaryDark" : "text-text-primaryLight")
               }
             >
-              Surah Al-Mulk
+              {surahName || "Surah"}
             </Text>
             <Text
               className={
@@ -119,24 +70,30 @@ export default function AudioPlayer({ isDark }: { isDark: boolean }) {
                   : "text-text-secondaryLight")
               }
             >
-              Mishary Rashid Alafasy
+              {surahEnglishName || "Audio"}
             </Text>
           </View>
 
           <View className="flex flex-row items-center gap-2">
-            <Pressable className="rounded-full p-2">
-              <MaterialIcons
-                name="skip-previous"
-                size={22}
-                color={isDark ? "#B4C6BC" : "#6B7F78"}
-              />
+            <Pressable
+              onPress={() => {
+                const newNumber = audioNumber - 1;
+                setAudioNumber(newNumber);
+                playAudio("ayah", newNumber);
+              }}
+              className="rounded-full p-2"
+            >
+              <MaterialIcons name="skip-previous" size={22} />
             </Pressable>
-            <Pressable className="rounded-full p-2">
-              <MaterialIcons
-                name="skip-next"
-                size={22}
-                color={isDark ? "#B4C6BC" : "#6B7F78"}
-              />
+            <Pressable
+              onPress={() => {
+                const newNumber = audioNumber + 1;
+                setAudioNumber(newNumber);
+                playAudio("ayah", newNumber);
+              }}
+              className="rounded-full p-2"
+            >
+              <MaterialIcons name="skip-next" size={22} />
             </Pressable>
           </View>
         </View>

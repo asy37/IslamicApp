@@ -3,6 +3,8 @@ import { Pressable, Text, TouchableOpacity, View } from "react-native";
 import { colors } from "../theme/colors";
 import { Ayah } from "@/types/quran";
 import clsx from "clsx";
+import { useAudioStore } from "@/lib/storage/useQuranStore";
+import { useAudioPlayer } from "@/lib/hooks/useAudioPlayer";
 
 type AyahBlockProps = Readonly<{
   ayah: Ayah;
@@ -10,6 +12,21 @@ type AyahBlockProps = Readonly<{
 }>;
 
 export default function AyahBlock({ ayah, isDark }: AyahBlockProps) {
+  const { setAudioNumber, audioNumber } = useAudioStore();
+  const { playAudio, isPlaying } = useAudioPlayer();
+  
+  const handlePress = (number: number) => {
+    // Eğer aynı ayet seçiliyse play/pause toggle, değilse yeni ayet çal
+    if (audioNumber === number) {
+      playAudio("ayah", number);
+    } else {
+      setAudioNumber(number);
+      playAudio("ayah", number);
+    }
+  };
+
+  // Sadece bu ayet çalıyorsa pause ikonu göster
+  const isCurrentAyahPlaying = audioNumber === ayah.number && isPlaying;
   return (
     <View
       className={
@@ -36,14 +53,14 @@ export default function AyahBlock({ ayah, isDark }: AyahBlockProps) {
         <View className="flex flex-row gap-1 opacity-80">
           <TouchableOpacity
             onPress={() => {
-              console.log("ayah", ayah.number);
+              handlePress(ayah.number);
             }}
             className="rounded-full p-2 bg-primary-500/20"
           >
-            <MaterialIcons 
-            name="play-arrow"
-            size={20}
-            color={colors.success}
+            <MaterialIcons
+              name={isCurrentAyahPlaying ? "pause" : "play-arrow"}
+              size={20}
+              color={colors.success}
             />
           </TouchableOpacity>
           <Pressable className="rounded-full p-2">
@@ -75,14 +92,16 @@ export default function AyahBlock({ ayah, isDark }: AyahBlockProps) {
       >
         {ayah.text}
       </Text>
-      <Text
-        className={
-          "text-[17px] leading-relaxed tracking-wide " +
-          (isDark ? "text-text-secondaryDark" : "text-text-secondaryLight")
-        }
-      >
-        {ayah.translationText ?? ""}
-      </Text>
+      {ayah.translationText && (
+        <Text
+          className={
+            "text-[17px] leading-relaxed tracking-wide " +
+            (isDark ? "text-text-secondaryDark" : "text-text-secondaryLight")
+          }
+        >
+          {ayah.translationText}
+        </Text>
+      )}
     </View>
   );
 }
