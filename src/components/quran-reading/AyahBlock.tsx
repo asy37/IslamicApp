@@ -4,7 +4,6 @@ import { colors } from "../theme/colors";
 import { Ayah } from "@/types/quran";
 import clsx from "clsx";
 import { useAudioStore } from "@/lib/storage/useQuranStore";
-import { useAudioPlayer } from "@/lib/hooks/useAudioPlayer";
 
 type AyahBlockProps = Readonly<{
   ayah: Ayah;
@@ -12,22 +11,29 @@ type AyahBlockProps = Readonly<{
 }>;
 
 export default function AyahBlock({ ayah, isDark }: AyahBlockProps) {
-  const { setAudioNumber, audioNumber, setAudioMode } = useAudioStore();
-  const { playAudio, isPlaying } = useAudioPlayer();
-  
+  const {
+    setAudioNumber,
+    audioNumber,
+    setAudioMode,
+    audioMode,
+    isPlaying,
+    setIsPlaying,
+  } = useAudioStore();
+
   const handlePress = (number: number) => {
-    setAudioMode("ayah");
     // Eğer aynı ayet seçiliyse play/pause toggle, değilse yeni ayet çal
-    if (audioNumber === number) {
-      playAudio("ayah", number);
+    if (audioNumber === number && audioMode === "ayah") {
+      setIsPlaying(!isPlaying);
     } else {
+      setAudioMode("ayah");
       setAudioNumber(number);
-      playAudio("ayah", number);
+      setIsPlaying(true);
     }
   };
 
   // Sadece bu ayet çalıyorsa pause ikonu göster
-  const isCurrentAyahPlaying = audioNumber === ayah.number && isPlaying;
+  const isCurrentAyahPlaying =
+    audioNumber === ayah.number && audioMode === "ayah" && isPlaying;
   return (
     <View
       className={
@@ -59,7 +65,11 @@ export default function AyahBlock({ ayah, isDark }: AyahBlockProps) {
             className="rounded-full p-2 bg-primary-500/20"
           >
             <MaterialIcons
-              name={isCurrentAyahPlaying ? "pause" : "play-arrow"}
+              name={
+                audioMode === "ayah" && isCurrentAyahPlaying
+                  ? "pause"
+                  : "play-arrow"
+              }
               size={20}
               color={colors.success}
             />

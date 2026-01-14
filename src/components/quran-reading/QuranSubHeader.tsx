@@ -4,8 +4,7 @@ import QuranSettings from "./modals/QuranSettings";
 import Button from "../button/Button";
 import { TranslationMetadata } from "@/lib/database/sqlite/translation/repository";
 import clsx from "clsx";
-import { useSurahStore } from "@/lib/storage/useQuranStore";
-import { useAudioPlayer } from "@/lib/hooks/useAudioPlayer";
+import { useAudioStore, useSurahStore } from "@/lib/storage/useQuranStore";
 
 type QuranSubHeaderProps = {
   readonly isDark: boolean;
@@ -22,9 +21,24 @@ export default function QuranSubHeader({
 }: QuranSubHeaderProps) {
   const [settingsModal, setSettingsModal] = useState(false);
   const { surahName, surahEnglishName, juz, surahNumber } = useSurahStore();
-  const { playAudio, isPlaying } = useAudioPlayer();
-  const handlePlayAudio = (surahNumber: number) => {
-    playAudio("surah", surahNumber);
+  const {
+    audioMode,
+    audioNumber,
+    setAudioMode,
+    setAudioNumber,
+    isPlaying,
+    setIsPlaying,
+  } = useAudioStore();
+
+  const handlePlayAudio = (surahNum: number) => {
+    // Eğer aynı sure seçiliyse play/pause toggle, değilse yeni sure çal
+    if (audioNumber === surahNum && audioMode === "surah") {
+      setIsPlaying(!isPlaying);
+    } else {
+      setAudioMode("surah");
+      setAudioNumber(surahNum);
+      setIsPlaying(true);
+    }
   };
   return (
     <>
@@ -45,10 +59,10 @@ export default function QuranSubHeader({
         />
         <View className="items-center">
           <Text
-            className={
-              "text-lg font-bold leading-tight " +
-              (isDark ? "text-text-primaryDark" : "text-text-primaryLight")
-            }
+            className={clsx(
+              "text-lg font-bold leading-tight ",
+              isDark ? "text-text-primaryDark" : "text-text-primaryLight"
+            )}
           >
             {surahEnglishName} / {surahName}
           </Text>
@@ -58,7 +72,9 @@ export default function QuranSubHeader({
           <Button
             onPress={() => handlePlayAudio(surahNumber)}
             isDark={isDark}
-            leftIcon={isPlaying ? "pause" : "play-arrow"}
+            leftIcon={
+              audioMode === "surah" && isPlaying ? "pause" : "play-arrow"
+            }
             size="small"
             backgroundColor="primary"
           />

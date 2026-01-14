@@ -103,14 +103,13 @@ export default function RootLayout() {
   }
 
   // Show loading screen while checking auth
-  if (isLoading || !isNavigationReady) {
-    return (
-      <View className="flex-1 items-center justify-center bg-background-light dark:bg-background-dark">
-        <ActivityIndicator size="large" color="#1F8F5F" />
-      </View>
-    );
-  }
-console.log(isLoading, isNavigationReady);
+  // if (isLoading || !isNavigationReady) {
+  //   return (
+  //     <View className="flex-1 items-center justify-center bg-background-light dark:bg-background-dark">
+  //       <ActivityIndicator size="large" color="#1F8F5F" />
+  //     </View>
+  //   );
+  // }
 
   return (
     <QueryClientProvider client={queryClient}>

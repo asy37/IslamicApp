@@ -9,6 +9,7 @@ import QuranData from "@/lib/quran/arabic/ar.json";
 import { useTranslationByIdentifier } from "@/lib/hooks/useTranslationByIdentifier";
 import SurahSelectionModal from "@/components/quran-reading/modals/SurahSelectionModal";
 import { TranslationMetadata } from "@/lib/database/sqlite/translation/repository";
+import { useAudioPlayer } from "@/lib/hooks/useAudioPlayer";
 
 export default function QuranScreen() {
   const colorScheme = useColorScheme();
@@ -16,6 +17,9 @@ export default function QuranScreen() {
   const [isSurahModalVisible, setIsSurahModalVisible] = useState(false);
   const [selectedTranslation, setSelectedTranslation] =
     useState<TranslationMetadata | null>(null);
+
+  // Audio player hook'u sadece burada çağrılır
+  useAudioPlayer();
 
   const { translation: quran } = useTranslationByIdentifier(
     selectedTranslation?.edition_identifier || null

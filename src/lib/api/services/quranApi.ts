@@ -378,7 +378,7 @@ export async function getMeta(): Promise<QuranApiResponse<MetaResponse>> {
 // --------------------
 
 export function getAudioUrl(
-  audioMode: "surah" | "ayah",
+  audioMode: "surah" | "ayah" | null,
   number: number | null,
   options?: {
     edition?: string;

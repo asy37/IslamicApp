@@ -2,7 +2,6 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { colors } from "../theme/colors";
 import { useAudioStore, useSurahStore } from "@/lib/storage/useQuranStore";
-import { useAudioPlayer } from "@/lib/hooks/useAudioPlayer";
 import { formatTime, progressPercentage } from "./utils";
 
 type QuranAudioPlayerProps = Readonly<{
@@ -10,14 +9,30 @@ type QuranAudioPlayerProps = Readonly<{
 }>;
 
 export default function QuranAudioPlayer({ isDark }: QuranAudioPlayerProps) {
-  const { audioNumber, setAudioNumber } = useAudioStore();
+  const {
+    audioNumber,
+    setAudioNumber,
+    audioMode,
+    setAudioMode,
+    isPlaying,
+    setIsPlaying,
+    position,
+    duration,
+  } = useAudioStore();
   const { surahName, surahEnglishName } = useSurahStore();
 
-  const { playAudio, isPlaying, position, duration } = useAudioPlayer();
-
   const handleTogglePlayPause = () => {
-    playAudio("ayah", audioNumber);
+    // Mevcut audioMode'a göre play/pause toggle yap
+    if (audioMode) {
+      // Mevcut moda göre play/pause toggle
+      setIsPlaying(!isPlaying);
+    } else {
+      // audioMode yoksa ayet moduna geç
+      setAudioMode("ayah");
+      setIsPlaying(true);
+    }
   };
+
   // audioNumber null ise player'ı gizle
   if (audioNumber === null) {
     return null;
@@ -70,8 +85,9 @@ export default function QuranAudioPlayer({ isDark }: QuranAudioPlayerProps) {
             <Pressable
               onPress={() => {
                 const newNumber = audioNumber - 1;
+                setAudioMode("ayah");
                 setAudioNumber(newNumber);
-                playAudio("ayah", newNumber);
+                setIsPlaying(true);
               }}
               className="rounded-full p-2"
             >
@@ -80,8 +96,9 @@ export default function QuranAudioPlayer({ isDark }: QuranAudioPlayerProps) {
             <Pressable
               onPress={() => {
                 const newNumber = audioNumber + 1;
+                setAudioMode("ayah");
                 setAudioNumber(newNumber);
-                playAudio("ayah", newNumber);
+                setIsPlaying(true);
               }}
               className="rounded-full p-2"
             >

@@ -6,7 +6,7 @@ type AudioMode = "surah" | "ayah";
 
 type AudioStateType = {
   audioNumber: number;
-  audioMode: AudioMode;
+  audioMode: AudioMode | null;
   isPlaying: boolean;
   position: number;
   duration: number;
@@ -43,7 +43,7 @@ export const useAudioStore = create<AudioStateType>()(
   persist(
     (set) => ({
       audioNumber: 1,
-      audioMode: "surah",
+      audioMode: null,
       isPlaying: false,
       position: 0,
       duration: 0,
