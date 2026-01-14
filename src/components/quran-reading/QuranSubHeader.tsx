@@ -11,6 +11,7 @@ type QuranSubHeaderProps = {
   readonly onOpenSurahModal: () => void;
   readonly setSelectTranslation: (item: TranslationMetadata) => void;
   readonly selectedTranslation: string | null;
+  readonly onPlaySurah?: (surahNumber: number) => void; // Sure okuma başlatma callback'i
 };
 
 export default function QuranSubHeader({
@@ -18,26 +19,15 @@ export default function QuranSubHeader({
   onOpenSurahModal,
   setSelectTranslation,
   selectedTranslation,
+  onPlaySurah,
 }: QuranSubHeaderProps) {
   const [settingsModal, setSettingsModal] = useState(false);
   const { surahName, surahEnglishName, juz, surahNumber } = useSurahStore();
-  const {
-    audioMode,
-    audioNumber,
-    setAudioMode,
-    setAudioNumber,
-    isPlaying,
-    setIsPlaying,
-  } = useAudioStore();
+  const { isSurahPlaybackActive, isPlaying } = useAudioStore();
 
-  const handlePlayAudio = (surahNum: number) => {
-    // Eğer aynı sure seçiliyse play/pause toggle, değilse yeni sure çal
-    if (audioNumber === surahNum && audioMode === "surah") {
-      setIsPlaying(!isPlaying);
-    } else {
-      setAudioMode("surah");
-      setAudioNumber(surahNum);
-      setIsPlaying(true);
+  const handlePlaySurah = () => {
+    if (onPlaySurah) {
+      onPlaySurah(surahNumber);
     }
   };
   return (
@@ -69,15 +59,24 @@ export default function QuranSubHeader({
           <Text className="text-xs font-medium uppercase tracking-wide text-primary-500">
             {juz ? `Juz ${juz}` : ""}
           </Text>
-          <Button
-            onPress={() => handlePlayAudio(surahNumber)}
-            isDark={isDark}
-            leftIcon={
-              audioMode === "surah" && isPlaying ? "pause" : "play-arrow"
-            }
-            size="small"
-            backgroundColor="primary"
-          />
+          {!isSurahPlaybackActive && (
+            <Button
+              onPress={handlePlaySurah}
+              isDark={isDark}
+              leftIcon="play-arrow"
+              size="small"
+              backgroundColor="primary"
+            />
+          )}
+          {isSurahPlaybackActive && (
+            <Button
+              onPress={handlePlaySurah}
+              isDark={isDark}
+              leftIcon={isPlaying ? "pause" : "play-arrow"}
+              size="small"
+              backgroundColor="primary"
+            />
+          )}
         </View>
         <Button
           onPress={() => setSettingsModal(true)}

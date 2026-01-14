@@ -377,6 +377,34 @@ export async function getMeta(): Promise<QuranApiResponse<MetaResponse>> {
 // Audio Endpoints
 // --------------------
 
+/**
+ * Ayet bazlı ses dosyası URL'ini oluşturur
+ * @param ayahNumber - Ayet numarası (1-6236)
+ * @param options - Edition ve bitrate seçenekleri
+ * @returns Ayet ses dosyası URL'i
+ */
+export function getAyahAudioUrl(
+  ayahNumber: number,
+  options?: {
+    edition?: string;
+    bitrate?: number;
+  }
+): string {
+  if (ayahNumber === null || ayahNumber === undefined) {
+    throw new Error("Ayah number cannot be null or undefined");
+  }
+
+  const baseUrl = "https://cdn.islamic.network/quran/audio";
+  const edition = options?.edition ?? "ar.alafasy";
+  const bitrate = options?.bitrate ?? 128;
+  const url = `${baseUrl}/${bitrate}/${edition}/${ayahNumber}.mp3`;
+
+  return url;
+}
+
+/**
+ * @deprecated Use getAyahAudioUrl instead. This function is kept for backward compatibility.
+ */
 export function getAudioUrl(
   audioMode: "surah" | "ayah" | null,
   number: number | null,
@@ -385,17 +413,6 @@ export function getAudioUrl(
     bitrate?: number;
   }
 ) {
-  if (number === null) {
-    throw new Error("Ayah number cannot be null");
-  }
-
-  const baseUrl =
-  audioMode === "surah"
-      ? "https://cdn.islamic.network/quran/audio-surah"
-      : "https://cdn.islamic.network/quran/audio";
-  const edition = options?.edition ?? "ar.alafasy";
-  const bitrate = options?.bitrate ?? 128;
-  const url = `${baseUrl}/${bitrate}/${edition}/${number}.mp3`;
-
-  return url;
+  // Sadece ayet bazlı URL döndür (surah modu artık desteklenmiyor)
+  return getAyahAudioUrl(number ?? 1, options);
 }

@@ -17,6 +17,10 @@ type QuranContentProps = Readonly<{
   isDark: boolean;
   goNext: () => void;
   goPrev: () => void;
+  activeAyahNumber?: number | null; // Aktif ayet numarası (scroll için)
+  activeWordIndex?: number; // Aktif kelime index'i
+  onScroll?: () => void; // Kullanıcı scroll yaptığında çağrılacak (sure okumasını iptal etmek için)
+  onAyahPress?: (ayahNumber: number) => void; // Ayet tıklandığında çağrılacak
 }>;
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
 const SWIPE_THRESHOLD = SCREEN_WIDTH * 0.5;
@@ -26,11 +30,17 @@ export default function QuranContent({
   ayahs,
   goNext,
   goPrev,
+  activeAyahNumber,
+  activeWordIndex = -1,
+  onScroll,
+  onAyahPress,
 }: QuranContentProps) {
   const listRef = useRef<FlatList<Ayah>>(null);
   const translateX = useRef(new Animated.Value(0)).current;
   const { surahNumber } = useSurahStore();
+  const previousAyahNumberRef = useRef<number | null | undefined>(activeAyahNumber);
 
+  // Sayfa değiştiğinde scroll'u sıfırla
   useEffect(() => {
     listRef.current?.scrollToOffset({
       offset: 0,
@@ -38,6 +48,33 @@ export default function QuranContent({
     });
     translateX.setValue(0);
   }, [ayahs, translateX]);
+
+  // Aktif ayet değiştiğinde scroll yap (sadece ayet değişiminde, positionMillis değişiminde değil)
+  useEffect(() => {
+    if (activeAyahNumber === null || activeAyahNumber === undefined) {
+      previousAyahNumberRef.current = activeAyahNumber;
+      return;
+    }
+
+    // Sadece ayet numarası değiştiğinde scroll yap
+    if (previousAyahNumberRef.current !== activeAyahNumber) {
+      previousAyahNumberRef.current = activeAyahNumber;
+
+      // Aktif ayeti bul
+      const activeAyahIndex = ayahs.findIndex(
+        (ayah) => ayah.number === activeAyahNumber
+      );
+
+      if (activeAyahIndex >= 0 && listRef.current) {
+        // Aktif ayeti görünür alana getir
+        listRef.current.scrollToIndex({
+          index: activeAyahIndex,
+          animated: true,
+          viewPosition: 0.3, // Ekranın üst kısmından %30 aşağıda
+        });
+      }
+    }
+  }, [activeAyahNumber, ayahs]);
 
   const panResponder = useMemo(
     () =>
@@ -109,7 +146,16 @@ export default function QuranContent({
           ref={listRef}
           data={ayahs}
           keyExtractor={(item) => `${item.number}-${item.numberInSurah}`}
-          renderItem={({ item }) => <AyahBlock ayah={item} isDark={isDark} />}
+          renderItem={({ item }) => (
+            <AyahBlock
+              ayah={item}
+              isDark={isDark}
+              activeWordIndex={
+                activeAyahNumber === item.number ? activeWordIndex : -1
+              }
+              onAyahPress={onAyahPress}
+            />
+          )}
           contentContainerStyle={{ paddingBottom: 100, paddingHorizontal: 20 }}
           showsVerticalScrollIndicator={false}
           initialNumToRender={12}
@@ -118,6 +164,22 @@ export default function QuranContent({
           removeClippedSubviews
           scrollsToTop={true}
           ListFooterComponent={footerComponent}
+          onScrollBeginDrag={() => {
+            // Kullanıcı scroll yapmaya başladığında callback çağır
+            if (onScroll) {
+              onScroll();
+            }
+          }}
+          onScrollToIndexFailed={(info) => {
+            // Scroll hatası durumunda fallback
+            const wait = new Promise((resolve) => setTimeout(resolve, 500));
+            wait.then(() => {
+              listRef.current?.scrollToIndex({
+                index: info.index,
+                animated: true,
+              });
+            });
+          }}
         />
       </Animated.View>
     </View>

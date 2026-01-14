@@ -10,31 +10,22 @@ type QuranAudioPlayerProps = Readonly<{
 
 export default function QuranAudioPlayer({ isDark }: QuranAudioPlayerProps) {
   const {
-    audioNumber,
-    setAudioNumber,
-    audioMode,
-    setAudioMode,
+    activeAyahNumber,
+    setActiveAyahNumber,
     isPlaying,
     setIsPlaying,
     position,
     duration,
+    isSurahPlaybackActive,
   } = useAudioStore();
   const { surahName, surahEnglishName } = useSurahStore();
 
   const handleTogglePlayPause = () => {
-    // Mevcut audioMode'a göre play/pause toggle yap
-    if (audioMode) {
-      // Mevcut moda göre play/pause toggle
-      setIsPlaying(!isPlaying);
-    } else {
-      // audioMode yoksa ayet moduna geç
-      setAudioMode("ayah");
-      setIsPlaying(true);
-    }
+    setIsPlaying(!isPlaying);
   };
 
-  // audioNumber null ise player'ı gizle
-  if (audioNumber === null) {
+  // activeAyahNumber null ise player'ı gizle
+  if (activeAyahNumber === null) {
     return null;
   }
 
@@ -84,10 +75,11 @@ export default function QuranAudioPlayer({ isDark }: QuranAudioPlayerProps) {
           <View className="flex flex-row items-center gap-2">
             <Pressable
               onPress={() => {
-                const newNumber = audioNumber - 1;
-                setAudioMode("ayah");
-                setAudioNumber(newNumber);
-                setIsPlaying(true);
+                if (activeAyahNumber > 1) {
+                  const newNumber = activeAyahNumber - 1;
+                  setActiveAyahNumber(newNumber);
+                  setIsPlaying(true);
+                }
               }}
               className="rounded-full p-2"
             >
@@ -95,9 +87,8 @@ export default function QuranAudioPlayer({ isDark }: QuranAudioPlayerProps) {
             </Pressable>
             <Pressable
               onPress={() => {
-                const newNumber = audioNumber + 1;
-                setAudioMode("ayah");
-                setAudioNumber(newNumber);
+                const newNumber = activeAyahNumber + 1;
+                setActiveAyahNumber(newNumber);
                 setIsPlaying(true);
               }}
               className="rounded-full p-2"

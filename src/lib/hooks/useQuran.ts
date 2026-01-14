@@ -23,7 +23,7 @@ export function useQuran(
   const { setJuz, setSurahName, setSurahEnglishName, setSurahNumber } =
     useSurahStore();
 
-  const { setAudioNumber, setIsPlaying } = useAudioStore();
+  const { setAudioNumber, setIsPlaying, activeAyahNumber } = useAudioStore();
   // Store'dan değer al, yoksa initial değeri kullan
   const currentSurahNumber = storeSurahNumber ?? initialSurahNumber;
   const currentPageIndex = storePageIndex ?? 0;
@@ -140,6 +140,40 @@ export function useQuran(
       setAudioNumber(visibleAyahs[0].number);
     }
   }, [visibleAyahs, setAudioNumber]);
+
+  // Aktif ayetin page bilgisi farklıysa otomatik sayfa değişimi
+  useEffect(() => {
+    if (activeAyahNumber === null || activeAyahNumber === undefined) {
+      return;
+    }
+
+    // Aktif ayeti bul
+    const activeAyah = enrichedAyahs.find(
+      (ayah) => ayah.number === activeAyahNumber
+    );
+
+    if (!activeAyah) return;
+
+    // Mevcut sayfadaki ayetlerin page bilgisini kontrol et
+    const currentPageAyahs = visibleAyahs;
+    if (currentPageAyahs.length === 0) return;
+
+    const currentPageNumber = currentPageAyahs[0]?.page;
+    const activeAyahPage = activeAyah.page;
+
+    // Eğer aktif ayetin page'i mevcut sayfadan farklıysa
+    if (activeAyahPage !== currentPageNumber) {
+      // Aktif ayetin hangi sayfada olduğunu bul (sure içindeki sayfa index'i)
+      const targetPageIndex = pages.findIndex((page) =>
+        page.some((ayah) => ayah.number === activeAyahNumber)
+      );
+
+      if (targetPageIndex >= 0 && targetPageIndex !== currentPageIndex) {
+        // Doğru sayfaya geç
+        setStorePageIndex(targetPageIndex);
+      }
+    }
+  }, [activeAyahNumber, enrichedAyahs, visibleAyahs, pages, currentPageIndex, setStorePageIndex]);
 
   // setCurrentSurahNumber wrapper'ı - store'u günceller
   const setCurrentSurahNumber = (surahNumber: number) => {

@@ -4,36 +4,50 @@ import { colors } from "../theme/colors";
 import { Ayah } from "@/types/quran";
 import clsx from "clsx";
 import { useAudioStore } from "@/lib/storage/useQuranStore";
+import { splitAyahText } from "@/lib/quran/utils/wordSplitter";
+import { useMemo } from "react";
 
 type AyahBlockProps = Readonly<{
   ayah: Ayah;
   isDark: boolean;
+  activeWordIndex?: number; // Aktif kelime index'i (highlight için)
+  onAyahPress?: (ayahNumber: number) => void; // Ayet tıklandığında çağrılacak callback
 }>;
 
-export default function AyahBlock({ ayah, isDark }: AyahBlockProps) {
+export default function AyahBlock({
+  ayah,
+  isDark,
+  activeWordIndex = -1,
+  onAyahPress,
+}: AyahBlockProps) {
   const {
-    setAudioNumber,
-    audioNumber,
-    setAudioMode,
-    audioMode,
+    activeAyahNumber,
     isPlaying,
     setIsPlaying,
+    setActiveAyahNumber,
   } = useAudioStore();
 
+  // Ayet metnini kelimelere böl
+  const words = useMemo(() => splitAyahText(ayah.text), [ayah.text]);
+
   const handlePress = (number: number) => {
-    // Eğer aynı ayet seçiliyse play/pause toggle, değilse yeni ayet çal
-    if (audioNumber === number && audioMode === "ayah") {
+    if (onAyahPress) {
+      onAyahPress(number);
+      return;
+    }
+
+    // Varsayılan davranış: eğer aynı ayet seçiliyse play/pause toggle
+    if (activeAyahNumber === number) {
       setIsPlaying(!isPlaying);
     } else {
-      setAudioMode("ayah");
-      setAudioNumber(number);
+      setActiveAyahNumber(number);
       setIsPlaying(true);
     }
   };
 
   // Sadece bu ayet çalıyorsa pause ikonu göster
   const isCurrentAyahPlaying =
-    audioNumber === ayah.number && audioMode === "ayah" && isPlaying;
+    activeAyahNumber === ayah.number && isPlaying;
   return (
     <View
       className={
@@ -65,11 +79,7 @@ export default function AyahBlock({ ayah, isDark }: AyahBlockProps) {
             className="rounded-full p-2 bg-primary-500/20"
           >
             <MaterialIcons
-              name={
-                audioMode === "ayah" && isCurrentAyahPlaying
-                  ? "pause"
-                  : "play-arrow"
-              }
+              name={isCurrentAyahPlaying ? "pause" : "play-arrow"}
               size={20}
               color={colors.success}
             />
@@ -95,13 +105,31 @@ export default function AyahBlock({ ayah, isDark }: AyahBlockProps) {
         </View>
       </View>
 
+      {/* Kelime bazlı render - RTL (sağdan sola) */}
       <Text
-        className={
-          "text-right text-4xl leading-[42px] " +
-          (isDark ? "text-text-primaryDark" : "text-text-primaryLight")
-        }
+        className={clsx(
+          "text-right text-4xl leading-[42px]",
+          isDark ? "text-text-primaryDark" : "text-text-primaryLight"
+        )}
+        style={{
+          textAlign: "right",
+          writingDirection: "rtl",
+        }}
       >
-        {ayah.text}
+        {words.map((word, index) => {
+          const isActive = activeAyahNumber === ayah.number && index === activeWordIndex;
+          return (
+            <Text
+              key={`${ayah.number}-${index}`}
+              className={clsx(
+                isActive && "text-primary-500 font-bold"
+              )}
+            >
+              {word}
+              {index < words.length - 1 && " "}
+            </Text>
+          );
+        })}
       </Text>
       {ayah.translationText && (
         <Text

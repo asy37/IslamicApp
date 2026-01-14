@@ -2,18 +2,31 @@ import { Ayah } from "@/types/quran";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
-type AudioMode = "surah" | "ayah";
-
 type AudioStateType = {
-  audioNumber: number;
-  audioMode: AudioMode | null;
+  // Aktif ayet numarası (şu anda çalan ayet)
+  activeAyahNumber: number | null;
+  // Oynatma durumu
   isPlaying: boolean;
+  // Ses pozisyonu (milisaniye)
   position: number;
+  // Ses süresi (milisaniye)
   duration: number;
+  // Sure okuma durumu
+  isSurahPlaybackActive: boolean;
+  // Sure okuma sırasında hangi ayetteyiz (sure içindeki index)
+  currentSurahAyahIndex: number | null;
+  // Aktif kelime index'i (highlight için)
+  activeWordIndex: number;
+  // Setter fonksiyonları
   setIsPlaying: (isPlaying: boolean) => void;
   setPosition: (position: number) => void;
   setDuration: (duration: number) => void;
-  setAudioMode: (audioMode: AudioMode) => void;
+  setActiveAyahNumber: (ayahNumber: number | null) => void;
+  setIsSurahPlaybackActive: (active: boolean) => void;
+  setCurrentSurahAyahIndex: (index: number | null) => void;
+  setActiveWordIndex: (index: number) => void;
+  // Geriye dönük uyumluluk için (kademeli geçiş)
+  audioNumber: number;
   setAudioNumber: (audioNumber: number) => void;
 };
 
@@ -42,24 +55,35 @@ type AyahStateType = {
 export const useAudioStore = create<AudioStateType>()(
   persist(
     (set) => ({
-      audioNumber: 1,
-      audioMode: null,
+      activeAyahNumber: null,
       isPlaying: false,
       position: 0,
       duration: 0,
+      isSurahPlaybackActive: false,
+      currentSurahAyahIndex: null,
+      activeWordIndex: 0,
+      // Geriye dönük uyumluluk
+      audioNumber: 1,
 
-      setIsPlaying: (isPlaying: boolean) => set({ isPlaying: isPlaying }),
-      setPosition: (position: number) => set({ position: position }),
-      setDuration: (duration: number) => set({ duration: duration }),
+      setIsPlaying: (isPlaying: boolean) => set({ isPlaying }),
+      setPosition: (position: number) => set({ position }),
+      setDuration: (duration: number) => set({ duration }),
+      setActiveAyahNumber: (ayahNumber: number | null) =>
+        set({ activeAyahNumber: ayahNumber }),
+      setIsSurahPlaybackActive: (active: boolean) =>
+        set({ isSurahPlaybackActive: active }),
+      setCurrentSurahAyahIndex: (index: number | null) =>
+        set({ currentSurahAyahIndex: index }),
+      setActiveWordIndex: (index: number) => set({ activeWordIndex: index }),
+      // Geriye dönük uyumluluk
       setAudioNumber: (audioNumber: number) =>
-        set({ audioNumber: audioNumber }),
-      setAudioMode: (audioMode: AudioMode) => set({ audioMode: audioMode }),
+        set({ audioNumber, activeAyahNumber: audioNumber }),
     }),
     {
       name: "audio-state",
       partialize: (state) => ({
-        audioNumber: state.audioNumber,
-        audioMode: state.audioMode,
+        activeAyahNumber: state.activeAyahNumber,
+        audioNumber: state.audioNumber, // Geriye dönük uyumluluk
       }),
     }
   )
