@@ -12,6 +12,10 @@ import { TranslationMetadata } from "@/lib/database/sqlite/translation/repositor
 import { useSurahPlayer } from "@/lib/hooks/useSurahPlayer";
 import { useAudioStore } from "@/lib/storage/useQuranStore";
 import { splitAyahText } from "@/lib/quran/utils/wordSplitter";
+import {
+  getActiveWordIndexFromTimings,
+  getVerseTiming,
+} from "@/lib/quran/utils/audioTimings";
 
 export default function QuranScreen() {
   const colorScheme = useColorScheme();
@@ -71,12 +75,22 @@ export default function QuranScreen() {
     const words = splitAyahText(activeAyah.text);
     if (words.length === 0) return;
 
-    // Her kelime için tahmini süre hesapla (eşit dağılım)
-    const wordDuration = duration / words.length;
+    // 1) Timing tabanlı hesap (varsa)
+    const verseTiming = getVerseTiming(surah.number, activeAyah.numberInSurah);
+    const timingIndex =
+      verseTiming ? getActiveWordIndexFromTimings(position, verseTiming) : null;
 
-    // Hangi kelimenin aktif olduğunu bul
-    const currentWordIndex = Math.floor(position / wordDuration);
-    const clampedIndex = Math.min(currentWordIndex, words.length - 1);
+    // 2) Fallback: tahmini (eşit süre) hesap
+    const fallbackIndex = (() => {
+      const wordDuration = duration / words.length;
+      const currentWordIndex = Math.floor(position / wordDuration);
+      return Math.min(currentWordIndex, words.length - 1);
+    })();
+
+    const clampedIndex =
+      timingIndex !== null
+        ? Math.max(0, Math.min(timingIndex, words.length - 1))
+        : fallbackIndex;
 
     if (clampedIndex !== activeWordIndex) {
       setActiveWordIndex(clampedIndex);
