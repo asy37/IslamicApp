@@ -1,5 +1,5 @@
 import { View, useColorScheme } from "react-native";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import clsx from "clsx";
 import QuranSubHeader from "@/components/quran-reading/QuranSubHeader";
 import QuranContent from "@/components/quran-reading/QuranContent";
@@ -23,10 +23,14 @@ export default function QuranScreen() {
   const { translation: quran } = useTranslationByIdentifier(
     selectedTranslation?.edition_identifier || null
   );
+  const translationData = useMemo(
+    () => (quran?.surahs ? { surahs: quran.surahs } : undefined),
+    [quran?.surahs]
+  );
   const { surah, ayahs, goNext, goPrev, setCurrentSurahNumber } = useQuran(
     QuranData,
     1,
-    quran?.surahs ? { surahs: quran.surahs } : undefined
+    translationData
   );
 
   const {

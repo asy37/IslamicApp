@@ -75,9 +75,14 @@ export const useAudioStore = create<AudioStateType>()(
       setCurrentSurahAyahIndex: (index: number | null) =>
         set({ currentSurahAyahIndex: index }),
       setActiveWordIndex: (index: number) => set({ activeWordIndex: index }),
-      // Geriye dönük uyumluluk
+      // Geriye dönük uyumluluk (idempotent: aynı değerse state güncelleme)
       setAudioNumber: (audioNumber: number) =>
-        set({ audioNumber, activeAyahNumber: audioNumber }),
+        set((state) => {
+          if (state.audioNumber === audioNumber && state.activeAyahNumber === audioNumber) {
+            return state;
+          }
+          return { audioNumber, activeAyahNumber: audioNumber };
+        }),
     }),
     {
       name: "audio-state",
@@ -132,7 +137,7 @@ export const useAyahStore = create<AyahStateType>()(
     (set) => ({
       ayahs: [],
 
-      setAyahs: (ayahs: Ayah[]) => set({ ayahs: ayahs }),
+      setAyahs: (ayahs: Ayah[]) => set({ ayahs }),
 
       clearCache: () =>
         set({

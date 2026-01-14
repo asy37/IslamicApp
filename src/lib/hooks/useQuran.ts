@@ -23,7 +23,7 @@ export function useQuran(
   const { setJuz, setSurahName, setSurahEnglishName, setSurahNumber } =
     useSurahStore();
 
-  const { setAudioNumber, setIsPlaying, activeAyahNumber } = useAudioStore();
+  const { setAudioNumber, activeAyahNumber } = useAudioStore();
   // Store'dan değer al, yoksa initial değeri kullan
   const currentSurahNumber = storeSurahNumber ?? initialSurahNumber;
   const currentPageIndex = storePageIndex ?? 0;
@@ -137,9 +137,20 @@ export function useQuran(
 
   useEffect(() => {
     if (visibleAyahs.length > 0) {
-      setAudioNumber(visibleAyahs[0].number);
+      const next = visibleAyahs[0].number;
+      // Eğer zaten aynı ayet aktifse veya aktif ayet seçilmişse tekrar set etmeyelim
+      // (çeviri objesi referansı sık değişse bile sonsuz döngüyü engeller)
+      if (activeAyahNumber === next) {
+        return;
+      }
+
+      // Aktif ayet seçildiyse, sayfa değişse bile otomatik olarak başa çekmeyelim
+      if (activeAyahNumber !== null && activeAyahNumber !== undefined) {
+        return;
+      }
+      setAudioNumber(next);
     }
-  }, [visibleAyahs, setAudioNumber]);
+  }, [visibleAyahs, setAudioNumber, activeAyahNumber]);
 
   // Aktif ayetin page bilgisi farklıysa otomatik sayfa değişimi
   useEffect(() => {

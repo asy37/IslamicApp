@@ -406,7 +406,6 @@ export function getAyahAudioUrl(
  * @deprecated Use getAyahAudioUrl instead. This function is kept for backward compatibility.
  */
 export function getAudioUrl(
-  audioMode: "surah" | "ayah" | null,
   number: number | null,
   options?: {
     edition?: string;
