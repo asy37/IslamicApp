@@ -1,32 +1,13 @@
-import { MaterialIcons } from "@expo/vector-icons";
-import { Pressable, Text, View } from "react-native";
-import { useRouter } from "expo-router";
 import clsx from "clsx";
+import { View, Text } from "react-native";
 
-export default function QiblaHeader({ isDark }: { isDark: boolean }) {
-  const router = useRouter();
+type QiblaHeaderProps = {
+  readonly isDark: boolean;
+};
 
+export default function QiblaHeader({ isDark }: QiblaHeaderProps) {
   return (
     <View className="flex-row items-center p-6 pb-2 justify-between z-10">
-      <Pressable
-        className="flex size-10 shrink-0 items-center justify-center rounded-full"
-        onPress={() => router.back()}
-        hitSlop={10}
-        style={{
-          backgroundColor: isDark ? "rgba(255, 255, 255, 0.05)" : "#FFFFFF",
-          shadowColor: "#000",
-          shadowOffset: { width: 0, height: 1 },
-          shadowOpacity: 0.1,
-          shadowRadius: 2,
-          elevation: 2,
-        }}
-      >
-        <MaterialIcons
-          name="arrow-back"
-          size={24}
-          color={isDark ? "#EAF3F0" : "#1C2A26"}
-        />
-      </Pressable>
       <View className="flex-1 items-center">
         <Text
           className={clsx(
@@ -34,31 +15,14 @@ export default function QiblaHeader({ isDark }: { isDark: boolean }) {
             isDark ? "text-text-primaryDark" : "text-text-primaryLight"
           )}
         >
-          Kıble Bulucu
+          Qibla Finder
         </Text>
         {!isDark && (
-          <Text
-            className="text-xs font-medium mt-0.5"
-            style={{ color: "#6B7F78" }}
-          >
-            Yönünüzü Kaabe'ye çevirin
+          <Text className="text-xs text-text-secondary-light font-medium mt-0.5">
+            Turn your direction to Kaaba
           </Text>
         )}
       </View>
-      <Pressable
-        className="flex size-10 shrink-0 items-center justify-center rounded-full"
-        hitSlop={10}
-        style={{
-          backgroundColor: isDark ? "rgba(255, 255, 255, 0.05)" : "transparent",
-        }}
-      >
-        <MaterialIcons
-          name="settings"
-          size={24}
-          color={isDark ? "#EAF3F0" : "#1C2A26"}
-        />
-      </Pressable>
     </View>
   );
 }
-

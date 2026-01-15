@@ -1,48 +1,42 @@
 import { MaterialIcons } from "@expo/vector-icons";
 import { Text, View } from "react-native";
 import type { UserLocation } from "@/lib/storage/locationStore";
+import clsx from "clsx";
+
+type LocationInfoProps = {
+  readonly isDark: boolean;
+  readonly location: UserLocation | null;
+  readonly loading: boolean;
+  readonly error: string | null;
+};
 
 export default function LocationInfo({
   isDark,
   location,
   loading,
   error,
-}: {
-  isDark: boolean;
-  location: UserLocation | null;
-  loading: boolean;
-  error: string | null;
-}) {
-  const title = loading
-    ? "Konum alınıyor…"
-    : error
-      ? "Konum hatası"
-      : location
-        ? `${location.latitude.toFixed(4)}, ${location.longitude.toFixed(4)}`
-        : "Konum yok";
+}: LocationInfoProps) {
+  let title = "Location not found";
 
+  if (loading) {
+    title = "Location is being fetched…";
+  } else if (error) {
+    title = "Location error";
+  } else if (location) {
+    title = `${location.latitude.toFixed(4)}, ${location.longitude.toFixed(4)}`;
+  }
   return (
     <View
-      className="flex-1 rounded-xl p-4 border flex-row items-center gap-4"
-      style={{
-        backgroundColor: isDark
-          ? "rgba(26, 44, 38, 0.8)"
-          : "#FFFFFF",
-        borderColor: isDark ? "rgba(255, 255, 255, 0.05)" : "#E2ECE8",
-        shadowColor: "#000",
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.1,
-        shadowRadius: 8,
-        elevation: 4,
-      }}
+      className={clsx(
+        "flex-1 rounded-xl p-4  flex-row items-center gap-4",
+        isDark ? "bg-background-cardDark" : "bg-background-cardLight"
+      )}
     >
       <View
-        className="w-10 h-10 rounded-full flex items-center justify-center shrink-0"
-        style={{
-          backgroundColor: isDark
-            ? "rgba(255, 255, 255, 0.05)"
-            : "#CFEBDD",
-        }}
+        className={clsx(
+          "w-10 h-10 rounded-full flex items-center justify-center shrink-0",
+          isDark ? "bg-background-cardDark" : "bg-background-cardLight"
+        )}
       >
         <MaterialIcons
           name={isDark ? "near-me" : "location-on"}
@@ -52,22 +46,28 @@ export default function LocationInfo({
       </View>
       <View className="flex-col flex-1">
         <Text
-          className={isDark ? "text-xs font-medium uppercase tracking-wider" : "text-xs font-medium uppercase tracking-wider"}
-          style={{ color: isDark ? "#8FA6A0" : "#6B7F78" }}
+          className={clsx(
+            "text-xs font-medium uppercase tracking-wider",
+            isDark ? "text-text-secondaryDark" : "text-text-secondaryLight"
+          )}
         >
-          Konum
+          Location
         </Text>
         <Text
-          className={isDark ? "text-sm font-bold text-white" : "text-sm font-bold"}
-          style={{ color: isDark ? "#FFFFFF" : "#1C2A26" }}
+          className={clsx(
+            "text-sm font-bold",
+            isDark ? "text-text-primaryDark" : "text-text-primaryLight"
+          )}
           numberOfLines={1}
         >
           {title}
         </Text>
         {error && !loading && (
           <Text
-            className="text-[10px] mt-0.5"
-            style={{ color: isDark ? "rgba(255,255,255,0.5)" : "#9CA3AF" }}
+            className={clsx(
+              "text-[10px] mt-0.5",
+              isDark ? "text-text-secondaryDark" : "text-text-secondaryLight"
+            )}
             numberOfLines={2}
           >
             {error}
@@ -77,4 +77,3 @@ export default function LocationInfo({
     </View>
   );
 }
-
