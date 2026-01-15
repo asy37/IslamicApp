@@ -1,7 +1,26 @@
 import { MaterialIcons } from "@expo/vector-icons";
 import { Text, View } from "react-native";
+import type { UserLocation } from "@/lib/storage/locationStore";
 
-export default function LocationInfo({ isDark }: { isDark: boolean }) {
+export default function LocationInfo({
+  isDark,
+  location,
+  loading,
+  error,
+}: {
+  isDark: boolean;
+  location: UserLocation | null;
+  loading: boolean;
+  error: string | null;
+}) {
+  const title = loading
+    ? "Konum alınıyor…"
+    : error
+      ? "Konum hatası"
+      : location
+        ? `${location.latitude.toFixed(4)}, ${location.longitude.toFixed(4)}`
+        : "Konum yok";
+
   return (
     <View
       className="flex-1 rounded-xl p-4 border flex-row items-center gap-4"
@@ -32,36 +51,27 @@ export default function LocationInfo({ isDark }: { isDark: boolean }) {
         />
       </View>
       <View className="flex-col flex-1">
-        {isDark ? (
-          <>
-            <Text
-              className="text-xs font-medium uppercase tracking-wider"
-              style={{ color: "#8FA6A0" }}
-            >
-              Konum
-            </Text>
-            <View className="flex-row items-baseline gap-2">
-              <Text className="text-lg font-bold text-white">İstanbul</Text>
-              <Text className="text-sm" style={{ color: "rgba(255, 255, 255, 0.4)" }}>
-                Türkiye
-              </Text>
-            </View>
-          </>
-        ) : (
-          <>
-            <Text
-              className="text-sm font-bold leading-tight"
-              style={{ color: "#1C2A26" }}
-            >
-              Istanbul, TR
-            </Text>
-            <Text
-              className="text-xs mt-0.5"
-              style={{ color: "#6B7F78" }}
-            >
-              Fatih Camii
-            </Text>
-          </>
+        <Text
+          className={isDark ? "text-xs font-medium uppercase tracking-wider" : "text-xs font-medium uppercase tracking-wider"}
+          style={{ color: isDark ? "#8FA6A0" : "#6B7F78" }}
+        >
+          Konum
+        </Text>
+        <Text
+          className={isDark ? "text-sm font-bold text-white" : "text-sm font-bold"}
+          style={{ color: isDark ? "#FFFFFF" : "#1C2A26" }}
+          numberOfLines={1}
+        >
+          {title}
+        </Text>
+        {error && !loading && (
+          <Text
+            className="text-[10px] mt-0.5"
+            style={{ color: isDark ? "rgba(255,255,255,0.5)" : "#9CA3AF" }}
+            numberOfLines={2}
+          >
+            {error}
+          </Text>
         )}
       </View>
     </View>

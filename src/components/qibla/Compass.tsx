@@ -1,15 +1,33 @@
 import { MaterialIcons } from "@expo/vector-icons";
 import { Text, View } from "react-native";
 import clsx from "clsx";
+import type { FeedbackLevel } from "@/lib/hooks/useQiblaGuide";
 
 type CompassProps = {
   readonly isDark: boolean;
-  readonly qiblaAngle: number;
+  readonly heading: number | null;
+  readonly qiblaBearing: number | null;
+  readonly angleDiff: number;
+  readonly feedbackLevel: FeedbackLevel;
 };
 
-export default function Compass({ isDark, qiblaAngle }: CompassProps) {
+const COLORS = {
+  far: "#EF4444",
+  near: "#F59E0B",
+  aligned: "#1F8F5F",
+} as const;
+
+export default function Compass({
+  isDark,
+  heading,
+  qiblaBearing,
+  angleDiff,
+  feedbackLevel,
+}: CompassProps) {
   const compassSize = 320;
-  const needleRotation = -28; // İğne rotasyonu (örnek değer)
+  const dialRotation = heading == null ? 0 : -heading; // pusula arka planını kullanıcının yönüne göre döndür
+  const qiblaRotation = qiblaBearing == null ? 0 : angleDiff; // kıble oku (relative)
+  const accent = COLORS[feedbackLevel];
 
   return (
     <View className="relative items-center justify-center">
@@ -43,7 +61,7 @@ export default function Compass({ isDark, qiblaAngle }: CompassProps) {
           }}
         />
 
-        {/* Compass Dial Background */}
+        {/* Compass Dial Background (rotates with device heading) */}
         <View
           className="relative rounded-full items-center justify-center"
           style={{
@@ -57,6 +75,7 @@ export default function Compass({ isDark, qiblaAngle }: CompassProps) {
             shadowOpacity: 0.5,
             shadowRadius: 40,
             elevation: 8,
+            transform: [{ rotate: `${dialRotation}deg` }],
           }}
         >
           {/* Degree Markings Ring */}
@@ -168,84 +187,31 @@ export default function Compass({ isDark, qiblaAngle }: CompassProps) {
             }}
           />
 
-          {/* Kaaba Icon Indicator (Rotated to Qibla direction) */}
-          <View
-            className="absolute items-center justify-center"
-            style={{
-              width: compassSize,
-              height: compassSize,
-              transform: [{ rotate: `${qiblaAngle}deg` }],
-            }}
-          >
-            <View
-              className="absolute items-center justify-center rounded-full"
-              style={{
-                top: 32,
-                width: 32,
-                height: 32,
-                backgroundColor: "rgba(31, 143, 95, 0.2)",
-              }}
-            >
-              <MaterialIcons
-                name="mosque"
-                size={18}
-                color="#1F8F5F"
-              />
-            </View>
-          </View>
+        </View>
 
-          {/* Main Needle */}
+        {/* Qibla Arrow (fixed center, rotates relative to device) */}
+        <View
+          className="absolute items-center justify-center"
+          style={{
+            width: compassSize,
+            height: compassSize,
+            transform: [{ rotate: `${qiblaRotation}deg` }],
+          }}
+        >
           <View
-            className="absolute items-center justify-center"
+            className="absolute items-center justify-center rounded-full"
             style={{
-              width: 8,
-              height: 160,
-              transform: [{ rotate: `${needleRotation}deg` }],
+              top: 20,
+              width: 44,
+              height: 44,
+              backgroundColor: isDark
+                ? "rgba(255, 255, 255, 0.06)"
+                : "rgba(0,0,0,0.04)",
+              borderWidth: 2,
+              borderColor: accent,
             }}
           >
-            {/* North Point (Red/Highlight) */}
-            <View
-              style={{
-                width: 6,
-                height: 80,
-                backgroundColor: "#1F8F5F",
-                borderTopLeftRadius: 3,
-                borderTopRightRadius: 3,
-                shadowColor: "#1F8F5F",
-                shadowOffset: { width: 0, height: 0 },
-                shadowOpacity: 0.6,
-                shadowRadius: 15,
-                elevation: 4,
-              }}
-            />
-            {/* South Point (Gray) */}
-            <View
-              style={{
-                width: 6,
-                height: 80,
-                backgroundColor: isDark ? "rgba(255, 255, 255, 0.2)" : "#E2ECE8",
-                borderBottomLeftRadius: 3,
-                borderBottomRightRadius: 3,
-              }}
-            />
-            {/* Center Pivot */}
-            <View
-              className="absolute rounded-full"
-              style={{
-                top: 80 - 8,
-                left: 4 - 8,
-                width: 16,
-                height: 16,
-                backgroundColor: isDark ? "#1A2C26" : "#FFFFFF",
-                borderWidth: 2,
-                borderColor: "#1F8F5F",
-                shadowColor: "#000",
-                shadowOffset: { width: 0, height: 2 },
-                shadowOpacity: 0.3,
-                shadowRadius: 4,
-                elevation: 4,
-              }}
-            />
+            <MaterialIcons name="navigation" size={20} color={accent} />
           </View>
         </View>
       </View>

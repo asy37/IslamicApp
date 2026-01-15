@@ -75,6 +75,12 @@
         }
       ],
       [
+        "expo-sensors",
+        {
+          "motionPermission": "Kıble yönünü doğru gösterebilmek için cihaz hareket sensörlerine erişim gerekiyor."
+        }
+      ],
+      [
         "expo-location",
         {
           "locationAlwaysAndWhenInUsePermission": "Namaz vakitlerini doğru hesaplamak için konumunuza ihtiyacımız var."

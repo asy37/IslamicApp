@@ -1,6 +1,14 @@
 import { Text } from "react-native";
 
-export default function CalibrationHint({ isDark }: { isDark: boolean }) {
+export default function CalibrationHint({
+  isDark,
+  shouldShow,
+}: {
+  isDark: boolean;
+  shouldShow: boolean;
+}) {
+  if (!shouldShow) return null;
+
   return (
     <Text
       className="text-center text-[10px] mt-4 max-w-[200px] mx-auto leading-relaxed"

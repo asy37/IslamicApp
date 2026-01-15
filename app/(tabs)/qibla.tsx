@@ -1,16 +1,64 @@
-import { useColorScheme, View } from "react-native";
+import React, { useEffect, useMemo, useRef } from "react";
+import { ActivityIndicator, Text, View, useColorScheme } from "react-native";
 import clsx from "clsx";
+import * as Haptics from "expo-haptics";
 import QiblaHeader from "@/components/qibla/QiblaHeader";
 import Compass from "@/components/qibla/Compass";
 import AlignmentFeedback from "@/components/qibla/AlignmentFeedback";
 import LocationInfo from "@/components/qibla/LocationInfo";
 import AngleInfo from "@/components/qibla/AngleInfo";
 import CalibrationHint from "@/components/qibla/CalibrationHint";
+import { useLocation } from "@/lib/hooks/useLocation";
+import { useLocationStore } from "@/lib/storage/locationStore";
+import { useDeviceHeading } from "@/lib/hooks/useDeviceHeading";
+import { useQiblaBearing } from "@/lib/hooks/useQiblaBearing";
+import { useQiblaGuide } from "@/lib/hooks/useQiblaGuide";
+export default function QiblaTabScreen() {
+  const BAD_ACCURACY_THRESHOLD = 1; // MVP: gerçek platform accuracy yoksa null döneriz
 
-export default function QiblaScreen() {
   const colorScheme = useColorScheme();
   const isDark = colorScheme === "dark";
-  const qiblaAngle = 152; // Örnek açı - gerçek uygulamada hesaplanacak
+
+  const storedLocation = useLocationStore((s) => s.location);
+  const {
+    loading: locationLoading,
+    error: locationError,
+    requestLocation,
+  } = useLocation();
+
+  const location = storedLocation
+    ? { lat: storedLocation.latitude, lng: storedLocation.longitude }
+    : null;
+
+  useEffect(() => {
+    if (!location && !locationLoading && !locationError) {
+      requestLocation();
+    }
+  }, [location, locationError, locationLoading, requestLocation]);
+
+  const { heading, accuracy } = useDeviceHeading(100);
+  const { qiblaBearing } = useQiblaBearing(location);
+  const { angleDiff, feedbackLevel } = useQiblaGuide(heading, qiblaBearing);
+
+  const alignedTriggeredRef = useRef(false);
+  useEffect(() => {
+    if (feedbackLevel === "aligned" && !alignedTriggeredRef.current) {
+      alignedTriggeredRef.current = true;
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success).catch(
+        () => {}
+      );
+    }
+    if (feedbackLevel !== "aligned") {
+      alignedTriggeredRef.current = false;
+    }
+  }, [feedbackLevel]);
+
+  const shouldShowCalibration = useMemo(() => {
+    if (accuracy === null) return false;
+    return accuracy <= BAD_ACCURACY_THRESHOLD;
+  }, [accuracy]);
+
+  const showLoading = locationLoading && !location;
 
   return (
     <View
@@ -20,18 +68,55 @@ export default function QiblaScreen() {
       )}
     >
       <QiblaHeader isDark={isDark} />
+
       <View className="flex-1 flex-col items-center justify-center relative">
-        <Compass isDark={isDark} qiblaAngle={qiblaAngle} />
-        <AlignmentFeedback isDark={isDark} />
+        {showLoading ? (
+          <View className="items-center justify-center gap-3">
+            <ActivityIndicator />
+            <Text
+              className={clsx(
+                "text-sm",
+                isDark ? "text-text-secondaryDark" : "text-text-secondaryLight"
+              )}
+            >
+              Location is being fetched…
+            </Text>
+          </View>
+        ) : (
+          <>
+            <Compass
+              isDark={isDark}
+              heading={heading}
+              qiblaBearing={qiblaBearing}
+              feedbackLevel={feedbackLevel}
+              angleDiff={angleDiff}
+            />
+            <AlignmentFeedback feedbackLevel={feedbackLevel} />
+          </>
+        )}
       </View>
+
       <View className="p-6 pb-8 z-10">
         <View className="flex-row items-center justify-between gap-4">
-          <LocationInfo isDark={isDark} />
-          <AngleInfo angle={qiblaAngle} isDark={isDark} />
+          <LocationInfo
+            isDark={isDark}
+            location={storedLocation}
+            loading={locationLoading}
+            error={locationError}
+          />
+          <AngleInfo
+            angle={Math.round(Math.abs(angleDiff))}
+            isDark={isDark}
+            feedbackLevel={feedbackLevel}
+          />
         </View>
-        <CalibrationHint isDark={isDark} />
+        <CalibrationHint isDark={isDark} shouldShow={shouldShowCalibration} />
+        {locationError && (
+          <Text className="text-center text-xs mt-2 text-red-500">
+            {locationError}
+          </Text>
+        )}
       </View>
     </View>
   );
 }
-
