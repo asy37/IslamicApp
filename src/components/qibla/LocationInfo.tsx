@@ -23,7 +23,7 @@ export default function LocationInfo({
   } else if (error) {
     title = "Location error";
   } else if (location) {
-    title = `${location.latitude.toFixed(4)}, ${location.longitude.toFixed(4)}`;
+    title = `${location.city}, ${location.country}`;
   }
   return (
     <View
