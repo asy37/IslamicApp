@@ -2,7 +2,7 @@ import "@/lib/utils/debugLogInit";
 import "../global.css";
 import { Stack, useRouter, useSegments } from "expo-router";
 import { useEffect, useState } from "react";
-import { useFonts } from "expo-font";
+
 import * as SplashScreen from "expo-splash-screen";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { initI18n } from "@/i18n";
@@ -36,15 +36,18 @@ export default function RootLayout() {
   const [isNavigationReady, setIsNavigationReady] = useState(false);
   const [i18nReady, setI18nReady] = useState(false);
   const [dbReady, setDbReady] = useState(false);
+  const [onboardingCompleted, setOnboardingCompleted] = useState<boolean | null>(null);
 
   useEffect(() => {
     initI18n().then(() => setI18nReady(true)).catch(() => setI18nReady(true));
+    
+    // Check onboarding status
+    storage.getString(ONBOARDING_COMPLETED_KEY).then((val) => {
+      setOnboardingCompleted(val === "true");
+    });
   }, []);
 
-  const [fontsLoaded] = useFonts({});
-
-  const appReady =
-    !isLoading && i18nReady && dbReady && fontsLoaded;
+  const appReady = !isLoading && i18nReady && dbReady && onboardingCompleted !== null;
 
   useEffect(() => {
     SplashScreen.preventAutoHideAsync();
@@ -56,10 +59,15 @@ export default function RootLayout() {
 
   useEffect(() => {
     const run = () => {
-      getDb()
+      // 3 saniyelik bir timeout ekliyoruz. Eğer DB kilitlenirse sonsuza kadar beklemesin.
+      const timeoutPromise = new Promise((_, reject) => 
+        setTimeout(() => reject(new Error("DB Timeout")), 3000)
+      );
+      
+      Promise.race([getDb(), timeoutPromise])
         .then(() => setDbReady(true))
         .catch((err) => {
-          console.error("DB Init error in _layout:", err);
+          console.error("DB Init error or timeout in _layout:", err);
           setDbReady(true); // Veritabanı başlatılamasa bile uygulamanın açılmasını sağla
         });
     };
@@ -72,69 +80,48 @@ export default function RootLayout() {
     setupQueryManagers();
   }, []);
 
-  // Yönlendirme: nav ready olduktan sonra segment/auth değişince (örn. logout sonrası).
-  useEffect(() => {
-    if (isLoading || !isNavigationReady) return;
-    let cancelled = false;
-    storage.getString(ONBOARDING_COMPLETED_KEY).then((value) => {
-      if (cancelled) return;
-      const inOnboarding = segments[0] === "onboarding";
-      if (value !== "true") {
-        if (!inOnboarding) router.replace("/onboarding");
-        return;
-      }
-      const inAuth = segments[0] === "auth";
-      const inTabs = segments[0] === "(tabs)";
-      if (inOnboarding) return;
-      if (shouldShowRegister && !inAuth) {
-        router.replace("/auth/register");
-      } else if (canAccessApp && !inTabs && !inAuth) {
-        router.replace("/(tabs)");
-      }
-    });
-    return () => {
-      cancelled = true;
-    };
-  }, [isLoading, shouldShowRegister, canAccessApp, segments, isNavigationReady, router]);
-
-  // appReady olunca önce doğru sayfaya yönlendir, sonra splash kapat ve nav ready yap (yanlış sayfa flash olmasın).
+  // appReady olunca YALNIZCA BİR KERE çalışır, ilk yönlendirmeyi yapar ve splash'ı kapatır.
   useEffect(() => {
     if (!appReady) return;
-    let cancelled = false;
-    let done = false;
-    let delayId: ReturnType<typeof setTimeout>;
-    let fallbackId: ReturnType<typeof setTimeout>;
-    const setNavReady = () => {
-      if (done || cancelled) return;
-      done = true;
-      setIsNavigationReady(true);
-    };
 
-    storage.getString(ONBOARDING_COMPLETED_KEY).then((value) => {
-      if (cancelled) return;
-      if (value !== "true") {
-        router.replace("/onboarding");
-      } else if (shouldShowRegister) {
-        router.replace("/auth/register");
-      } else if (canAccessApp) {
-        router.replace("/(tabs)");
-      }
-      // Yönlendirme tetiklendikten sonra kısa gecikmeyle splash kapat; router'ın ekranı değiştirmesi için zaman tanı.
-      delayId = setTimeout(() => {
-        if (cancelled) return;
-        SplashScreen.hideAsync()
-          .then(setNavReady)
-          .catch(setNavReady);
-        fallbackId = setTimeout(setNavReady, 800);
-      }, 50);
-    });
+    // İlk yönlendirmeyi yapıyoruz
+    if (!onboardingCompleted) {
+      router.replace("/onboarding");
+    } else if (shouldShowRegister) {
+      router.replace("/auth/register");
+    } else if (canAccessApp) {
+      router.replace("/(tabs)");
+    }
 
-    return () => {
-      cancelled = true;
-      clearTimeout(delayId);
-      clearTimeout(fallbackId);
-    };
-  }, [appReady, shouldShowRegister, canAccessApp, router]);
+    // Yönlendirme tetiklendikten sonra kısa gecikmeyle splash kapat
+    const timer = setTimeout(() => {
+      SplashScreen.hideAsync().finally(() => setIsNavigationReady(true));
+    }, 50);
+
+    return () => clearTimeout(timer);
+  }, [appReady]); // Sadece appReady bağımlılığı var, race condition olmaz.
+
+  // Runtime'da auth durumu veya segment değişirse yönlendirmeleri yönet (örneğin logout olunca)
+  useEffect(() => {
+    if (!isNavigationReady) return; // Sadece uygulama tam açıldıktan sonra
+    
+    const inOnboarding = segments[0] === "onboarding";
+    if (!onboardingCompleted) {
+      if (!inOnboarding) router.replace("/onboarding");
+      return;
+    }
+    
+    const inAuth = segments[0] === "auth";
+    const inTabs = segments[0] === "(tabs)";
+    
+    if (inOnboarding) return;
+    
+    if (shouldShowRegister && !inAuth) {
+      router.replace("/auth/register");
+    } else if (canAccessApp && !inTabs && !inAuth) {
+      router.replace("/(tabs)");
+    }
+  }, [shouldShowRegister, canAccessApp, segments, isNavigationReady, onboardingCompleted, router]);
 
   useNotificationSetup(router);
   usePrayerTimesPrefetch(dbReady);
