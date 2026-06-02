@@ -513,25 +513,7 @@ export class NotificationService {
     }
   }
 
-  /**
-   * Cancel the late reminder for a specific prayer (call when user marks prayer as prayed).
-   */
-  async cancelPrayerLateReminderForPrayer(prayerName: string, date: string): Promise<void> {
-    const NotificationsModule = getNotifications();
-    if (!NotificationsModule) return;
 
-    const notifications = await NotificationsModule.getAllScheduledNotificationsAsync();
-    const key = prayerName.toLowerCase();
-    const filtered = notifications.filter(
-      (n) =>
-        n.content.data?.type === 'prayer_late_reminder' &&
-        (n.content.data?.prayerName as string)?.toLowerCase() === key &&
-        n.content.data?.date === date
-    );
-    for (const notification of filtered) {
-      await NotificationsModule.cancelScheduledNotificationAsync(notification.identifier);
-    }
-  }
 
   /**
    * Schedule prayer reminder notifications (30 minutes after prayer time).
@@ -843,7 +825,7 @@ export class NotificationService {
   }
 
   /**
-   * Sadece belirtilen (tarih, vakit) için namaz hatırlatıcı bildirimini iptal eder.
+   * Sadece belirtilen (tarih, vakit) için namaz hatırlatıcı bildirimlerini (status, late reminder, vb.) iptal eder.
    * Kullanıcı "kıldım" işaretlediğinde o vakit hatırlatması gelmemeli.
    */
   async cancelPrayerReminderForPrayer(prayerName: string, date: string): Promise<void> {
@@ -854,7 +836,9 @@ export class NotificationService {
     const key = prayerName.toLowerCase();
     const filtered = notifications.filter(
       (n) =>
-        n.content.data?.type === 'prayer_reminder' &&
+        (n.content.data?.type === 'prayer_reminder' ||
+         n.content.data?.type === 'prayer_status' ||
+         n.content.data?.type === 'prayer_late_reminder') &&
         (n.content.data?.prayerName as string)?.toLowerCase() === key &&
         n.content.data?.date === date
     );
