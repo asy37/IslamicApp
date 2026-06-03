@@ -140,6 +140,17 @@ class DailyResetService {
       this.lastResetDate = effectiveToday;
       await storage.set(LAST_RESET_DATE_KEY, effectiveToday);
 
+      // Yeni gün başladığında, internet varsa önceki günün verilerini hemen Supabase'e gönder
+      try {
+        const { prayerSyncService } = await import('@/lib/services/prayerSync');
+        prayerSyncService.syncPendingItems().catch((err) => {
+          console.warn('[DailyReset] Sync after reset failed (will retry later):', err);
+        });
+      } catch (err) {
+        // Sync service yüklenemezse sessizce devam et
+        console.warn('[DailyReset] Failed to import/run prayerSyncService:', err);
+      }
+
       console.log('[DailyReset] Daily reset completed', {
         previousDate: currentState?.date,
         effectiveToday,

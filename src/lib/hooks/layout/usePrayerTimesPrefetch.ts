@@ -57,6 +57,12 @@ export function usePrayerTimesPrefetch(dbReady: boolean): void {
           queryClient.invalidateQueries({
             queryKey: ["prayerTracking", "local", getEffectiveToday()],
           });
+          try {
+            const { dailyResetService } = await import("@/lib/services/dailyReset");
+            await dailyResetService.initialize({ data: cached } as any);
+          } catch (err) {
+            console.warn("[Prefetch] Daily reset check failed (cached):", err);
+          }
         }
 
         const queue = await getPrayerTimesSyncQueue();
@@ -98,6 +104,12 @@ export function usePrayerTimesPrefetch(dbReady: boolean): void {
           queryClient.invalidateQueries({
             queryKey: ["prayerTracking", "local", getEffectiveToday()],
           });
+          try {
+            const { dailyResetService } = await import("@/lib/services/dailyReset");
+            await dailyResetService.initialize({ data: todayFromCal } as any);
+          } catch (err) {
+            console.warn("[Prefetch] Daily reset check failed (cal):", err);
+          }
         }
 
         const dayIndex = cal.data.findIndex((d) => d.date?.gregorian?.date === today);

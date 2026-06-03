@@ -1,6 +1,9 @@
 /**
  * Authentication Hook
  * Manages authentication state and session
+ *
+ * getSession() çağrısına 5sn timeout eklendi.
+ * Ağ yavaş veya offline olduğunda splash screen'de takılmayı önler.
  */
 
 import { useState, useEffect } from 'react';
@@ -9,12 +12,42 @@ import type { User, Session } from '@supabase/supabase-js';
 import { isAnonymousUser, isEmailConfirmed } from '@/lib/api/services/auth';
 import { debugLog } from '@/lib/utils/debugLog';
 
+/** Auth timeout süresi (ms). Ağ yavaş/offline olduğunda splash'ı bloklamayı önler. */
+const AUTH_TIMEOUT_MS = 5000;
+
 export interface AuthState {
   user: User | null;
   session: Session | null;
   isLoading: boolean;
   isAnonymous: boolean;
   isEmailConfirmed: boolean;
+}
+
+/**
+ * getSession() çağrısını timeout ile sarmalayan yardımcı fonksiyon.
+ * Timeout durumunda null session döner, uygulama yine de açılır.
+ */
+function getSessionWithTimeout(
+  timeoutMs: number = AUTH_TIMEOUT_MS
+): Promise<{ session: Session | null }> {
+  return new Promise((resolve) => {
+    const timer = setTimeout(() => {
+      debugLog('useAuth.ts', 'getSession TIMEOUT', { timeoutMs });
+      resolve({ session: null });
+    }, timeoutMs);
+
+    supabase.auth
+      .getSession()
+      .then(({ data: { session } }) => {
+        clearTimeout(timer);
+        resolve({ session });
+      })
+      .catch((err) => {
+        clearTimeout(timer);
+        debugLog('useAuth.ts', 'getSession error', { error: String(err) });
+        resolve({ session: null });
+      });
+  });
 }
 
 /**
@@ -28,19 +61,14 @@ export function useAuth(): AuthState {
   useEffect(() => {
     let mounted = true;
     debugLog('useAuth.ts', 'before getSession', {});
-    supabase.auth.getSession()
-      .then(({ data: { session } }) => {
-        debugLog('useAuth.ts', 'getSession success', { hasSession: !!session });
-        if (!mounted) return;
-        setSession(session);
-        setUser(session?.user ?? null);
-        setIsLoading(false);
-      })
-      .catch((err) => {
-        debugLog('useAuth.ts', 'getSession error', { error: String(err) });
-        if (!mounted) return;
-        setIsLoading(false);
-      });
+
+    getSessionWithTimeout().then(({ session }) => {
+      debugLog('useAuth.ts', 'getSession resolved', { hasSession: !!session });
+      if (!mounted) return;
+      setSession(session);
+      setUser(session?.user ?? null);
+      setIsLoading(false);
+    });
 
     // Listen for auth changes
     const {
@@ -50,10 +78,11 @@ export function useAuth(): AuthState {
       
       // For SIGNED_IN, SIGNED_UP and TOKEN_REFRESHED events, ensure we have the latest session
       if (['SIGNED_IN', 'SIGNED_UP', 'TOKEN_REFRESHED'].includes(event)) {
-        // Double-check session to ensure it's up to date
-        const { data: { session: latestSession } } = await supabase.auth.getSession();
-        setSession(latestSession);
-        setUser(latestSession?.user ?? null);
+        // Timeout ile sarmalıyoruz — bu event handler'da da asılı kalabilir
+        const { session: latestSession } = await getSessionWithTimeout(3000);
+        if (!mounted) return;
+        setSession(latestSession ?? session);
+        setUser((latestSession ?? session)?.user ?? null);
       } else {
         setSession(session);
         setUser(session?.user ?? null);

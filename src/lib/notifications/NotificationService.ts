@@ -834,11 +834,15 @@ export class NotificationService {
 
     const notifications = await NotificationsModule.getAllScheduledNotificationsAsync();
     const key = prayerName.toLowerCase();
+    const reminderTypes = [
+      'prayer_reminder',
+      'prayer_status',
+      'prayer_late_reminder',
+      'prayer_reminder_later',
+    ];
     const filtered = notifications.filter(
       (n) =>
-        (n.content.data?.type === 'prayer_reminder' ||
-         n.content.data?.type === 'prayer_status' ||
-         n.content.data?.type === 'prayer_late_reminder') &&
+        reminderTypes.includes(n.content.data?.type as string) &&
         (n.content.data?.prayerName as string)?.toLowerCase() === key &&
         n.content.data?.date === date
     );

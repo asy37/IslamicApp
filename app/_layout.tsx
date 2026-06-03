@@ -58,18 +58,31 @@ export default function RootLayout() {
   }, []);
 
   useEffect(() => {
-    const run = () => {
+    const run = async () => {
       // 3 saniyelik bir timeout ekliyoruz. Eğer DB kilitlenirse sonsuza kadar beklemesin.
       const timeoutPromise = new Promise((_, reject) => 
         setTimeout(() => reject(new Error("DB Timeout")), 3000)
       );
       
-      Promise.race([getDb(), timeoutPromise])
-        .then(() => setDbReady(true))
-        .catch((err) => {
-          console.error("DB Init error or timeout in _layout:", err);
-          setDbReady(true); // Veritabanı başlatılamasa bile uygulamanın açılmasını sağla
-        });
+      try {
+        await Promise.race([getDb(), timeoutPromise]);
+      } catch (err) {
+        console.error("DB Init error or timeout in _layout:", err);
+      }
+      setDbReady(true);
+
+      // DB hazır olduğunda daily reset kontrolü yap (UI'dan bağımsız)
+      try {
+        const { dailyResetService } = await import('@/lib/services/dailyReset');
+        const { usePrayerTimesStore } = await import('@/lib/storage/prayerTimesStore');
+        const todayData = usePrayerTimesStore.getState().getTodayData();
+        const prayerTimesResponse = todayData
+          ? ({ data: todayData } as any)
+          : undefined;
+        await dailyResetService.initialize(prayerTimesResponse);
+      } catch (err) {
+        console.warn('[Layout] Daily reset check failed:', err);
+      }
     };
     // Production APK ilk açılışta requestIdleCallback bazen gecikiyor; doğrudan setTimeout kullan.
     const timeoutId = setTimeout(run, 0);

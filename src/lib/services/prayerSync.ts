@@ -21,19 +21,27 @@ export interface SyncResult {
 class PrayerSyncService {
   private isSyncing = false;
 
-  /**
-   * Check if device is online
-   * Uses fetch to check connectivity (works without NetInfo package)
-   */
   async isOnline(): Promise<boolean> {
     try {
-      // Simple connectivity check
-      const response = await fetch('https://www.google.com', {
-        method: 'HEAD',
-        mode: 'no-cors',
-        cache: 'no-store',
-      });
-      return true;
+      // NetInfo kullanarak bağlantı kontrolü; yoksa küçük bir fetch ile kontrol et
+      try {
+        const NetInfo = require('@react-native-community/netinfo');
+        const state = await NetInfo.fetch();
+        return state.isConnected === true;
+      } catch {
+        // NetInfo yüklü değilse, basit fetch ile kontrol et
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), 5000);
+        try {
+          await fetch('https://www.google.com/generate_204', {
+            method: 'HEAD',
+            signal: controller.signal,
+          });
+          return true;
+        } finally {
+          clearTimeout(timeout);
+        }
+      }
     } catch {
       return false;
     }

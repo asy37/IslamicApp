@@ -97,7 +97,7 @@
     <key>UILaunchScreen</key>
     <dict>
       <key>backgroundColor</key>
-      <string>#2D5016</string>
+      <string>#06231E</string>
     </dict>
     <key>UILaunchStoryboardName</key>
     <string>SplashScreen</string>
