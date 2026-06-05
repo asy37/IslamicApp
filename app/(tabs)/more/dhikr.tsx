@@ -90,7 +90,7 @@ export default function DhikrScreen() {
         if (isLoadingDhikrs || isLoadingDhikr) {
           return (
             <View className="flex-1 items-center justify-center">
-              <ActivityIndicator size="large" color="#1F8F5F" />
+              <ActivityIndicator size="large" color={colors.primary[500]} />
             </View>
           );
         }

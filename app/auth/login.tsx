@@ -23,6 +23,7 @@ import { loginSchema, type LoginFormValues } from "@/components/auth/login/schem
 import { useTheme } from "@/lib/storage/useThemeStore";
 import { useTranslation } from "@/i18n";
 import { i18n } from "@/i18n";
+import { colors } from "@/components/theme/colors";
 
 async function doSignIn(email: string, password: string) {
     const result = await signInWithPassword(email, password);
@@ -161,7 +162,7 @@ export default function LoginScreen() {
                                                 errors.email && "border-red-500"
                                             )}
                                             placeholder="ornek@email.com"
-                                            placeholderTextColor={isDark ? "#8FA6A0" : "#6B7F78"}
+                                            placeholderTextColor={isDark ? colors.text.secondaryDark : colors.text.secondaryLight}
                                             value={value}
                                             onChangeText={onChange}
                                             onBlur={onBlur}
@@ -181,7 +182,7 @@ export default function LoginScreen() {
                                             <MaterialIcons
                                                 name="mail"
                                                 size={20}
-                                                color={isDark ? "#8FA6A0" : "#6B7F78"}
+                                                color={isDark ? colors.text.secondaryDark : colors.text.secondaryLight}
                                             />
                                         </View>
                                     </View>
@@ -216,7 +217,7 @@ export default function LoginScreen() {
                                                 errors.password && "border-red-500"
                                             )}
                                             placeholder="••••••••"
-                                            placeholderTextColor={isDark ? "#8FA6A0" : "#6B7F78"}
+                                            placeholderTextColor={isDark ? colors.text.secondaryDark : colors.text.secondaryLight}
                                             value={value}
                                             onChangeText={onChange}
                                             onBlur={onBlur}
@@ -237,7 +238,7 @@ export default function LoginScreen() {
                                             <MaterialIcons
                                                 name={showPassword ? "visibility-off" : "visibility"}
                                                 size={20}
-                                                color={isDark ? "#8FA6A0" : "#6B7F78"}
+                                                color={isDark ? colors.text.secondaryDark : colors.text.secondaryLight}
                                             />
                                         </TouchableOpacity>
                                     </View>

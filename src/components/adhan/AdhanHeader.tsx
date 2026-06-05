@@ -9,6 +9,7 @@ import { getLocationText } from "./utils/utils-function";
 import { useMethodStore } from "@/lib/storage/useMethodStore";
 import { PrayerCalculationMethod } from "@/constants/prayer-method";
 import Button from "../button/Button";
+import { colors } from "@/components/theme/colors";
 
 type AdhanHeaderProps = {
   readonly isDark: boolean;
@@ -49,7 +50,7 @@ export default function AdhanHeader({ isDark }: AdhanHeaderProps) {
             <MaterialIcons
               name="location-on"
               size={20}
-              color={isDark ? "#4CAF84" : "#1F8F5F"}
+              color={isDark ? colors.secondary : colors.primary[500]}
             />
             <Text
               className={clsx(

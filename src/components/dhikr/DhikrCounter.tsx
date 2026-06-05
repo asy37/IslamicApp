@@ -2,6 +2,7 @@ import { Text, View, Animated } from "react-native";
 import clsx from "clsx";
 import { useEffect, useRef } from "react";
 import Svg, { Circle } from "react-native-svg";
+import { colors } from "@/components/theme/colors";
 
 type DhikrCounterProps = {
   readonly count: number;
@@ -79,8 +80,8 @@ export default function DhikrCounter({
           className="absolute inset-0 rounded-full"
           style={{
             backgroundColor: isDark
-              ? "rgba(31, 143, 95, 0.1)"
-              : "rgba(31, 143, 95, 0.05)",
+              ? "rgba(38, 166, 154, 0.1)"
+              : "rgba(38, 166, 154, 0.05)",
             transform: [{ scale: pulseAnim }],
           }}
         />
@@ -93,7 +94,7 @@ export default function DhikrCounter({
               cx={center}
               cy={center}
               r={radius}
-              stroke={isDark ? "rgba(34, 56, 51, 0.3)" : "rgba(226, 236, 232, 0.3)"}
+              stroke={isDark ? "rgba(38, 53, 46, 0.3)" : "rgba(229, 239, 234, 0.3)"}
               strokeWidth={strokeWidth}
               fill="transparent"
             />
@@ -102,7 +103,7 @@ export default function DhikrCounter({
               cx={center}
               cy={center}
               r={radius}
-              stroke={isDark ? "#4CAF84" : "#1F8F5F"}
+              stroke={isDark ? colors.secondary : colors.primary[500]}
               strokeWidth={strokeWidth}
               fill="transparent"
               strokeDasharray={strokeDasharray}

@@ -43,8 +43,8 @@ export default function SettingsScreen() {
 
   const adhanNotifications = useNotificationSettings((s) => s.adhanNotifications);
   const setAdhanNotifications = useNotificationSettings((s) => s.setAdhanNotifications);
-  const prePrayerAlerts = useNotificationSettings((s) => s.prePrayerAlerts);
-  const setPrePrayerAlerts = useNotificationSettings((s) => s.setPrePrayerAlerts);
+  const prayerReminderEnabled = useNotificationSettings((s) => s.prayerReminderEnabled);
+  const setPrayerReminderEnabled = useNotificationSettings((s) => s.setPrayerReminderEnabled);
   const playAdhanAudio = useNotificationSettings((s) => s.playAdhanAudio);
   const setPlayAdhanAudio = useNotificationSettings((s) => s.setPlayAdhanAudio);
   const vibration = useNotificationSettings((s) => s.vibration);
@@ -68,7 +68,7 @@ export default function SettingsScreen() {
     key: string
   ) => {
     setter(value);
-    if (key === "adhan" || key === "prePrayer" || key === "playAdhan" || key === "vibration" || key === "dailyVerse") {
+    if (key === "adhan" || key === "prayerReminder" || key === "playAdhan" || key === "vibration" || key === "dailyVerse") {
       try {
         const method = useMethodStore.getState().method?.id ?? 13;
         const location = useLocationStore.getState().location;
@@ -253,10 +253,10 @@ export default function SettingsScreen() {
               }}
             />
             <SettingsToggle
-              title={t("settings.prePrayerAlerts")}
-              subtitle={t("settings.prePrayerSubtitle")}
-              value={prePrayerAlerts}
-              onValueChange={(v) => handleToggleChange(setPrePrayerAlerts, v, "prePrayer")}
+              title={t("settings.prayerReminder")}
+              subtitle={t("settings.prayerReminderSubtitle")}
+              value={prayerReminderEnabled}
+              onValueChange={(v) => handleToggleChange(setPrayerReminderEnabled, v, "prayerReminder")}
               isDark={isDark}
             />
             <View

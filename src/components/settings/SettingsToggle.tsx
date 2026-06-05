@@ -1,5 +1,6 @@
 import { Switch, Text, View } from "react-native";
 import clsx from "clsx";
+import { colors } from "@/components/theme/colors";
 
 type SettingsToggleProps = {
   readonly title: string;
@@ -43,7 +44,7 @@ export default function SettingsToggle({
         onValueChange={onValueChange}
         trackColor={{
           false: isDark ? "rgba(255, 255, 255, 0.1)" : "#E5E7EB",
-          true: "#1F8F5F",
+          true: colors.primary[500],
         }}
         thumbColor="#FFFFFF"
         ios_backgroundColor={isDark ? "rgba(255, 255, 255, 0.1)" : "#E5E7EB"}

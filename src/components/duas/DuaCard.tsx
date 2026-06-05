@@ -3,6 +3,7 @@ import { Alert, Text, View } from "react-native";
 import React from "react";
 import clsx from "clsx";
 import Button from "@/components/button/Button";
+import { colors } from "@/components/theme/colors";
 import { DuaFormData, duaSchema } from "./schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -66,7 +67,7 @@ export default function DuaCard({ dua, isDark, updateDua, deleteDua, toggleFavor
               <MaterialIcons
                 name="calendar-today"
                 size={16}
-                color={isDark ? "#8FA6A0" : "#6B7F78"}
+                color={isDark ? colors.text.secondaryDark : colors.text.secondaryLight}
               />
               <Text
                 className={clsx(

@@ -1,6 +1,7 @@
 import { MaterialIcons } from "@expo/vector-icons";
 import { Pressable, Text, View } from "react-native";
 import clsx from "clsx";
+import { colors } from "@/components/theme/colors";
 
 type SettingsItemProps = {
   readonly title: string;
@@ -50,7 +51,7 @@ export default function SettingsItem({
         <MaterialIcons
           name="chevron-right"
           size={20}
-          color={isDark ? "#8FA6A0" : "#6B7F78"}
+          color={isDark ? colors.text.secondaryDark : colors.text.secondaryLight}
         />
       </View>
     </Pressable>

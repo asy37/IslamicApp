@@ -1,6 +1,7 @@
 import { MaterialIcons } from "@expo/vector-icons";
 import { Pressable, Text, View } from "react-native";
 import clsx from "clsx";
+import { colors } from "@/components/theme/colors";
 
 export default function MoreHeader({ isDark }: { isDark: boolean }) {
   return (
@@ -26,7 +27,7 @@ export default function MoreHeader({ isDark }: { isDark: boolean }) {
           <MaterialIcons
             name="notifications"
             size={24}
-            color={isDark ? "#4CAF84" : "#1F8F5F"}
+            color={isDark ? colors.secondary : colors.primary[500]}
           />
         </Pressable>
       </View>

@@ -4,6 +4,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { useDhikrStats } from "@/lib/hooks/dhikir/useDhikirStats";
 import clsx from "clsx";
 import { useTheme } from "@/lib/storage/useThemeStore";
+import { colors } from "@/components/theme/colors";
 
 type DhikirStatsProps = Readonly<{
     readonly visible: boolean;
@@ -50,7 +51,7 @@ export default function DhikirStats({ visible, onClose }: DhikirStatsProps) {
                 if (loading) {
                     return (
                         <View className="flex-1 items-center justify-center py-8">
-                            <ActivityIndicator size="large" color="#1F8F5F" />
+                            <ActivityIndicator size="large" color={colors.primary[500]} />
                             <Text className={clsx("mt-4", isDark ? "text-text-primaryDark" : "text-text-primaryLight")}>
                                 Loading statistics...
                             </Text>

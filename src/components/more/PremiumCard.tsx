@@ -1,5 +1,6 @@
 import { Pressable, Text, View } from "react-native";
 import clsx from "clsx";
+import { colors } from "@/components/theme/colors";
 
 export default function PremiumCard({ isDark }: { isDark: boolean }) {
   return (
@@ -7,7 +8,7 @@ export default function PremiumCard({ isDark }: { isDark: boolean }) {
       <View
         className="relative overflow-hidden rounded-2xl p-6"
         style={{
-          backgroundColor: "#1F8F5F",
+          backgroundColor: colors.primary[500],
           shadowColor: "#000",
           shadowOffset: { width: 0, height: 4 },
           shadowOpacity: 0.3,
@@ -44,7 +45,7 @@ export default function PremiumCard({ isDark }: { isDark: boolean }) {
           >
             <Text
               className="text-sm font-semibold"
-              style={{ color: "#1F8F5F" }}
+              style={{ color: colors.primary[500] }}
             >
               Detayları Gör
             </Text>

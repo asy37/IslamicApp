@@ -8,6 +8,7 @@ import { useDuas } from "@/lib/hooks/duas/useDuas";
 import SelectButton from "@/components/button/SelectButton";
 import { FILTERS } from "@/components/duas/utils/utils";
 import { useTheme } from "@/lib/storage/useThemeStore";
+import { colors } from "@/components/theme/colors";
 
 export default function DuasScreen() {
   const { isDark } = useTheme();
@@ -51,7 +52,7 @@ export default function DuasScreen() {
       <DuasHeader setSearchQuery={setSearchQuery} />
       {isLoading ? (
         <View className="flex-1 items-center justify-center">
-          <ActivityIndicator size="large" color="#1F8F5F" />
+          <ActivityIndicator size="large" color={colors.primary[500]} />
         </View>
       ) : (
         <>

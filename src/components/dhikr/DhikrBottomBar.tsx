@@ -5,6 +5,7 @@ import { Dhikr } from "@/types/dhikir";
 import React from "react";
 import DhikirSelect from "./DhikirSelect";
 import DhikirStats from "./DhikirStats";
+import { colors } from "@/components/theme/colors";
 
 
 
@@ -48,7 +49,7 @@ export default function DhikrBottomBar({
             <MaterialIcons
               name="restart-alt"
               size={24}
-              color={isDark ? "#8FA6A0" : "#6B7F78"}
+              color={isDark ? colors.text.secondaryDark : colors.text.secondaryLight}
             />
           </Pressable>
 
@@ -81,7 +82,7 @@ export default function DhikrBottomBar({
             <MaterialIcons
               name="expand-more"
               size={20}
-              color={isDark ? "#8FA6A0" : "#6B7F78"}
+              color={isDark ? colors.text.secondaryDark : colors.text.secondaryLight}
             />
           </Pressable>
 
@@ -90,7 +91,7 @@ export default function DhikrBottomBar({
             <MaterialIcons
               name="bar-chart"
               size={24}
-              color={isDark ? "#8FA6A0" : "#6B7F78"}
+              color={isDark ? colors.text.secondaryDark : colors.text.secondaryLight}
             />
           </Pressable>
         </View>

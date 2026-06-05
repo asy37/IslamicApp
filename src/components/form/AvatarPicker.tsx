@@ -2,6 +2,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 import clsx from "clsx";
 import { Image, Text, TouchableOpacity, View } from "react-native";
 import { useTheme } from "@/lib/storage/useThemeStore";
+import { colors } from "@/components/theme/colors";
 
 // Avatar Picker Component
 type AvatarPickerProps = Readonly<{
@@ -23,7 +24,7 @@ export default function AvatarPicker({ avatar, onPickImage }: AvatarPickerProps)
                 {avatar ? (
                     <Image source={{ uri: avatar }} className="w-full h-full rounded-full" />
                 ) : (
-                    <MaterialIcons name="add-a-photo" size={32} color={isDark ? "#8FA6A0" : "#6B7F78"} />
+                    <MaterialIcons name="add-a-photo" size={32} color={isDark ? colors.text.secondaryDark : colors.text.secondaryLight} />
                 )}
             </TouchableOpacity>
             <Text className={clsx("text-sm font-medium", isDark ? "text-text-secondaryDark" : "text-text-secondaryLight")}>

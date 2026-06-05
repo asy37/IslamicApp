@@ -6,6 +6,7 @@ import { useState, useEffect } from "react";
 import { useAuth } from "@/lib/hooks/auth/useAuth";
 import { resendConfirmationEmail } from "@/lib/api/services/auth";
 import { useTheme } from "@/lib/storage/useThemeStore";
+import { colors } from "@/components/theme/colors";
 
 export default function RegistrationConfirmationScreen() {
   const { isDark } = useTheme();
@@ -59,7 +60,7 @@ export default function RegistrationConfirmationScreen() {
           )}
         >
           {/* Mail Icon */}
-          <MaterialIcons name="mail" size={64} color="#1F8F5F" />
+          <MaterialIcons name="mail" size={64} color={colors.primary[500]} />
         </View>
         {/* Checkmark Badge */}
         <View
@@ -121,7 +122,7 @@ export default function RegistrationConfirmationScreen() {
           )}
           style={{ minWidth: 84, maxWidth: 480, gap: 8 }}
         >
-          <MaterialIcons name="send" size={20} color="#1F8F5F" />
+          <MaterialIcons name="send" size={20} color={colors.primary[500]} />
           <Text className="text-primary-500 text-sm font-bold">
             {isResending ? "Gönderiliyor..." : "Maili tekrar gönder"}
           </Text>
@@ -138,7 +139,7 @@ export default function RegistrationConfirmationScreen() {
           <MaterialIcons
             name="arrow-back"
             size={18}
-            color={isDark ? "#8FA6A0" : "#6B7F78"}
+            color={isDark ? colors.text.secondaryDark : colors.text.secondaryLight}
           />
           <Text
             className={clsx(

@@ -2,6 +2,7 @@ import { Controller, Control, FieldValues, Path } from "react-hook-form";
 import { Text, TextInput, View } from "react-native";
 import { getLabelClassName, getTextInputClassName } from "./utils";
 import { useTheme } from "@/lib/storage/useThemeStore";
+import { colors } from "@/components/theme/colors";
 
 // Form Field Component
 type FormFieldProps<T extends FieldValues = FieldValues> = Readonly<{
@@ -43,7 +44,7 @@ export default function FormField<T extends FieldValues = FieldValues>({
                         <TextInput
                             className={getTextInputClassName(isDark, !!error)}
                             placeholder={placeholder}
-                            placeholderTextColor={isDark ? "#8FA6A0" : "#6B7F78"}
+                            placeholderTextColor={isDark ? colors.text.secondaryDark : colors.text.secondaryLight}
                             value={value}
                             onChangeText={onChange}
                             onBlur={onBlur}

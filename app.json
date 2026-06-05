@@ -9,7 +9,7 @@
     "splash": {
       "image": "./assets/splash-screen.png",
       "resizeMode": "cover",
-      "backgroundColor": "#06231E"
+      "backgroundColor": "#121B17"
     },
     "assetBundlePatterns": [
       "**/*"
@@ -28,7 +28,7 @@
         "NSPhotoLibraryUsageDescription": "Profil fotoğrafı eklemek için fotoğraf kütüphanenize erişim gerekiyor.",
         "NSCameraUsageDescription": "Profil fotoğrafı çekmek için kameraya erişim gerekiyor.",
         "UILaunchScreen": {
-          "backgroundColor": "#06231E"
+          "backgroundColor": "#121B17"
         },
         "NSAppTransportSecurity": {
           "NSAllowsArbitraryLoads": false,
@@ -50,7 +50,7 @@
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/app-logo.png",
-        "backgroundColor": "#06231E"
+        "backgroundColor": "#121B17"
       },
       "package": "com.salah.app",
       "permissions": [
@@ -70,7 +70,7 @@
         "expo-notifications",
         {
           "icon": "./assets/app-logo.png",
-          "color": "#1F8F5F",
+          "color": "#26A69A",
           "sounds": [
             "./assets/sounds/fajr_ezan.mp3",
             "./assets/sounds/dhuhr_ezan.mp3",

@@ -133,30 +133,23 @@ class NotificationSchedulerService {
       await notificationService.cancelNotificationsByType('prayer_time');
     }
 
-    if (settings.prePrayerAlerts) {
-      await notificationService.schedulePrePrayerAlerts(
-        limitedPrayerTimes,
-        effectiveDays,
-        settings.vibration
-      );
-    } else {
-      await notificationService.cancelNotificationsByType('pre_prayer');
-    }
+    // Cancel old/redundant notification types to clean up user device
+    await notificationService.cancelNotificationsByType('pre_prayer');
+    await notificationService.cancelNotificationsByType('prayer_status');
+    await notificationService.cancelNotificationsByType('prayer_late_reminder');
 
     if (settings.prayerReminderEnabled) {
-      await this.schedulePrayerStatusAndLateReminders(
+      await this.schedulePrayerReminder(
         limitedPrayerTimes,
         effectiveDays,
         settings.vibration
       );
     } else {
       await notificationService.cancelNotificationsByType('prayer_reminder');
-      await notificationService.cancelNotificationsByType('prayer_status');
-      await notificationService.cancelNotificationsByType('prayer_late_reminder');
     }
 
     if (settings.dailyVerseEnabled) {
-      await this.scheduleDailyVerse(settings.dailyVerseTime);
+      await this.scheduleDailyVerse('09:00');
     } else {
       await notificationService.cancelNotificationsByType('daily_verse');
     }
@@ -168,8 +161,8 @@ class NotificationSchedulerService {
     }
   }
 
-  /** Namaz durumu (15-20 dk) ve namaz hatırlatma (1 saat). Bugün "kıldım" işaretlenmiş vakitler atlanır. */
-  private async schedulePrayerStatusAndLateReminders(
+  /** Namaz hatırlatması (1 saat). Bugün "kıldım" işaretlenmiş vakitler atlanır. */
+  private async schedulePrayerReminder(
     limitedPrayerTimes: PrayerTimeData[],
     effectiveDays: number,
     vibration: boolean
@@ -186,13 +179,7 @@ class NotificationSchedulerService {
           isha: state.isha === 'prayed',
         }
       : {};
-    await notificationService.schedulePrayerStatusNotifications(
-      limitedPrayerTimes,
-      effectiveDays,
-      vibration,
-      { todayDate: today, alreadyPrayedToday }
-    );
-    await notificationService.schedulePrayerLateReminderNotifications(
+    await notificationService.schedulePrayerReminderNotifications(
       limitedPrayerTimes,
       effectiveDays,
       vibration,
@@ -229,14 +216,11 @@ class NotificationSchedulerService {
         settings.adhanNotifications ? totalPrayerCount : 0;
       const estimatedReminderNotifs =
         settings.prayerReminderEnabled ? totalPrayerCount : 0;
-      const estimatedPrePrayerNotifs =
-        settings.prePrayerAlerts ? totalPrayerCount : 0;
       const estimatedOtherNotifs =
         (settings.dailyVerseEnabled ? 1 : 0) + (settings.streakEnabled ? 1 : 0);
       const estimatedTotal =
         estimatedPrayerTimeNotifs +
         estimatedReminderNotifs +
-        estimatedPrePrayerNotifs +
         estimatedOtherNotifs;
 
       let effectiveDays = days;
@@ -280,14 +264,11 @@ class NotificationSchedulerService {
         settings.adhanNotifications ? totalPrayerCount : 0;
       const estimatedReminderNotifs =
         settings.prayerReminderEnabled ? totalPrayerCount : 0;
-      const estimatedPrePrayerNotifs =
-        settings.prePrayerAlerts ? totalPrayerCount : 0;
       const estimatedOtherNotifs =
         (settings.dailyVerseEnabled ? 1 : 0) + (settings.streakEnabled ? 1 : 0);
       const estimatedTotal =
         estimatedPrayerTimeNotifs +
         estimatedReminderNotifs +
-        estimatedPrePrayerNotifs +
         estimatedOtherNotifs;
 
       let effectiveDays = days;
@@ -360,28 +341,6 @@ class NotificationSchedulerService {
     }
   }
 
-  /**
-   * Handle "remind later" action - schedule reminder for next prayer
-   */
-  async scheduleReminderForNextPrayer(
-    currentPrayerName: string,
-    prayerTimesResponse: AladhanPrayerTimesResponse
-  ): Promise<void> {
-    const prayerTimes = convertPrayerTimesToData(prayerTimesResponse, 2);
-    const nextPrayerTime = getNextPrayerTime(prayerTimes, currentPrayerName);
-
-    if (!nextPrayerTime) {
-      console.warn('[NotificationScheduler] Could not find next prayer time');
-      return;
-    }
-
-    const today = new Date().toISOString().slice(0, 10);
-    await notificationService.schedulePrayerReminderLater(
-      currentPrayerName,
-      nextPrayerTime,
-      today
-    );
-  }
 }
 
 // Singleton instance

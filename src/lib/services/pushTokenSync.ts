@@ -42,7 +42,7 @@ export async function syncPushTokenAndSettings(): Promise<void> {
         streak_time: settings.streakTime,
         notification_settings: {
           adhanNotifications: settings.adhanNotifications,
-          prePrayerAlerts: settings.prePrayerAlerts,
+          prayerReminderEnabled: settings.prayerReminderEnabled,
           playAdhanAudio: settings.playAdhanAudio,
           vibration: settings.vibration,
         },

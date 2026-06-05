@@ -17,6 +17,7 @@ import { RegisterFormData, registerSchema } from "./schema";
 import AvatarPicker from "@/components/form/AvatarPicker";
 import FormField from "@/components/form/FormField";
 import { useTheme } from "@/lib/storage/useThemeStore";
+import { colors } from "@/components/theme/colors";
 
 // Helper functions
 
@@ -139,7 +140,7 @@ export default function RegisterForm() {
         <TouchableOpacity
             onPress={() => setShowPassword(!showPassword)}
         >
-            <MaterialIcons name={showPassword ? "visibility-off" : "visibility"} size={20} color={isDark ? "#8FA6A0" : "#6B7F78"} />
+            <MaterialIcons name={showPassword ? "visibility-off" : "visibility"} size={20} color={isDark ? colors.text.secondaryDark : colors.text.secondaryLight} />
         </TouchableOpacity>
     );
 
@@ -176,7 +177,7 @@ export default function RegisterForm() {
                         isLoading={isLoading}
                         keyboardType="email-address"
                         autoComplete="email"
-                        rightIcon={<MaterialIcons name="mail" size={20} color={isDark ? "#8FA6A0" : "#6B7F78"} />}
+                        rightIcon={<MaterialIcons name="mail" size={20} color={isDark ? colors.text.secondaryDark : colors.text.secondaryLight} />}
                     />
 
                     <FormField

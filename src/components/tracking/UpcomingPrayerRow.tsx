@@ -2,6 +2,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { Text, View } from "react-native";
 import type { PrayerWithTime } from "@/types/prayer-tracking";
 import { useTheme } from "@/lib/storage/useThemeStore";
+import { colors } from "@/components/theme/colors";
 
 type UpcomingPrayerRowProps = {
   readonly prayer: PrayerWithTime;
@@ -30,7 +31,7 @@ export default function UpcomingPrayerRow({ prayer }: UpcomingPrayerRowProps) {
           <MaterialIcons
             name={prayer.icon as any}
             size={20}
-            color={isDark ? "#8FA6A0" : "#6B7F78"}
+            color={isDark ? colors.text.secondaryDark : colors.text.secondaryLight}
           />
         </View>
         <View>

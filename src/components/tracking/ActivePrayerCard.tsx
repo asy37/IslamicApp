@@ -72,7 +72,7 @@ export default function ActivePrayerCard({ prayer }: ActivePrayerCardProps) {
             <MaterialIcons
               name={prayer.icon as any}
               size={26}
-              color={isDark ? colors.success : colors.primary[500]}
+              color={isDark ? colors.secondary : colors.primary[500]}
             />
           </View>
           <View>
@@ -100,7 +100,7 @@ export default function ActivePrayerCard({ prayer }: ActivePrayerCardProps) {
         <Pressable
           onPress={handleMarkCompleted}
           disabled={isProcessing}
-          className="flex-[3] flex-row items-center justify-center gap-2 rounded-xl bg-primary-500 py-3.5 px-4 shadow-[0_4px_14px_rgba(31,143,95,0.3)] active:scale-[0.98] disabled:opacity-50"
+          className="flex-[3] flex-row items-center justify-center gap-2 rounded-xl bg-primary-500 py-3.5 px-4 shadow-[0_4px_14px_rgba(38,166,154,0.3)] active:scale-[0.98] disabled:opacity-50"
         >
           <MaterialIcons name="check" size={20} color="#fff" />
           <Text className="text-sm font-bold text-white">
@@ -119,7 +119,7 @@ export default function ActivePrayerCard({ prayer }: ActivePrayerCardProps) {
           <MaterialIcons
             name="alarm"
             size={20}
-            color={isDark ? "#EAF3F0" : "#6B7F78"}
+            color={isDark ? colors.text.primaryDark : colors.text.secondaryLight}
           />
           <Text
             className={

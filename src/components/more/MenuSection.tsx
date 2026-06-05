@@ -1,6 +1,7 @@
 import { View, Text } from "react-native";
 import clsx from "clsx";
 import MenuItem from "./MenuItem";
+import { colors } from "@/components/theme/colors";
 
 type MenuItemType = {
   key: string;
@@ -41,7 +42,7 @@ export default function MenuSection({
           isDark ? "bg-background-cardDark" : "bg-background-cardLight"
         )}
         style={{
-          shadowColor: "#1F8F5F",
+          shadowColor: colors.primary[500],
           shadowOffset: { width: 0, height: 2 },
           shadowOpacity: 0.05,
           shadowRadius: 8,

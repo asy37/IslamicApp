@@ -6,6 +6,7 @@ import { usePrayerTrackingLocal, convertToPrayerTrackingData } from "@/lib/hooks
 import { useAutoSync } from "@/lib/hooks/adhan/usePrayerSync";
 import { useTheme } from "@/lib/storage/useThemeStore";
 import { useTranslation } from "@/i18n";
+import { colors } from "@/components/theme/colors";
 
 export default function PrayerTrackingScreen() {
   const { isDark } = useTheme();
@@ -27,7 +28,7 @@ export default function PrayerTrackingScreen() {
           isDark ? "bg-background-dark" : "bg-background-light"
         )}
       >
-        <ActivityIndicator size="large" color={isDark ? "#4CAF84" : "#1F8F5F"} />
+        <ActivityIndicator size="large" color={isDark ? colors.secondary : colors.primary[500]} />
         <Text
           className={clsx(
             "mt-4 text-sm",

@@ -8,6 +8,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 import clsx from "clsx";
 import type { PrayerStreak } from "@/types/prayer-tracking";
 import { useTheme } from "@/lib/storage/useThemeStore";
+import { colors } from "@/components/theme/colors";
 
 type StreakCounterProps = {
   readonly streak: PrayerStreak;
@@ -30,7 +31,7 @@ export default function StreakCounter({ streak }: StreakCounterProps) {
             isDark ? "bg-primary-500/20" : "bg-primary-50"
           )}
         >
-          <MaterialIcons name="local-fire-department" size={24} color="#1F8F5F" />
+          <MaterialIcons name="local-fire-department" size={24} color={colors.primary[500]} />
         </View>
         <View>
           <Text

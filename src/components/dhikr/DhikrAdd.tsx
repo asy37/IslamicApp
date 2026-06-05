@@ -8,6 +8,7 @@ import type { Dhikr } from "@/types/dhikir";
 import Button from "@/components/button/Button";
 import { generateSlug, generateUUID, validate } from "./utils";
 import { useTheme } from "@/lib/storage/useThemeStore";
+import { colors } from "@/components/theme/colors";
 
 type DhikrAddProps = Readonly<{
     readonly openAddDhikrModal: boolean;
@@ -136,7 +137,7 @@ export default function DhikrAdd({ openAddDhikrModal, setOpenAddDhikrModal, onDh
                                 isDark ? "bg-background-cardDark border-border-dark text-text-primaryDark" : "bg-white border-gray-200 text-text-primaryLight"
                             )}
                             placeholder="e.g., Subhanallah"
-                            placeholderTextColor={isDark ? "#8FA6A0" : "#6B7F78"}
+                            placeholderTextColor={isDark ? colors.text.secondaryDark : colors.text.secondaryLight}
                         />
                         {errors.label && (
                             <Text className="text-error text-xs mt-1 ml-1">{errors.label}</Text>
@@ -170,7 +171,7 @@ export default function DhikrAdd({ openAddDhikrModal, setOpenAddDhikrModal, onDh
                                 isDark ? "bg-background-cardDark border-border-dark text-text-primaryDark" : "bg-white border-gray-200 text-text-primaryLight"
                             )}
                             placeholder="e.g., 33"
-                            placeholderTextColor={isDark ? "#8FA6A0" : "#6B7F78"}
+                            placeholderTextColor={isDark ? colors.text.secondaryDark : colors.text.secondaryLight}
                         />
                         {errors.targetCount && (
                             <Text className="text-error text-xs mt-1 ml-1">{errors.targetCount}</Text>

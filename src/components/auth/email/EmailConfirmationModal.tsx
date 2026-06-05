@@ -16,6 +16,7 @@ import clsx from "clsx";
 import { useAuth } from "@/lib/hooks/auth/useAuth";
 import { resendConfirmationEmail } from "@/lib/api/services/auth";
 import { useTheme } from "@/lib/storage/useThemeStore";
+import { colors } from "@/components/theme/colors";
 
 interface EmailConfirmationModalProps {
   visible: boolean;
@@ -79,7 +80,7 @@ export default function EmailConfirmationModal({
                 isDark ? "bg-primary-500/20" : "bg-primary-50"
               )}
             >
-              <MaterialIcons name="mail-outline" size={32} color="#1F8F5F" />
+              <MaterialIcons name="mail-outline" size={32} color={colors.primary[500]} />
             </View>
           </View>
 

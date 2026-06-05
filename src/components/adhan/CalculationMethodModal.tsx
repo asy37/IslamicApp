@@ -9,6 +9,7 @@ import { PRAYER_CALCULATION_METHODS, PrayerCalculationMethod } from "@/constants
 import { MaterialIcons } from "@expo/vector-icons";
 import clsx from "clsx";
 import { useTheme } from "@/lib/storage/useThemeStore";
+import { colors } from "@/components/theme/colors";
 
 type CalculationMethodModalProps = {
   readonly visible: boolean;
@@ -28,7 +29,7 @@ function ModalHeader({ isDark, onClose }: ModalHeaderProps) {
         <View
           className="h-1.5 w-12 rounded-full"
           style={{
-            backgroundColor: isDark ? "#223833" : "#E2ECE8",
+            backgroundColor: isDark ? colors.border.dark : colors.border.light,
           }}
         />
       </View>
@@ -46,7 +47,7 @@ function ModalHeader({ isDark, onClose }: ModalHeaderProps) {
           <MaterialIcons
             name="close"
             size={26}
-            color={isDark ? "#EAF3F0" : "#6B7F78"}
+            color={isDark ? colors.text.primaryDark : colors.text.secondaryLight}
           />
         </Pressable>
       </View>
@@ -92,7 +93,7 @@ function MethodListItem({
         <MaterialIcons
           name="calculate"
           size={22}
-          color={isDark ? "#4CAF84" : "#1F8F5F"}
+          color={isDark ? colors.secondary : colors.primary[500]}
         />
       </View>
       <View className="flex-1">
@@ -128,7 +129,7 @@ function MethodListItem({
       <MaterialIcons
         name="chevron-right"
         size={20}
-        color={isDark ? "#8FA6A0" : "#9CA3AF"}
+        color={isDark ? colors.text.secondaryDark : "#9CA3AF"}
       />
     </Pressable>
   );
@@ -192,8 +193,8 @@ export default function CalculationMethodModal({
             className="h-px w-full"
             style={{
               backgroundColor: isDark
-                ? "rgba(34, 56, 51, 0.4)"
-                : "rgba(226, 236, 232, 0.6)",
+                ? "rgba(38, 53, 46, 0.4)"
+                : "rgba(229, 239, 234, 0.6)",
             }}
           />
 

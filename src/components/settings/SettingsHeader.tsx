@@ -4,6 +4,7 @@ import clsx from "clsx";
 
 import { useTheme } from "@/lib/storage/useThemeStore";
 import { useTranslation } from "@/i18n";
+import { colors } from "@/components/theme/colors";
 
 export default function SettingsHeader({ isDark }: { isDark: boolean }) {
   const { t } = useTranslation();
@@ -30,7 +31,7 @@ export default function SettingsHeader({ isDark }: { isDark: boolean }) {
         <Pressable onPress={() => router.back()} hitSlop={10}>
           <Text
             className="text-base font-bold"
-            style={{ color: "#1F8F5F" }}
+            style={{ color: colors.primary[500] }}
           >
             {t("common.done")}
           </Text>

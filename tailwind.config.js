@@ -6,48 +6,56 @@ module.exports = {
     extend: {
       colors: {
         // =========================
-        // PRIMARY GREEN PALETTE
+        // PRIMARY TURQUOISE PALETTE
         // =========================
         primary: {
-          50: "#E9F6F0",
-          100: "#CFEBDD",
-          200: "#9FD7BC",
-          300: "#6FC39A",
-          400: "#3FAF79",
-          500: "#1F8F5F", // Main brand green
-          600: "#18724C",
-          700: "#125539",
-          800: "#0C3826",
-          900: "#061B13",
+          50: "#E0F2F1",
+          100: "#B2DFDB", // Primary Light (passive states, bg touches)
+          200: "#80CBC4",
+          300: "#4DB6AC",
+          400: "#39BDB1",
+          500: "#26A69A", // Primary (main action, highlights)
+          600: "#00897B",
+          700: "#00796B", // Primary Dark (headers, strong text highlights)
+          800: "#00695C",
+          900: "#004D40",
+        },
+
+        // =========================
+        // SECONDARY NAN & DOĞA
+        // =========================
+        secondary: {
+          DEFAULT: "#4DB6AC", // Soft turquoise green (secondary buttons, icons)
+          light: "#DCEFE3",   // Mint white (light theme main background)
         },
 
         // =========================
         // BACKGROUND COLORS
         // =========================
         background: {
-          light: "#CFEBDD",
-          dark: "#0F1F1A",
-          cardLight: "#FFFFFF",
-          cardDark: "#162925",
+          light: "#DCEFE3",      // Mint white main background
+          dark: "#121B17",       // Deep anthracite green dark background
+          cardLight: "#FFFFFF",  // Pure white card background
+          cardDark: "#1D2923",   // Slightly lighter dark green card background
         },
 
         // =========================
         // TEXT COLORS
         // =========================
         text: {
-          primaryLight: "#1C2A26",
-          secondaryLight: "#6B7F78",
-          primaryDark: "#EAF3F0",
-          secondaryDark: "#8FA6A0",
-          muted: "#A8BDB6",
+          primaryLight: "#1A2E26",   // Deep forest green/black for high contrast light mode
+          secondaryLight: "#5F7D73", // Gray green for helper text/dates light mode
+          primaryDark: "#E0EAE5",    // Soft white for dark mode text
+          secondaryDark: "#8EA39B",  // Gray green for helper text/dates dark mode
+          muted: "#A3BAB1",
         },
 
         // =========================
         // BORDER & DIVIDER
         // =========================
         border: {
-          light: "#E2ECE8",
-          dark: "#223833",
+          light: "#E5EFEA",
+          dark: "#26352E",
         },
 
         // =========================

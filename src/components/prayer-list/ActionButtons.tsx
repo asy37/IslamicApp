@@ -5,6 +5,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { PrayerItem } from "./types/prayer-timings";
 import { useTheme } from "@/lib/storage/useThemeStore";
 import { useTranslation } from "@/i18n";
+import { colors } from "@/components/theme/colors";
 
 type ActionButtonsProps = {
   readonly updateStatus: (
@@ -60,7 +61,7 @@ export const ActionButtons = ({
           isDark ? "bg-primary-500/20" : "bg-primary-50"
         )}
       >
-        <MaterialIcons name="check-circle" size={18} color="#1F8F5F" />
+        <MaterialIcons name="check-circle" size={18} color={colors.primary[500]} />
         <Text className="text-primary-500 font-semibold">{t("prayer.markPrayed")}</Text>
       </TouchableOpacity>
 

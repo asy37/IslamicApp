@@ -43,11 +43,7 @@ function getPrayerSound(prayerName: string): string | false {
 // Notification categories
 export const NOTIFICATION_CATEGORIES = {
   PRAYER_TIME: 'PRAYER_TIME',
-  PRE_PRAYER: 'PRE_PRAYER',
-  PRAYER_STATUS: 'PRAYER_STATUS',           // Ezan sonrası 15-20dk: "Namazı kıldın mı?"
-  PRAYER_LATE_REMINDER: 'PRAYER_LATE_REMINDER', // Ezan sonrası 1 saat: hatırlatma
   PRAYER_REMINDER: 'PRAYER_REMINDER',
-  PRAYER_REMINDER_LATER: 'PRAYER_REMINDER_LATER',
   DAILY_VERSE: 'DAILY_VERSE',
   STREAK: 'STREAK',
 } as const;
@@ -94,11 +90,6 @@ function configureNotifications() {
       }),
     });
 
-    // PRAYER_STATUS ve PRAYER_REMINDER kategorileri butonsuz (kıldım/kılmadım butonları kaldırıldı)
-    NotificationsModule.setNotificationCategoryAsync(
-      NOTIFICATION_CATEGORIES.PRAYER_STATUS,
-      []
-    );
     NotificationsModule.setNotificationCategoryAsync(
       NOTIFICATION_CATEGORIES.PRAYER_REMINDER,
       []
@@ -302,223 +293,9 @@ export class NotificationService {
   }
 
   /**
-   * Schedule pre-prayer alerts (15 minutes before prayer time)
-   */
-  async schedulePrePrayerAlerts(
-    prayerTimes: Array<{
-      date: string;
-      prayers: Array<{ name: string; time: Date }>;
-    }>,
-    days: number = 7,
-    vibrationEnabled: boolean = true
-  ): Promise<void> {
-    const NotificationsModule = getNotifications();
-    if (!NotificationsModule) {
-      console.warn('[NotificationService] Notifications not available');
-      return;
-    }
-
-    configureNotifications(); // Ensure handler is set
-
-    await this.cancelNotificationsByType('pre_prayer');
-
-    const PRE_PRAYER_MINUTES = 15;
-
-    for (const day of prayerTimes.slice(0, days)) {
-      for (const prayer of day.prayers) {
-        const prayerKey = prayer.name.toLowerCase();
-        if (!['fajr', 'dhuhr', 'asr', 'maghrib', 'isha'].includes(prayerKey)) {
-          continue;
-        }
-
-        const prayerNameTurkish = getPrayerNameTurkish(prayer.name);
-        const alertTime = new Date(prayer.time);
-        alertTime.setMinutes(alertTime.getMinutes() - PRE_PRAYER_MINUTES);
-
-        if (alertTime.getTime() <= Date.now()) {
-          continue;
-        }
-
-        await NotificationsModule.scheduleNotificationAsync({
-          content: {
-            title: i18n.t('notification.reminderTitle'),
-            body: i18n.t('notification.prePrayerBody', { prayerName: prayerNameTurkish }),
-            sound: true,
-            vibrate: vibrationEnabled ? [0, 250, 250, 250] : undefined,
-            categoryIdentifier: NOTIFICATION_CATEGORIES.PRE_PRAYER,
-            data: {
-              type: 'pre_prayer',
-              prayerName: prayer.name,
-              prayerNameTurkish,
-              date: day.date,
-              deepLink: 'salah://adhan',
-            },
-          },
-          trigger: {
-            type: 'date',
-            date: alertTime,
-          } as any,
-        });
-      }
-    }
-  }
-
-  /**
-   * Schedule prayer STATUS notifications (15-20 minutes after prayer / ezan time).
-   * Shows "Namazı kıldın mı?" with "Kıldım" and "Daha sonra hatırlat" action buttons.
-   * Tapping the notification navigates to the index (home) screen.
-   * todayDate + alreadyPrayedToday verilirse, bugün için "kıldım" işaretlenmiş vakitlerin bildirimi planlanmaz.
-   */
-  async schedulePrayerStatusNotifications(
-    prayerTimes: Array<{
-      date: string;
-      prayers: Array<{ name: string; time: Date }>;
-    }>,
-    days: number = 7,
-    vibrationEnabled: boolean = true,
-    opts?: { todayDate: string; alreadyPrayedToday: Record<string, boolean> }
-  ): Promise<void> {
-    const NotificationsModule = getNotifications();
-    if (!NotificationsModule) {
-      console.warn('[NotificationService] Notifications not available');
-      return;
-    }
-
-    configureNotifications();
-
-    await this.cancelNotificationsByType('prayer_status');
-
-    // Random offset between 15-20 minutes to feel more natural
-    const getStatusDelayMs = () => (15 + Math.floor(Math.random() * 6)) * 60 * 1000;
-
-    for (const day of prayerTimes.slice(0, days)) {
-      for (const prayer of day.prayers) {
-        const prayerKey = prayer.name.toLowerCase();
-        if (!['fajr', 'dhuhr', 'asr', 'maghrib', 'isha'].includes(prayerKey)) {
-          continue;
-        }
-
-        // Skip if already prayed today
-        if (
-          opts?.todayDate &&
-          opts?.alreadyPrayedToday &&
-          day.date === opts.todayDate &&
-          opts.alreadyPrayedToday[prayerKey]
-        ) {
-          continue;
-        }
-
-        const prayerNameDisplay = getPrayerDisplayName(prayer.name);
-        const statusTime = new Date(prayer.time.getTime() + getStatusDelayMs());
-
-        if (statusTime.getTime() <= Date.now()) {
-          continue;
-        }
-
-        await NotificationsModule.scheduleNotificationAsync({
-          content: {
-            title: i18n.t('notification.prayerStatusTitle', { prayerName: prayerNameDisplay }),
-            body: i18n.t('notification.prayerStatusBody', { prayerName: prayerNameDisplay }),
-            sound: true,
-            vibrate: vibrationEnabled ? [0, 250, 250, 250] : undefined,
-            categoryIdentifier: NOTIFICATION_CATEGORIES.PRAYER_STATUS,
-            data: {
-              type: 'prayer_status',
-              prayerName: prayer.name,
-              prayerNameDisplay,
-              date: day.date,
-              deepLink: 'salah://index',
-            },
-          },
-          trigger: {
-            type: 'date',
-            date: statusTime,
-          } as any,
-        });
-      }
-    }
-  }
-
-  /**
-   * Schedule prayer LATE REMINDER notifications (1 hour after ezan time).
+   * Schedule unified prayer reminder notification (1 hour after ezan time).
    * Only sent if the user has NOT yet marked the prayer as prayed.
    * Tapping navigates to the index (home) screen.
-   */
-  async schedulePrayerLateReminderNotifications(
-    prayerTimes: Array<{
-      date: string;
-      prayers: Array<{ name: string; time: Date }>;
-    }>,
-    days: number = 7,
-    vibrationEnabled: boolean = true,
-    opts?: { todayDate: string; alreadyPrayedToday: Record<string, boolean> }
-  ): Promise<void> {
-    const NotificationsModule = getNotifications();
-    if (!NotificationsModule) {
-      console.warn('[NotificationService] Notifications not available');
-      return;
-    }
-
-    configureNotifications();
-
-    await this.cancelNotificationsByType('prayer_late_reminder');
-
-    const LATE_REMINDER_MS = 60 * 60 * 1000; // 1 hour
-
-    for (const day of prayerTimes.slice(0, days)) {
-      for (const prayer of day.prayers) {
-        const prayerKey = prayer.name.toLowerCase();
-        if (!['fajr', 'dhuhr', 'asr', 'maghrib', 'isha'].includes(prayerKey)) {
-          continue;
-        }
-
-        // Do NOT schedule if already prayed
-        if (
-          opts?.todayDate &&
-          opts?.alreadyPrayedToday &&
-          day.date === opts.todayDate &&
-          opts.alreadyPrayedToday[prayerKey]
-        ) {
-          continue;
-        }
-
-        const prayerNameDisplay = getPrayerDisplayName(prayer.name);
-        const lateReminderTime = new Date(prayer.time.getTime() + LATE_REMINDER_MS);
-
-        if (lateReminderTime.getTime() <= Date.now()) {
-          continue;
-        }
-
-        await NotificationsModule.scheduleNotificationAsync({
-          content: {
-            title: i18n.t('notification.prayerLateReminderTitle', { prayerName: prayerNameDisplay }),
-            body: i18n.t('notification.prayerLateReminderBody', { prayerName: prayerNameDisplay }),
-            sound: true,
-            vibrate: vibrationEnabled ? [0, 250, 250, 250] : undefined,
-            categoryIdentifier: NOTIFICATION_CATEGORIES.PRAYER_LATE_REMINDER,
-            data: {
-              type: 'prayer_late_reminder',
-              prayerName: prayer.name,
-              prayerNameDisplay,
-              date: day.date,
-              deepLink: 'salah://index',
-            },
-          },
-          trigger: {
-            type: 'date',
-            date: lateReminderTime,
-          } as any,
-        });
-      }
-    }
-  }
-
-
-
-  /**
-   * Schedule prayer reminder notifications (30 minutes after prayer time).
-   * @deprecated Use schedulePrayerStatusNotifications for the post-ezan "did you pray?" flow.
-   * todayDate + alreadyPrayedToday verilirse, bugün için "kıldım" işaretlenmiş vakitlerin hatırlatması planlanmaz.
    */
   async schedulePrayerReminderNotifications(
     prayerTimes: Array<{
@@ -539,6 +316,8 @@ export class NotificationService {
 
     await this.cancelNotificationsByType('prayer_reminder');
 
+    const REMINDER_DELAY_MS = 60 * 60 * 1000; // 1 hour
+
     for (const day of prayerTimes.slice(0, days)) {
       for (const prayer of day.prayers) {
         const prayerKey = prayer.name.toLowerCase();
@@ -546,6 +325,7 @@ export class NotificationService {
           continue;
         }
 
+        // Do NOT schedule if already prayed
         if (
           opts?.todayDate &&
           opts?.alreadyPrayedToday &&
@@ -555,9 +335,8 @@ export class NotificationService {
           continue;
         }
 
-        const prayerNameTurkish = getPrayerNameTurkish(prayer.name);
-        const reminderTime = new Date(prayer.time);
-        reminderTime.setMinutes(reminderTime.getMinutes() + 30);
+        const prayerDisplayName = getPrayerDisplayName(prayer.name);
+        const reminderTime = new Date(prayer.time.getTime() + REMINDER_DELAY_MS);
 
         if (reminderTime.getTime() <= Date.now()) {
           continue;
@@ -566,16 +345,16 @@ export class NotificationService {
         await NotificationsModule.scheduleNotificationAsync({
           content: {
             title: i18n.t('notification.reminderTitle'),
-            body: i18n.t('notification.reminderBody', { prayerName: prayerNameTurkish }),
+            body: i18n.t('notification.reminderBody', { prayerName: prayerDisplayName }),
             sound: true,
             vibrate: vibrationEnabled ? [0, 250, 250, 250] : undefined,
             categoryIdentifier: NOTIFICATION_CATEGORIES.PRAYER_REMINDER,
             data: {
               type: 'prayer_reminder',
               prayerName: prayer.name,
-              prayerNameTurkish,
+              prayerNameDisplay: prayerDisplayName,
               date: day.date,
-              deepLink: 'salah://tracking',
+              deepLink: 'salah://index',
             },
           },
           trigger: {
@@ -585,54 +364,6 @@ export class NotificationService {
         });
       }
     }
-  }
-
-  /**
-   * Schedule prayer reminder later notification (40 minutes before next prayer)
-   */
-  async schedulePrayerReminderLater(
-    prayerName: string,
-    nextPrayerTime: Date,
-    date: string
-  ): Promise<string | null> {
-    const NotificationsModule = getNotifications();
-    if (!NotificationsModule) {
-      console.warn('[NotificationService] Notifications not available');
-      return null;
-    }
-
-    configureNotifications(); // Ensure handler is set
-
-    const prayerNameTurkish = getPrayerNameTurkish(prayerName);
-    const reminderTime = new Date(nextPrayerTime);
-    reminderTime.setMinutes(reminderTime.getMinutes() - 40);
-
-    // Only schedule if reminder time is in the future
-    if (reminderTime.getTime() <= Date.now()) {
-      return null;
-    }
-
-    const notificationId = await NotificationsModule.scheduleNotificationAsync({
-      content: {
-        title: i18n.t('notification.reminderTitle'),
-        body: i18n.t('notification.dontForgetBody', { prayerName: prayerNameTurkish }),
-        sound: true,
-        categoryIdentifier: NOTIFICATION_CATEGORIES.PRAYER_REMINDER_LATER,
-        data: {
-          type: 'prayer_reminder_later',
-          prayerName,
-          prayerNameTurkish,
-          date,
-          deepLink: 'salah://adhan',
-        },
-      },
-      trigger: {
-        type: 'date' as const,
-        date: reminderTime,
-      } as any,
-    });
-
-    return notificationId;
   }
 
   /**
@@ -924,8 +655,8 @@ export class NotificationService {
         // Deep link: salah://daily-verse
         break;
       case 'prayer_reminder':
-        // Navigate to prayer tracking screen (legacy)
-        // Deep link: salah://tracking
+        // Navigate to home screen
+        // Deep link: salah://index
         break;
       case 'streak':
         // Navigate to tracking screen

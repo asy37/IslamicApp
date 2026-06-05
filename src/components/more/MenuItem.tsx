@@ -2,6 +2,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { Pressable, Text, View } from "react-native";
 import { useRouter } from "expo-router";
 import clsx from "clsx";
+import { colors } from "@/components/theme/colors";
 
 type MenuItemType = {
   key: string;
@@ -35,7 +36,7 @@ export default function MenuItem({
 
   const getIconColor = () => {
     if (item.iconBg === "primary") {
-      return isDark ? "#4CAF84" : "#1F8F5F";
+      return isDark ? colors.secondary : colors.primary[500];
     }
     return isDark ? "#D1D5DB" : "#4B5563";
   };
