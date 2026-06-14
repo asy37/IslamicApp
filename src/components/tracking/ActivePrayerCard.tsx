@@ -5,6 +5,7 @@ import type { PrayerWithTime } from "@/types/prayer-tracking";
 import { useMarkPrayerCompleted, useSetRemindLater } from "@/lib/hooks/prayer-tracking/usePrayerTracking";
 import { useState } from "react";
 import { useTheme } from "@/lib/storage/useThemeStore";
+import { useTranslation } from "@/i18n";
 
 type ActivePrayerCardProps = {
   readonly prayer: PrayerWithTime;
@@ -15,6 +16,7 @@ export default function ActivePrayerCard({ prayer }: ActivePrayerCardProps) {
   const markCompleted = useMarkPrayerCompleted();
   const setRemindLater = useSetRemindLater();
   const [isProcessing, setIsProcessing] = useState(false);
+  const { t } = useTranslation();
 
   const handleMarkCompleted = async () => {
     if (isProcessing) return;
@@ -82,14 +84,14 @@ export default function ActivePrayerCard({ prayer }: ActivePrayerCardProps) {
                 (isDark ? "text-text-primaryDark" : "text-text-primaryLight")
               }
             >
-              {prayer.displayName}
+              {t(`prayerNames.${prayer.prayer_name.toLowerCase()}`)}
             </Text>
             <View className="mt-0.5 flex-row items-center gap-1.5">
               <View className="relative h-2 w-2">
                 <View className="absolute h-2 w-2 rounded-full bg-primary-500 opacity-75" />
               </View>
               <Text className="text-sm font-medium text-primary-500">
-                Şimdi • {prayer.time}
+                {t("prayer.now")} • {prayer.time}
               </Text>
             </View>
           </View>
@@ -104,7 +106,7 @@ export default function ActivePrayerCard({ prayer }: ActivePrayerCardProps) {
         >
           <MaterialIcons name="check" size={20} color="#fff" />
           <Text className="text-sm font-bold text-white">
-            {isProcessing ? "İşleniyor..." : "Kıldım"}
+            {isProcessing ? t("prayer.processing") : t("prayer.markPrayed")}
           </Text>
         </Pressable>
         <Pressable
@@ -127,7 +129,7 @@ export default function ActivePrayerCard({ prayer }: ActivePrayerCardProps) {
               (isDark ? "text-text-primaryDark" : "text-text-secondaryLight")
             }
           >
-            Sonra
+            {t("prayer.later")}
           </Text>
         </Pressable>
       </View>

@@ -9,6 +9,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import DuaCardModal from "@/components/duas/DuaCardModal";
 import { DuaType } from "@/components/duas/types/types";
+import { useTranslation } from "@/i18n";
 
 
 type DuaCardProps = {
@@ -23,12 +24,12 @@ type DuaCardProps = {
 export default function DuaCard({ dua, isDark, updateDua, deleteDua, toggleFavorite, isSaving }: DuaCardProps) {
   const [isMore, setIsMore] = React.useState(false);
   const [isFavorite, setIsFavorite] = React.useState(false);
-
+  const { t } = useTranslation();
 
 
   const handleToggleFavorite = () => {
     toggleFavorite(dua.id).catch((error) => {
-      Alert.alert("Error", "Failed to update favorite. Please try again.");
+      Alert.alert(t("more.error"), t("duas.updateFavoriteFailed"));
       console.error("Error toggling favorite:", error);
     });
     setIsFavorite(!isFavorite);

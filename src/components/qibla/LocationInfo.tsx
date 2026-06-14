@@ -2,6 +2,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { Text, View } from "react-native";
 import type { UserLocation } from "@/lib/storage/locationStore";
 import clsx from "clsx";
+import { useTranslation } from "@/i18n";
 
 type LocationInfoProps = {
   readonly isDark: boolean;
@@ -16,12 +17,13 @@ export default function LocationInfo({
   loading,
   error,
 }: LocationInfoProps) {
-  let title = "Location not found";
+  const { t } = useTranslation();
+  let title = t("qibla.locationNotFound");
 
   if (loading) {
-    title = "Location is being fetched…";
+    title = t("qibla.locationFetching");
   } else if (error) {
-    title = "Location error";
+    title = t("qibla.locationError");
   } else if (location) {
     title = `${location.city}, ${location.country}`;
   }
@@ -51,7 +53,7 @@ export default function LocationInfo({
             isDark ? "text-text-secondaryDark" : "text-text-secondaryLight"
           )}
         >
-          Location
+          {t("qibla.locationLabel")}
         </Text>
         <Text
           className={clsx(

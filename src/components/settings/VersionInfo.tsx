@@ -1,7 +1,9 @@
 import { Text, View } from "react-native";
 import clsx from "clsx";
+import { useTranslation } from "@/i18n";
 
 export default function VersionInfo({ isDark }: { isDark: boolean }) {
+  const { t } = useTranslation();
   return (
     <View className="mt-10 mb-8 items-center">
       <Text
@@ -10,7 +12,7 @@ export default function VersionInfo({ isDark }: { isDark: boolean }) {
           isDark ? "text-text-secondaryDark/60" : "text-text-secondaryLight"
         )}
       >
-        Version 2.4.0 (Build 152)
+        {t("settings.version", { version: "2.4.0", build: "152" })}
       </Text>
       <Text
         className={clsx(

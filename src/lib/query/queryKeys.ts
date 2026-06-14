@@ -28,6 +28,14 @@ export const queryKeys = {
     byDate: (date: string) => ['dailyVerse', date] as const,
   },
 
+  // Quran Bookmarks
+  quranBookmarks: {
+    all: ['quranBookmarks'] as const,
+    list: () => ['quranBookmarks', 'list'] as const,
+    likedNumbers: () => ['quranBookmarks', 'likedNumbers'] as const,
+    isBookmarked: (ayahNumber?: number) => ['quranBookmarks', 'isBookmarked', ayahNumber] as const,
+  },
+
   // Quran
   quran: {
     all: ['quran'] as const,

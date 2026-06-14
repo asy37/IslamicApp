@@ -6,6 +6,7 @@ import { SurahType } from "@/components/quran-reading/types/types";
 import Button from "@/components/button/Button";
 import { useSurahStore } from "@/lib/storage/useQuranStore";
 import { useTheme } from "@/lib/storage/useThemeStore";
+import { useTranslation } from "@/i18n";
 
 type SurahListItemProps = {
   readonly surah: SurahType;
@@ -22,6 +23,7 @@ export function SurahListItem({
 }: SurahListItemProps) {
   const { isDark } = useTheme();
   const { surahNumber } = useSurahStore();
+  const { t } = useTranslation();
 
   const isActive = surah.surahNumber === surahNumber;
 
@@ -80,7 +82,7 @@ export function SurahListItem({
               isDark ? "text-text-secondaryDark" : "text-blue-400"
             )}
           >
-            • {surah.ayahCount} Ayet
+            • {t("quran.ayahCount", { count: surah.ayahCount })}
           </Text>
         </View>
       </View>

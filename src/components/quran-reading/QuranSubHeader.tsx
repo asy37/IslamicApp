@@ -5,6 +5,7 @@ import Button from "../button/Button";
 import clsx from "clsx";
 import { useAudioStore, useSurahStore } from "@/lib/storage/useQuranStore";
 import { useTheme } from "@/lib/storage/useThemeStore";
+import { useTranslation } from "@/i18n";
 
 type QuranSubHeaderProps = {
   readonly onOpenSurahModal: () => void;
@@ -19,6 +20,7 @@ export default function QuranSubHeader({
   const [settingsModal, setSettingsModal] = useState(false);
   const { surahName, surahEnglishName, juz, surahNumber } = useSurahStore();
   const { isSurahPlaybackActive, isPlaying } = useAudioStore();
+  const { t } = useTranslation();
 
   const handlePlaySurah = () => {
     if (onPlaySurah) {
@@ -51,7 +53,7 @@ export default function QuranSubHeader({
             {surahEnglishName} / {surahName}
           </Text>
           <Text className="text-xs font-medium uppercase tracking-wide text-primary-500">
-            {juz ? `Juz ${juz}` : ""}
+            {juz ? t("quran.juz", { juz }) : ""}
           </Text>
           {!isSurahPlaybackActive && (
             <Button

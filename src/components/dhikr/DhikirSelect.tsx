@@ -8,6 +8,7 @@ import { useAuth } from "@/lib/hooks/auth/useAuth";
 import { DHIKR_PRESETS } from "@/constants/dhikr-presets";
 import clsx from "clsx";
 import { useTheme } from "@/lib/storage/useThemeStore";
+import { useTranslation } from "@/i18n";
 
 /**
  * Generate UUID v4
@@ -35,6 +36,7 @@ export default function DhikirSelect({ currentDhikr, openDhikrSelect, setCurrent
     const userId = user?.id || null;
     const [availableDhikrs, setAvailableDhikrs] = React.useState<Dhikr[]>([]);
     const [isLoading, setIsLoading] = React.useState(true);
+    const { t } = useTranslation();
 
     React.useEffect(() => {
         const loadDhikrs = async () => {
@@ -121,15 +123,15 @@ export default function DhikirSelect({ currentDhikr, openDhikrSelect, setCurrent
         <ModalComponent
             visible={openDhikrSelect}
             onClose={() => setOpenDhikrSelect(false)}
-            title="Select Dhikr"
+            title={t("dhikr.selectDhikrTitle")}
         >
             {isLoading ? (
                 <Text className={clsx("text-center py-4", isDark ? "text-text-primaryDark" : "text-text-primaryLight")}>
-                    Loading...
+                    {t("dhikr.loading")}
                 </Text>
             ) : availableDhikrs.length === 0 ? (
                 <Text className={clsx("text-center py-4", isDark ? "text-text-primaryDark" : "text-text-primaryLight")}>
-                    No dhikrs found. Add a new one!
+                    {t("dhikr.noDhikrsFound")}
                 </Text>
             ) : (
                 <FlatList
@@ -138,12 +140,12 @@ export default function DhikirSelect({ currentDhikr, openDhikrSelect, setCurrent
                     contentContainerClassName="gap-2 pb-4"
                     renderItem={({ item }) => (
                         <Button 
-                            isActive={currentDhikr?.id === item.id} 
-                            size="large" 
-                            onPress={() => handleSelectDhikr(item)} 
-                        >
-                            <Text>{item.label}</Text>
-                        </Button>
+                             isActive={currentDhikr?.id === item.id} 
+                             size="large" 
+                             onPress={() => handleSelectDhikr(item)} 
+                         >
+                             <Text>{item.label}</Text>
+                         </Button>
                     )}
                 />
             )}

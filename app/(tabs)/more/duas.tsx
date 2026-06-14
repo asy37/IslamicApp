@@ -9,12 +9,21 @@ import SelectButton from "@/components/button/SelectButton";
 import { FILTERS } from "@/components/duas/utils/utils";
 import { useTheme } from "@/lib/storage/useThemeStore";
 import { colors } from "@/components/theme/colors";
+import { useTranslation } from "@/i18n";
 
 export default function DuasScreen() {
   const { isDark } = useTheme();
   const [selectedFilter, setSelectedFilter] = React.useState<"all" | "favorites">("all");
   const [searchQuery, setSearchQuery] = React.useState("");
   const { duas, isLoading, createDua, updateDua, deleteDua, toggleFavorite, isSaving } = useDuas();
+  const { t, i18n } = useTranslation();
+
+  const localizedFilters = React.useMemo(() => {
+    return FILTERS.map((f) => ({
+      key: f.key,
+      label: t(`duas.${f.key}`),
+    }));
+  }, [t]);
 
   // Convert Dua to display format and filter
   const filteredDuas = React.useMemo(() => {
@@ -24,7 +33,7 @@ export default function DuasScreen() {
         title: dua.title,
         text: dua.text,
         isFavorite: dua.is_favorite,
-        date: new Date(dua.created_at).toLocaleDateString('en-US', {
+        date: new Date(dua.created_at).toLocaleDateString(i18n.language, {
           month: 'long',
           day: 'numeric',
           year: 'numeric',
@@ -40,7 +49,7 @@ export default function DuasScreen() {
         return dua.title.toLowerCase().includes(searchQuery.toLowerCase());
       });
     return result;
-  }, [duas, selectedFilter, searchQuery]);
+  }, [duas, selectedFilter, searchQuery, i18n.language]);
 
   return (
     <View
@@ -58,11 +67,11 @@ export default function DuasScreen() {
         <>
           <ScrollView
             className="flex-1"
-            contentContainerStyle={{ paddingBottom: 100 }}
+            contentContainerStyle={{ paddingBottom: 100, paddingLeft: 12, paddingRight: 12 }}
             showsVerticalScrollIndicator={false}
           >
             <SelectButton
-              buttonData={FILTERS}
+              buttonData={localizedFilters}
               selectedFilter={selectedFilter}
               onPress={setSelectedFilter}
             />

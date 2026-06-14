@@ -3,12 +3,12 @@ import { z } from "zod";
 export const loginSchema = z.object({
   email: z
     .string()
-    .min(1, "Email gerekli")
-    .email("Geçerli bir email girin"),
+    .min(1, "auth.errors.emailRequired")
+    .email("auth.errors.emailInvalid"),
   password: z
     .string()
-    .min(1, "Şifre gerekli")
-    .min(6, "Şifre en az 6 karakter olmalı"),
+    .min(1, "auth.errors.passwordRequired")
+    .min(6, "auth.errors.passwordTooShort"),
 });
 
 export type LoginFormValues = z.infer<typeof loginSchema>;

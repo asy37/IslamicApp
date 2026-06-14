@@ -4,8 +4,9 @@ import { useRouter } from "expo-router";
 import clsx from "clsx";
 import Button from "../button/Button";
 import { colors } from "@/components/theme/colors";
-import TranslationSelect from "../quran-reading/modals/TranslationSelect";
-import React from "react";
+import QuranSettings from "../quran-reading/modals/QuranSettings";
+import { useTranslation } from "@/i18n";
+import { useState } from "react";
 
 type DailyVerseHeaderProps = {
   readonly isDark: boolean;
@@ -13,14 +14,15 @@ type DailyVerseHeaderProps = {
 
 export default function DailyVerseHeader({ isDark }: DailyVerseHeaderProps) {
   const router = useRouter();
-  const [translationModal, setTranslationModal] = React.useState(false);
+  const { t } = useTranslation();
+  const [translationModal, setTranslationModal] = useState(false);
   return (
     <View className="flex-row items-center p-6 justify-between z-10">
-      <Button onPress={() => router.back()} size="small">
+      <Button onPress={() => router.back()} size="small" backgroundColor="primary">
         <MaterialIcons
           name="arrow-back"
-          size={24}
-          color={isDark ? colors.text.primaryDark : colors.text.primaryLight}
+          color={"#fff"}
+          size={20}
         />
       </Button>
       <View className="flex-col items-center">
@@ -30,21 +32,19 @@ export default function DailyVerseHeader({ isDark }: DailyVerseHeaderProps) {
             isDark ? "text-text-primaryDark" : "text-text-primaryLight"
           )}
         >
-          Daily Reflection
+          {t("quran.dailyReflection")}
         </Text>
       </View>
-      <Button onPress={() => setTranslationModal(true)} size="small">
-        <MaterialIcons
-          name="settings"
-          size={24}
-          color={isDark ? colors.text.primaryDark : colors.text.primaryLight}
-        />
-      </Button>
-      <TranslationSelect
+      <Button onPress={() => setTranslationModal(true)}
+        leftIcon="settings"
+        size="small"
+        backgroundColor="primary"
+      />
+      <QuranSettings
         visible={translationModal}
         onClose={() => setTranslationModal(false)}
       />
-    </View>
+    </View >
   );
 }
 

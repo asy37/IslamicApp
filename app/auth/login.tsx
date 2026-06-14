@@ -188,8 +188,8 @@ export default function LoginScreen() {
                                     </View>
                                 )}
                             />
-                            {errors.email && (
-                                <Text className="text-red-500 text-sm ml-1">{errors.email.message}</Text>
+                            {errors.email?.message && (
+                                <Text className="text-red-500 text-sm ml-1">{t(errors.email.message)}</Text>
                             )}
                         </View>
 
@@ -244,8 +244,8 @@ export default function LoginScreen() {
                                     </View>
                                 )}
                             />
-                            {errors.password && (
-                                <Text className="text-red-500 text-sm ml-1">{errors.password.message}</Text>
+                            {errors.password?.message && (
+                                <Text className="text-red-500 text-sm ml-1">{t(errors.password.message)}</Text>
                             )}
                         </View>
 
@@ -259,7 +259,7 @@ export default function LoginScreen() {
                                         isLoading && "opacity-50"
                                     )}
                                 >
-                                    Şifremi unuttum
+                                    {t("auth.forgotPassword")}
                                 </Text>
                             </TouchableOpacity>
                         </View>

@@ -3,6 +3,7 @@ import clsx from "clsx";
 import { useEffect, useRef } from "react";
 import Svg, { Circle } from "react-native-svg";
 import { colors } from "@/components/theme/colors";
+import { useTranslation } from "@/i18n";
 
 type DhikrCounterProps = {
   readonly count: number;
@@ -19,6 +20,7 @@ export default function DhikrCounter({
 }: DhikrCounterProps) {
   const pulseAnim = useRef(new Animated.Value(1)).current;
   const scaleAnim = useRef(new Animated.Value(1)).current;
+  const { t } = useTranslation();
 
   useEffect(() => {
     // Pulse animation for background glow
@@ -137,7 +139,7 @@ export default function DhikrCounter({
               "text-xs font-medium mt-4 tracking-widest uppercase opacity-80 text-primary-500"
             )}
           >
-            Target: {target}
+            {t("dhikr.targetLabel")}: {target}
           </Text>
         </View>
       </View>
@@ -147,7 +149,7 @@ export default function DhikrCounter({
           isDark ? "text-text-secondaryDark/40" : "text-text-secondaryLight/40"
         )}
       >
-        Tap anywhere to count
+        {t("dhikr.tapToCount")}
       </Text>
     </View>
   );

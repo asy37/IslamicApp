@@ -4,6 +4,8 @@ import { Image, Text, TouchableOpacity, View } from "react-native";
 import { useTheme } from "@/lib/storage/useThemeStore";
 import { colors } from "@/components/theme/colors";
 
+import { useTranslation } from "@/i18n";
+
 // Avatar Picker Component
 type AvatarPickerProps = Readonly<{
     avatar: string | null;
@@ -12,6 +14,7 @@ type AvatarPickerProps = Readonly<{
 
 export default function AvatarPicker({ avatar, onPickImage }: AvatarPickerProps) {
     const { isDark } = useTheme();
+    const { t } = useTranslation();
     return (
         <View className="items-center py-6" style={{ gap: 16 }}>
             <TouchableOpacity
@@ -28,7 +31,7 @@ export default function AvatarPicker({ avatar, onPickImage }: AvatarPickerProps)
                 )}
             </TouchableOpacity>
             <Text className={clsx("text-sm font-medium", isDark ? "text-text-secondaryDark" : "text-text-secondaryLight")}>
-                Fotoğraf ekle (isteğe bağlı)
+                {t("profile.addPhoto")}
             </Text>
         </View>
     );

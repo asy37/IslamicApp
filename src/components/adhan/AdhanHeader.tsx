@@ -10,12 +10,14 @@ import { useMethodStore } from "@/lib/storage/useMethodStore";
 import { PrayerCalculationMethod } from "@/constants/prayer-method";
 import Button from "../button/Button";
 import { colors } from "@/components/theme/colors";
+import { useTranslation } from "@/i18n";
 
 type AdhanHeaderProps = {
   readonly isDark: boolean;
 };
 
 export default function AdhanHeader({ isDark }: AdhanHeaderProps) {
+  const { t } = useTranslation();
   const location = useLocationStore((state) => state.location);
   const setMethod = useMethodStore((state) => state.setMethod);
   const method = useMethodStore((state) => state.method);
@@ -42,40 +44,46 @@ export default function AdhanHeader({ isDark }: AdhanHeaderProps) {
           isDark ? "bg-background-dark/95" : "bg-background-light/95"
         )}
       >
-        <Pressable
-          onPress={() => setShowPermissionModal(true)}
-          className="flex-col items-start w-full"
-        >
-          <View className="flex-row items-center gap-2">
-            <MaterialIcons
-              name="location-on"
-              size={20}
-              color={isDark ? colors.secondary : colors.primary[500]}
-            />
+        <View className="flex-row items-center justify-between w-full">
+          <Pressable
+            onPress={() => setShowPermissionModal(true)}
+            className="flex-col items-start flex-1"
+          >
+            <View className="flex-row items-center gap-2">
+              <MaterialIcons
+                name="location-on"
+                size={20}
+                color={isDark ? colors.secondary : colors.primary[500]}
+              />
+              <Text
+                className={clsx(
+                  "text-sm font-medium tracking-wide uppercase opacity-90",
+                  isDark ? "text-text-secondaryDark" : "text-text-secondaryLight"
+                )}
+              >
+                {t("adhan.currentLocation")}
+              </Text>
+            </View>
             <Text
               className={clsx(
-                "text-sm font-medium tracking-wide uppercase opacity-90",
-                isDark ? "text-text-secondaryDark" : "text-text-secondaryLight"
-              )}
-            >
-              Current Location
-            </Text>
-          </View>
-          <View className="flex-row items-center justify-between w-full mt-1">
-            <Text
-              className={clsx(
-                "text-2xl font-bold leading-tight tracking-tight shrink",
+                "text-2xl font-bold leading-tight tracking-tight mt-1",
                 isDark ? "text-text-primaryDark" : "text-text-primaryLight"
               )}
             >
               {locationText}
             </Text>
-            <Button
-              rightIcon="settings"
-              backgroundColor="transparent"
-              onPress={handleSelectCalculationMethod}
-            />
-          </View>
+          </Pressable>
+          <Button
+            leftIcon="settings"
+            size="small"
+            backgroundColor="primary"
+            onPress={handleSelectCalculationMethod}
+          />
+        </View>
+        <Pressable
+          onPress={handleSelectCalculationMethod}
+          className="mt-1"
+        >
           <Text className="text-sm text-text-secondaryDark">
             {method?.description ?? method?.label}
           </Text>

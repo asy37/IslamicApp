@@ -31,6 +31,9 @@ export function useNotificationSetup(router: Router): void {
       if (cancelled) return;
       notificationService.requestPermissions().catch(() => {});
       syncPushTokenAndSettings().catch(() => {});
+      notificationService.registerBackgroundTask().catch((err) => {
+        console.warn('[NotificationSetup] Background task registration failed:', err);
+      });
 
       const params: NotificationHandlerParams = {
         router,

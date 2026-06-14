@@ -3,7 +3,7 @@
  * Handles scheduling all types of notifications based on prayer times and settings
  */
 
-import { parse } from 'date-fns';
+import { format, parse } from 'date-fns';
 import { notificationService } from '@/lib/notifications/NotificationService';
 import { useNotificationSettings } from '@/lib/storage/notificationSettings';
 import { getDailyAyahNumber } from '@/lib/quran/dailyAyah';
@@ -15,6 +15,7 @@ import type {
   PrayerTimesDayData,
 } from '@/lib/api/services/prayerTimes';
 import { createPrayerTime } from '@/components/prayer-list/utils/utils';
+import { getMonth } from '@/lib/database/sqlite/prayer-times/repository';
 import { Platform } from 'react-native';
 
 // Prayer order for finding next prayer
@@ -202,7 +203,7 @@ class NotificationSchedulerService {
    */
   async scheduleAllNotifications(
     prayerTimesResponse: AladhanPrayerTimesResponse,
-    days: number = 7
+    days: number = 14
   ): Promise<void> {
     const run = async () => {
       const settings = useNotificationSettings.getState();
@@ -338,6 +339,97 @@ class NotificationSchedulerService {
       await notificationService.scheduleStreakNotification(streak, time);
     } catch (error) {
       console.error('[NotificationScheduler] Failed to schedule streak:', error);
+    }
+  }
+
+  /**
+   * SQLite cache'den veri okuyarak bildirimleri yeniden planla.
+   * İnternet bağlantısı gerektirmez — uygulama resume'da veya background task'ta kullanılır.
+   * Returns true if notifications were rescheduled, false if no data available.
+   */
+  async rescheduleFromCache(): Promise<boolean> {
+    try {
+      let latitude = 41.0082; // Istanbul defaults
+      let longitude = 28.9784;
+      let method = 13;
+
+      try {
+        const { useLocationStore } = await import('@/lib/storage/locationStore');
+        const { useMethodStore } = await import('@/lib/storage/useMethodStore');
+        const loc = useLocationStore.getState().location;
+        if (loc) {
+          latitude = loc.latitude;
+          longitude = loc.longitude;
+        }
+        const m = useMethodStore.getState().method?.id;
+        if (m) method = m;
+      } catch {
+        // Use defaults
+      }
+
+      const now = new Date();
+      const year = now.getFullYear();
+      const month = now.getMonth() + 1;
+
+      const monthData = await getMonth(year, month, latitude, longitude, method);
+      if (!monthData || monthData.length === 0) {
+        console.log('[NotificationScheduler] No cached data for reschedule');
+        return false;
+      }
+
+      const todayDDMMYYYY = format(now, 'dd-MM-yyyy');
+      const dayIndex = monthData.findIndex(
+        (d: any) => d.date?.gregorian?.date === todayDDMMYYYY
+      );
+
+      if (dayIndex < 0) {
+        console.log('[NotificationScheduler] Today not in cached data');
+        return false;
+      }
+
+      // Build up to 14 days of data
+      let allDays = monthData.slice(dayIndex, dayIndex + 14);
+
+      // Try to get next month data if needed
+      if (allDays.length < 14) {
+        try {
+          const nextMonth = month === 12 ? 1 : month + 1;
+          const nextYear = month === 12 ? year + 1 : year;
+          const nextMonthData = await getMonth(nextYear, nextMonth, latitude, longitude, method);
+          if (nextMonthData && nextMonthData.length > 0) {
+            const needed = 14 - allDays.length;
+            allDays = [...allDays, ...nextMonthData.slice(0, needed)];
+          }
+        } catch {
+          // Next month not cached — use what we have
+        }
+      }
+
+      // Convert to PrayerTimeData format
+      const prayerTimes: PrayerTimeData[] = allDays.map((dayData: any) => {
+        const dateStr = dayData.date?.gregorian?.date ?? '';
+        const baseDate = dateStr ? parse(dateStr, 'dd-MM-yyyy', new Date()) : now;
+        const dateString = baseDate.toISOString().slice(0, 10);
+        const timings = dayData.timings ?? {};
+
+        const prayers = PRAYER_ORDER.map((prayerName) => {
+          const timeString = timings[prayerName as keyof typeof timings];
+          if (!timeString) return null;
+          const time = createPrayerTime(timeString, baseDate);
+          return { name: prayerName, time } as { name: string; time: Date };
+        }).filter((p): p is { name: string; time: Date } => p !== null);
+
+        return { date: dateString, prayers };
+      });
+
+      if (prayerTimes.length === 0) return false;
+
+      await this.scheduleWithPrayerTimes(prayerTimes, prayerTimes.length);
+      console.log(`[NotificationScheduler] Rescheduled from cache: ${prayerTimes.length} days`);
+      return true;
+    } catch (error) {
+      console.error('[NotificationScheduler] rescheduleFromCache failed:', error);
+      return false;
     }
   }
 

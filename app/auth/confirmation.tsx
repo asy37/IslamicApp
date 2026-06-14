@@ -7,9 +7,11 @@ import { useAuth } from "@/lib/hooks/auth/useAuth";
 import { resendConfirmationEmail } from "@/lib/api/services/auth";
 import { useTheme } from "@/lib/storage/useThemeStore";
 import { colors } from "@/components/theme/colors";
+import { useTranslation } from "@/i18n";
 
 export default function RegistrationConfirmationScreen() {
   const { isDark } = useTheme();
+  const { t } = useTranslation();
   const { user } = useAuth();
   const [isResending, setIsResending] = useState(false);
 
@@ -23,7 +25,7 @@ export default function RegistrationConfirmationScreen() {
 
   const handleResendEmail = async () => {
     if (!user?.email) {
-      Alert.alert("Hata", "Email adresi bulunamadı");
+      Alert.alert(t("more.error"), t("auth.emailNotFound"));
       return;
     }
 
@@ -32,12 +34,12 @@ export default function RegistrationConfirmationScreen() {
       const { error } = await resendConfirmationEmail(user.email);
 
       if (error) {
-        Alert.alert("Hata", error.message);
+        Alert.alert(t("more.error"), error.message);
       } else {
-        Alert.alert("Başarılı", "Onay maili tekrar gönderildi. Lütfen mail kutunuzu kontrol edin.");
+        Alert.alert(t("common.done"), t("auth.resendSuccess"));
       }
     } catch (error) {
-      Alert.alert("Hata", "Mail gönderilirken bir hata oluştu");
+      Alert.alert(t("more.error"), t("auth.resendFailed"));
     } finally {
       setIsResending(false);
     }
@@ -85,7 +87,7 @@ export default function RegistrationConfirmationScreen() {
             isDark ? "text-text-primaryDark" : "text-text-primaryLight"
           )}
         >
-          Mailini kontrol et
+          {t("auth.checkMailTitle")}
         </Text>
         {/* Body Text */}
         <Text
@@ -94,7 +96,7 @@ export default function RegistrationConfirmationScreen() {
             isDark ? "text-text-secondaryDark" : "text-text-secondaryLight"
           )}
         >
-          Hesabını aktifleştirmek için {user?.email ? `${user.email} adresine` : "mailine"} bir onay linki gönderdik.
+          {t("auth.checkMailMessage", { email: user?.email ?? "" })}
         </Text>
         {/* Helper/Meta Text */}
         <View className="pt-2">
@@ -104,7 +106,7 @@ export default function RegistrationConfirmationScreen() {
               isDark ? "text-primary-400" : "text-primary-500"
             )}
           >
-            Mail gelmezse spam klasörünü kontrol etmeyi unutma.
+            {t("auth.spamWarning")}
           </Text>
         </View>
       </View>
@@ -124,7 +126,7 @@ export default function RegistrationConfirmationScreen() {
         >
           <MaterialIcons name="send" size={20} color={colors.primary[500]} />
           <Text className="text-primary-500 text-sm font-bold">
-            {isResending ? "Gönderiliyor..." : "Maili tekrar gönder"}
+            {isResending ? t("auth.resending") : t("auth.resendEmail")}
           </Text>
         </TouchableOpacity>
       </View>
@@ -147,7 +149,7 @@ export default function RegistrationConfirmationScreen() {
               isDark ? "text-text-secondaryDark" : "text-text-secondaryLight"
             )}
           >
-            Giriş sayfasına dön
+            {t("auth.returnToLogin")}
           </Text>
         </TouchableOpacity>
       </View>

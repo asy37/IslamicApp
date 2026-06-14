@@ -107,7 +107,13 @@ export function useUpdatePrayerStatusLocal() {
         queryKey: ['prayerStreak'],
       });
       if (status === 'prayed') {
+        // Hemen iptal et
         notificationService.cancelPrayerReminderForPrayer(prayer, effectiveToday).catch(() => {});
+        // Race condition: eğer eşzamanlı bir reschedule (prefetch/reconnect) bildirimi
+        // geri oluşturursa, 3 saniye sonra tekrar iptal et
+        setTimeout(() => {
+          notificationService.cancelPrayerReminderForPrayer(prayer, effectiveToday).catch(() => {});
+        }, 3000);
       }
     },
   });

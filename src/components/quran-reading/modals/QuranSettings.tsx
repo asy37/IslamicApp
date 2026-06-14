@@ -3,6 +3,7 @@ import React from "react";
 import { DownloadModal } from "./DownloadModal";
 import Button from "@/components/button/Button";
 import TranslationSelect from "./TranslationSelect";
+import { useTranslation } from "@/i18n";
 
 type QuranSettingsProps = {
   readonly visible: boolean;
@@ -16,22 +17,24 @@ export default function QuranSettings({
   const [showDownloadModal, setShowDownloadModal] = React.useState(false);
   const [showTranslationSelect, setShowTranslationSelect] =
     React.useState(false);
+  const { t } = useTranslation();
+
   return (
     <ModalComponent
       visible={visible}
       onClose={onClose}
-      title="Quran Settings"
+      title={t("quran.quranSettings")}
     >
       <Button
         className="w-full p-4"
-        text="Download Translation"
+        text={t("quran.downloadTranslation")}
         backgroundColor="primary"
         onPress={() => setShowDownloadModal(true)}
         rightIcon="chevron-right"
       />
       <Button
         className="w-full p-4"
-        text="Select Translation"
+        text={t("quran.selectTranslation")}
         backgroundColor="primary"
         onPress={() => setShowTranslationSelect(true)}
         rightIcon="chevron-right"

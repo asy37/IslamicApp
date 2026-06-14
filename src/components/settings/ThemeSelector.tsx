@@ -1,16 +1,18 @@
 import { Pressable, Text, View } from "react-native";
 import clsx from "clsx";
 import { useThemeStore, useTheme, type ThemeOption } from "@/lib/storage/useThemeStore";
+import { useTranslation } from "@/i18n";
 
 export default function ThemeSelector() {
   const { isDark } = useTheme();
   const selectedTheme = useThemeStore((s) => s.theme);
   const setTheme = useThemeStore((s) => s.setTheme);
+  const { t } = useTranslation();
 
   const themes: { key: ThemeOption; label: string }[] = [
-    { key: "light", label: "Light" },
-    { key: "dark", label: "Dark" },
-    { key: "system", label: "System" },
+    { key: "light", label: t("settings.themeLight") },
+    { key: "dark", label: t("settings.themeDark") },
+    { key: "system", label: t("settings.themeSystem") },
   ];
 
   return (
@@ -21,7 +23,7 @@ export default function ThemeSelector() {
           isDark ? "text-text-primaryDark" : "text-text-primaryLight"
         )}
       >
-        App Theme
+        {t("settings.themeLabel")}
       </Text>
       <View
         className="flex-row p-1 rounded-lg"

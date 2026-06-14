@@ -21,6 +21,7 @@ export default function OnboardingLocationScreen() {
   const { t } = useTranslation();
   const router = useRouter();
   const setLocation = useLocationStore((state) => state.setLocation);
+  const setAutoLocation = useLocationStore((state) => state.setAutoLocation);
   const queryClient = useQueryClient();
   const [showManualModal, setShowManualModal] = useState(false);
   const [hasResult, setHasResult] = useState(false);
@@ -30,6 +31,7 @@ export default function OnboardingLocationScreen() {
   const handleRequestPermission = async () => {
     await requestLocation();
     await storage.set(LOCATION_PERMISSION_ASKED_KEY, "true");
+    setAutoLocation(true);
     setHasResult(true);
     setSelectedChoice("allow");
   };
@@ -42,6 +44,7 @@ export default function OnboardingLocationScreen() {
     storage.set(LOCATION_PERMISSION_ASKED_KEY, "true");
     storage.set(LOCATION_PERMISSION_GRANTED_KEY, "false");
     setLocation(selectedLocation);
+    setAutoLocation(false);
     setShowManualModal(false);
     queryClient.invalidateQueries({ queryKey: queryKeys.prayerTimes.all });
     setHasResult(true);

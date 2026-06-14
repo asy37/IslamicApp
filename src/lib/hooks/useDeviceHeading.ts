@@ -15,32 +15,58 @@ type HeadingState = {
  * heading: 0-360 (Kuzey=0)
  * accuracy: iOS'ta derece cinsinden hata payı, Android'de null olabilir
  */
-export function useDeviceHeading(_updateIntervalMs: number = 100): HeadingState {
+export function useDeviceHeading(updateIntervalMs: number = 100): HeadingState {
   const [heading, setHeading] = useState<number | null>(null);
   const [accuracy, setAccuracy] = useState<number | null>(null);
 
   useEffect(() => {
     let subscription: Location.LocationSubscription | null = null;
+    let lastUpdateTime = 0;
+    let timeoutId: NodeJS.Timeout | null = null;
+    let pendingData: { heading: number; accuracy: number | null } | null = null;
+
+    const commitData = (h: number, acc: number | null) => {
+      setHeading(h);
+      setAccuracy(acc);
+      lastUpdateTime = Date.now();
+      pendingData = null;
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+        timeoutId = null;
+      }
+    };
 
     (async () => {
       const { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== "granted") return;
 
       subscription = await Location.watchHeadingAsync((data) => {
-        // magHeading: manyetik kuzey referanslı heading
-        // trueHeading: coğrafi kuzey referanslı (deklinasyon düzeltmeli)
-        // trueHeading varsa onu kullan, yoksa magHeading
         const h = data.trueHeading >= 0 ? data.trueHeading : data.magHeading;
-        setHeading(h);
-        // accuracy: iOS'ta derece cinsinden, Android'de -1 olabilir
-        setAccuracy(data.accuracy >= 0 ? data.accuracy : null);
+        const acc = data.accuracy >= 0 ? data.accuracy : null;
+        const now = Date.now();
+
+        if (now - lastUpdateTime >= updateIntervalMs) {
+          commitData(h, acc);
+        } else {
+          pendingData = { heading: h, accuracy: acc };
+          if (!timeoutId) {
+            timeoutId = setTimeout(() => {
+              if (pendingData) {
+                commitData(pendingData.heading, pendingData.accuracy);
+              }
+            }, updateIntervalMs - (now - lastUpdateTime));
+          }
+        }
       });
     })();
 
     return () => {
       subscription?.remove();
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
     };
-  }, []);
+  }, [updateIntervalMs]);
 
   return { heading, accuracy };
 }

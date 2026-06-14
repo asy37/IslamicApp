@@ -17,6 +17,7 @@ import { useState } from "react";
 import { useUpdatePrayerStatusLocal } from "@/lib/hooks/prayer-tracking/usePrayerTrackingLocal";
 import { ActionButtons } from "./ActionButtons";
 import { normalizeTimeString } from "./utils/utils";
+import { useTranslation } from "@/i18n";
 
 type PrayerItem = {
   readonly name: string;
@@ -43,6 +44,7 @@ export default function PrayerItem({
 }: PrayerItemProps) {
   const [isExpanded, setIsExpanded] = useState(false);
   const { mutate: updateStatus, isPending } = useUpdatePrayerStatusLocal();
+  const { t } = useTranslation();
   const prayerTime = normalizeTimeString(prayer.time);
   const canExpand = extended && (isPast || isActive);
   return (
@@ -79,12 +81,12 @@ export default function PrayerItem({
               getNameTextColor(isActive, isDark)
             )}
           >
-            {prayer.name}
+            {t(`prayerNames.${prayer.key.toLowerCase()}`)}
           </Text>
           <Text
             className={clsx("text-xs", getMeaningTextColor(isActive, isDark))}
           >
-            {prayer.meaning}
+            {t(`prayerMeanings.${prayer.key.toLowerCase()}`)}
           </Text>
         </View>
         <View className="shrink-0 text-right flex-col items-end">

@@ -16,9 +16,13 @@ import { getDb } from "@/lib/database/sqlite/db";
 import DhikrHeader from "@/components/dhikr/DhikrHeader";
 import { useTheme } from "@/lib/storage/useThemeStore";
 
+import { useTranslation } from "@/i18n";
+import { DHIKR_PRESETS } from "@/constants/dhikr-presets";
+
 export default function DhikrScreen() {
   const { isDark } = useTheme();
   const { user } = useAuth();
+  const { t } = useTranslation();
   const userId = user?.id || null;
 
   const [openAddDhikrModal, setOpenAddDhikrModal] = React.useState(false);
@@ -37,8 +41,35 @@ export default function DhikrScreen() {
           const records = await dhikrRepo.getAllDhikrs(userId);
 
           // Set first dhikr as current if none selected
-          if (!currentSlug && records.length > 0) {
-            setCurrentSlug(records[0].slug);
+          if (!currentSlug) {
+            if (records.length > 0) {
+              setCurrentSlug(records[0].slug);
+            } else if (DHIKR_PRESETS.length > 0) {
+              const defaultPreset = DHIKR_PRESETS[0];
+              const now = Date.now();
+              const generateUUID = () => 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+                const r = Math.trunc(Math.random() * 16);
+                const v = c === 'x' ? r : (r & 0x3) | 0x8;
+                return v.toString(16);
+              });
+              
+              // Insert the default preset to SQLite so useDhikr can find it
+              await dhikrRepo.upsertDhikr({
+                id: generateUUID(),
+                user_id: userId,
+                slug: defaultPreset.slug,
+                label: defaultPreset.label,
+                target_count: defaultPreset.target_count,
+                current_count: 0,
+                status: 'active',
+                started_at: now,
+                completed_at: null,
+                is_dirty: true,
+                last_synced_at: null,
+                updated_at: now,
+              });
+              setCurrentSlug(defaultPreset.slug);
+            }
           }
         }
       } catch (error) {
@@ -99,7 +130,7 @@ export default function DhikrScreen() {
           return (
             <>
               <Text className="text-2xl font-bold text-center">
-                {currentDhikr.label || "Dhikr"}
+                {currentDhikr.label || t("more.dhikrTracker")}
               </Text>
               <View className="relative flex-1">
                 <TouchableOpacity
@@ -109,7 +140,7 @@ export default function DhikrScreen() {
                   {targetReached && (
                     <View className="absolute top-10 items-center justify-center">
                       <MaterialIcons name="check-circle" size={24} color={colors.success} />
-                      <Text className="text-lg font-bold text-center text-success">Target Reached</Text>
+                      <Text className="text-lg font-bold text-center text-success">{t("dhikr.targetReached")}</Text>
                     </View>
                   )}
                   <DhikrCounter
@@ -127,7 +158,7 @@ export default function DhikrScreen() {
         return (
           <View className="flex-1 items-center justify-center">
             <Text className="text-2xl font-bold text-center">
-              Select or add a Dhikr
+              {t("dhikr.selectOrAdd")}
             </Text>
           </View>
         );

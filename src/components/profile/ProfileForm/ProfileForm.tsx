@@ -28,9 +28,11 @@ import { profileRepo } from "@/lib/database/sqlite/profile/repository";
 import { queryClient } from "@/lib/query/queryClient";
 import { queryKeys } from "@/lib/query/queryKeys";
 import NetInfo from "@react-native-community/netinfo";
+import { useTranslation } from "@/i18n";
 
 export default function ProfileForm() {
     const { isDark } = useTheme();
+    const { t } = useTranslation();
     const { user, isLoading: authLoading, isAnonymous } = useAuth();
     const { data: profile, isLoading: profileLoading, error: profileError } = useUserProfile();
     const updateProfileMutation = useUpdateUserProfile();
@@ -106,7 +108,7 @@ export default function ProfileForm() {
     const pickImage = async () => {
         const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
         if (status !== "granted") {
-            Alert.alert("İzin Gerekli", "Fotoğraf seçmek için izin gerekli");
+            Alert.alert(t("auth.photoPermissionTitle"), t("auth.photoPermissionMessage"));
             return;
         }
 
@@ -148,7 +150,7 @@ export default function ProfileForm() {
     const onSubmit = async (data: ProfileFormData) => {
         try {
             if (!user) {
-                Alert.alert("Hata", "Oturum bulunamadı. Lütfen tekrar giriş yapın.");
+                Alert.alert(t("more.error"), t("profile.sessionNotFound"));
                 return;
             }
 
@@ -160,15 +162,15 @@ export default function ProfileForm() {
 
             if (isAnonymous) {
                 if (!isOnline) {
-                    Alert.alert("İnternet gerekli", "Hesabı yükseltmek için internet bağlantısı gerekir.");
+                    Alert.alert(t("more.error"), t("profile.onlineRequired"));
                     return;
                 }
                 if (!email) {
-                    Alert.alert("Eksik bilgi", "Lütfen email adresinizi girin.");
+                    Alert.alert(t("more.error"), t("profile.emailRequired"));
                     return;
                 }
                 if (!password) {
-                    Alert.alert("Eksik bilgi", "Lütfen şifrenizi girin.");
+                    Alert.alert(t("more.error"), t("profile.passwordRequired"));
                     return;
                 }
 
@@ -185,7 +187,7 @@ export default function ProfileForm() {
                 await profileRepo.upsertLocalProfile(user.id, updatedProfile);
                 queryClient.invalidateQueries({ queryKey: queryKeys.user.profile() });
 
-                Alert.alert("Başarılı", "Hesabın yükseltildi ve profilin güncellendi.");
+                Alert.alert(t("common.done"), t("profile.upgradeSuccess"));
                 return;
             }
 
@@ -194,8 +196,8 @@ export default function ProfileForm() {
                     await updateAuthCredentialsIfNeeded(email, password);
                 } catch (e) {
                     Alert.alert(
-                        "Hata",
-                        e instanceof Error ? e.message : "Email/şifre güncellenemedi."
+                        t("more.error"),
+                        e instanceof Error ? e.message : t("profile.updateFailed")
                     );
                     return;
                 }
@@ -207,7 +209,7 @@ export default function ProfileForm() {
                     image: imagePath || null,
                 });
 
-                Alert.alert("Başarılı", "Profilin güncellendi.");
+                Alert.alert(t("common.done"), t("profile.updateSuccess"));
             } else {
                 const now = Date.now();
                 let createdAt: string;
@@ -234,10 +236,10 @@ export default function ProfileForm() {
                     image: profile?.image ?? null,
                 });
                 queryClient.invalidateQueries({ queryKey: queryKeys.user.profile() });
-                Alert.alert("Kaydedildi", "Profiliniz çevrimdışı kaydedildi. İnternet bağlantısı kurulduğunda senkronize edilecek.");
+                Alert.alert(t("common.done"), t("profile.offlineSaved"));
             }
         } catch (e) {
-            Alert.alert("Hata", e instanceof Error ? e.message : "Profil güncellenirken bir hata oluştu");
+            Alert.alert(t("more.error"), e instanceof Error ? e.message : t("profile.updateFailed"));
         }
     };
 
@@ -251,9 +253,9 @@ export default function ProfileForm() {
     );
 
     const submitLabel = useMemo(() => {
-        if (isBusy) return "Kaydediliyor...";
-        return isAnonymous ? "Hesabı Yükselt" : "Kaydet";
-    }, [isBusy, isAnonymous]);
+        if (isBusy) return t("profile.saving");
+        return isAnonymous ? t("profile.upgradeButton") : t("profile.saveButton");
+    }, [isBusy, isAnonymous, t]);
 
     return (
         <ScrollView className="flex-1 px-6 w-full" contentContainerStyle={{ paddingBottom: 32 }} showsVerticalScrollIndicator={false}>
@@ -262,29 +264,29 @@ export default function ProfileForm() {
 
                 <View className="w-full flex-1 ">
                     <FormField
-                        label="Ad (isteğe bağlı)"
+                        label={t("profile.nameLabel")}
                         name="name"
                         control={control}
-                        placeholder="Adınız"
+                        placeholder={t("profile.namePlaceholder")}
                         isLoading={isBusy}
                         autoCapitalize="words"
                     />
 
                     <FormField
-                        label="Soyad (isteğe bağlı)"
+                        label={t("profile.surnameLabel")}
                         name="surname"
                         control={control}
-                        placeholder="Soyadınız"
+                        placeholder={t("profile.surnamePlaceholder")}
                         isLoading={isBusy}
                         autoCapitalize="words"
                     />
 
                     <FormField
-                        label={isAnonymous ? "Email Adresi (hesap açmak için)" : "Email Adresi"}
+                        label={isAnonymous ? t("profile.emailLabelUpgrade") : t("profile.emailLabel")}
                         name="email"
                         control={control}
-                        placeholder="ornek@email.com"
-                        error={errors.email?.message}
+                        placeholder={t("auth.emailPlaceholder")}
+                        error={errors.email?.message ? t(errors.email.message) : undefined}
                         isLoading={isBusy}
                         keyboardType="email-address"
                         autoComplete="email"
@@ -292,11 +294,11 @@ export default function ProfileForm() {
                     />
 
                     <FormField
-                        label={isAnonymous ? "Şifre (hesap açmak için)" : "Yeni Şifre (isteğe bağlı)"}
+                        label={isAnonymous ? t("profile.passwordLabelUpgrade") : t("profile.passwordLabel")}
                         name="password"
                         control={control}
-                        placeholder="••••••••"
-                        error={errors.password?.message}
+                        placeholder={t("auth.passwordPlaceholder")}
+                        error={errors.password?.message ? t(errors.password.message) : undefined}
                         isLoading={isBusy}
                         autoComplete="password"
                         secureTextEntry={!showPassword}
@@ -313,7 +315,7 @@ export default function ProfileForm() {
 
                     {!!profileError && (
                         <Text className="text-red-500 text-sm mt-3">
-                            Profil yüklenemedi. Lütfen tekrar deneyin.
+                            {t("profile.loadFailed")}
                         </Text>
                     )}
                 </View>

@@ -17,6 +17,7 @@ import { useAuth } from "@/lib/hooks/auth/useAuth";
 import { resendConfirmationEmail } from "@/lib/api/services/auth";
 import { useTheme } from "@/lib/storage/useThemeStore";
 import { colors } from "@/components/theme/colors";
+import { useTranslation } from "@/i18n";
 
 interface EmailConfirmationModalProps {
   visible: boolean;
@@ -28,6 +29,7 @@ export default function EmailConfirmationModal({
   onClose,
 }: EmailConfirmationModalProps) {
   const { isDark } = useTheme();
+  const { t } = useTranslation();
   const { user, isEmailConfirmed, isAnonymous } = useAuth();
   const [isResending, setIsResending] = useState(false);
 
@@ -44,15 +46,15 @@ export default function EmailConfirmationModal({
       const { error } = await resendConfirmationEmail(user.email);
 
       if (error) {
-        Alert.alert("Hata", error.message);
+        Alert.alert(t("more.error"), error.message);
       } else {
         Alert.alert(
-          "Başarılı",
-          "Onay maili tekrar gönderildi. Lütfen mail kutunuzu kontrol edin."
+          t("common.done"),
+          t("auth.resendSuccess")
         );
       }
     } catch (error) {
-      Alert.alert("Hata", "Mail gönderilirken bir hata oluştu");
+      Alert.alert(t("more.error"), t("auth.resendFailed"));
     } finally {
       setIsResending(false);
     }
@@ -91,7 +93,7 @@ export default function EmailConfirmationModal({
               isDark ? "text-text-primaryDark" : "text-text-primaryLight"
             )}
           >
-            Email Adresinizi Onaylayın
+            {t("auth.confirmEmailTitle")}
           </Text>
 
           {/* Message */}
@@ -101,8 +103,7 @@ export default function EmailConfirmationModal({
               isDark ? "text-text-secondaryDark" : "text-text-secondaryLight"
             )}
           >
-            {user.email} adresine gönderdiğimiz onay linkine tıklayarak
-            hesabınızı aktifleştirebilirsiniz.
+            {t("auth.confirmEmailMessage", { email: user.email })}
           </Text>
 
           {/* Actions */}
@@ -122,7 +123,7 @@ export default function EmailConfirmationModal({
                 color="white"
               />
               <Text className="text-white text-base font-semibold">
-                {isResending ? "Gönderiliyor..." : "Maili Tekrar Gönder"}
+                {isResending ? t("auth.resending") : t("auth.resendEmail")}
               </Text>
             </TouchableOpacity>
 
@@ -139,7 +140,7 @@ export default function EmailConfirmationModal({
                   isDark ? "text-text-secondaryDark" : "text-text-primaryLight"
                 )}
               >
-                Daha Sonra
+                {t("auth.later")}
               </Text>
             </TouchableOpacity>
           </View>

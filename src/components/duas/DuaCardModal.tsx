@@ -9,6 +9,7 @@ import clsx from "clsx";
 import * as Clipboard from "expo-clipboard";
 import { DuaType } from "@/components/duas/types/types";
 import { useTheme } from "@/lib/storage/useThemeStore";
+import { useTranslation } from "@/i18n";
 
 type DuaCardModalProps = {
     readonly dua: DuaType;
@@ -23,6 +24,7 @@ type DuaCardModalProps = {
 export default function DuaCardModal({ control, handleSubmit, dua, isMore, updateDua, deleteDua, isSaving, setIsMore }: DuaCardModalProps) {
     const { isDark } = useTheme();
     const [isEdit, setIsEdit] = React.useState(false);
+    const { t } = useTranslation();
 
     const handleEditDua = () => {
         setIsEdit(!isEdit);
@@ -36,30 +38,30 @@ export default function DuaCardModal({ control, handleSubmit, dua, isMore, updat
             });
             setIsEdit(false);
             setIsMore(false);
-            Alert.alert("Success", "Dua updated successfully");
+            Alert.alert(t("common.success"), t("duas.updateSuccess"));
         } catch (error) {
-            Alert.alert("Error", "Failed to update dua. Please try again.");
+            Alert.alert(t("more.error"), t("duas.updateFailed"));
             console.error("Error updating dua:", error);
         }
     };
 
     const handleDeleteDua = () => {
         Alert.alert(
-            "Delete Dua",
-            "Are you sure you want to delete this dua?",
+            t("duas.deleteTitle"),
+            t("duas.deleteMessage"),
             [
-                { text: "Cancel", style: "cancel" },
+                { text: t("common.cancel"), style: "cancel" },
                 {
-                    text: "Delete",
+                    text: t("common.delete"),
                     style: "destructive",
                     onPress: () => {
                         deleteDua(dua.id)
                             .then(() => {
                                 setIsMore(false);
-                                Alert.alert("Success", "Dua deleted successfully");
+                                Alert.alert(t("common.success"), t("duas.deleteSuccess"));
                             })
                             .catch((error) => {
-                                Alert.alert("Error", "Failed to delete dua. Please try again.");
+                                Alert.alert(t("more.error"), t("duas.deleteFailed"));
                                 console.error("Error deleting dua:", error);
                             });
                     },
@@ -70,7 +72,7 @@ export default function DuaCardModal({ control, handleSubmit, dua, isMore, updat
 
     const handleCopyDua = async () => {
         await Clipboard.setStringAsync(dua.text);
-        Alert.alert("Kopyalandı", "Dua panoya kopyalandı 🤍");
+        Alert.alert(t("duas.copiedTitle"), t("duas.copiedMessage"));
     };
 
     return (
@@ -80,8 +82,9 @@ export default function DuaCardModal({ control, handleSubmit, dua, isMore, updat
                 setIsMore(false);
                 setIsEdit(false);
             }}
-            title={isEdit ? "Edit Dua" : dua.title}
+            title={isEdit ? t("duas.editDuaTitle") : dua.title}
             isLoading={isSaving}
+            scrollable={true}
         >
             {isEdit ? (
                 <>
@@ -95,14 +98,14 @@ export default function DuaCardModal({ control, handleSubmit, dua, isMore, updat
                                 control._reset();
                             }}
                             leftIcon="close"
-                            text="Cancel"
+                            text={t("common.cancel")}
                         />
                         <Button
                             backgroundColor="primary"
                             size="small"
                             onPress={handleSubmit(handleSaveEdit)}
                             leftIcon="check"
-                            text="Save"
+                            text={t("common.save")}
                             disabled={isSaving}
                         />
                     </View>
@@ -125,21 +128,21 @@ export default function DuaCardModal({ control, handleSubmit, dua, isMore, updat
                             size="small"
                             onPress={handleCopyDua}
                             leftIcon="content-copy"
-                            text="Copy"
+                            text={t("common.copy")}
                         />
                         <Button
                             backgroundColor="transparent"
                             size="small"
                             onPress={handleEditDua}
                             leftIcon="edit"
-                            text="Edit"
+                            text={t("common.edit")}
                         />
                         <Button
                             backgroundColor="transparent"
                             size="small"
                             onPress={handleDeleteDua}
                             leftIcon="delete"
-                            text="Delete"
+                            text={t("common.delete")}
                         />
                     </View>
                 </>

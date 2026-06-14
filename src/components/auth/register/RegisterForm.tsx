@@ -18,42 +18,39 @@ import AvatarPicker from "@/components/form/AvatarPicker";
 import FormField from "@/components/form/FormField";
 import { useTheme } from "@/lib/storage/useThemeStore";
 import { colors } from "@/components/theme/colors";
-
-// Helper functions
-
-const handleSignUpSuccess = () => {
-    setTimeout(() => router.replace("/(tabs)"), 500);
-};
-
-const handleSignUpError = (error: Error) => {
-    Alert.alert("Kayıt Hatası", error.message);
-};
-
-const handleSignUpFailure = () => {
-    Alert.alert("Hata", "Kayıt olurken bir sorun oluştu. Lütfen tekrar deneyin.");
-};
-
-const handleGuestSuccess = () => {
-    setTimeout(() => router.replace("/(tabs)"), 500);
-};
-
-const handleGuestError = (error: Error) => {
-    Alert.alert("Hata", error.message);
-};
-
-const handleGuestFailure = () => {
-    Alert.alert("Hata", "Misafir girişi yapılırken bir sorun oluştu. Lütfen tekrar deneyin.");
-};
-
-
-
-
+import { useTranslation } from "@/i18n";
 
 export default function RegisterForm() {
     const { isDark } = useTheme();
+    const { t } = useTranslation();
     const [isLoading, setIsLoading] = useState(false);
     const [avatar, setAvatar] = useState<string | null>(null);
     const [showPassword, setShowPassword] = useState(false);
+
+    // Helpers moved inside component to access useTranslation hook
+    const handleSignUpSuccess = () => {
+        setTimeout(() => router.replace("/(tabs)"), 500);
+    };
+
+    const handleSignUpError = (error: Error) => {
+        Alert.alert(t("auth.signUpError"), error.message);
+    };
+
+    const handleSignUpFailure = () => {
+        Alert.alert(t("more.error"), t("auth.signUpErrorMessage"));
+    };
+
+    const handleGuestSuccess = () => {
+        setTimeout(() => router.replace("/(tabs)"), 500);
+    };
+
+    const handleGuestError = (error: Error) => {
+        Alert.alert(t("more.error"), error.message);
+    };
+
+    const handleGuestFailure = () => {
+        Alert.alert(t("more.error"), t("auth.guestSignInError"));
+    };
 
     const {
         control,
@@ -72,7 +69,7 @@ export default function RegisterForm() {
     const pickImage = async () => {
         const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
         if (status !== "granted") {
-            Alert.alert("İzin Gerekli", "Fotoğraf seçmek için izin gerekli");
+            Alert.alert(t("auth.photoPermissionTitle"), t("auth.photoPermissionMessage"));
             return;
         }
 
@@ -110,7 +107,7 @@ export default function RegisterForm() {
                 handleSignUpFailure();
             }
         } catch {
-            Alert.alert("Hata", "Kayıt olurken bir hata oluştu");
+            Alert.alert(t("more.error"), t("auth.signUpErrorMessage"));
         } finally {
             setIsLoading(false);
         }
@@ -130,7 +127,7 @@ export default function RegisterForm() {
                 handleGuestFailure();
             }
         } catch {
-            Alert.alert("Hata", "Misafir girişi başarısız");
+            Alert.alert(t("more.error"), t("auth.guestSignInError"));
         } finally {
             setIsLoading(false);
         }
@@ -151,29 +148,29 @@ export default function RegisterForm() {
 
                 <View style={{ gap: 20 }}>
                     <FormField
-                        label="Ad (isteğe bağlı)"
+                        label={t("auth.nameLabel")}
                         name="name"
                         control={control}
-                        placeholder="Adınız"
+                        placeholder={t("auth.namePlaceholder")}
                         isLoading={isLoading}
                         autoCapitalize="words"
                     />
 
                     <FormField
-                        label="Soyad (isteğe bağlı)"
+                        label={t("auth.surnameLabel")}
                         name="surname"
                         control={control}
-                        placeholder="Soyadınız"
+                        placeholder={t("auth.surnamePlaceholder")}
                         isLoading={isLoading}
                         autoCapitalize="words"
                     />
 
                     <FormField
-                        label="Email Adresi"
+                        label={t("auth.emailLabel")}
                         name="email"
                         control={control}
-                        placeholder="ornek@email.com"
-                        error={errors.email?.message}
+                        placeholder={t("auth.emailPlaceholder")}
+                        error={errors.email?.message ? t(errors.email.message) : undefined}
                         isLoading={isLoading}
                         keyboardType="email-address"
                         autoComplete="email"
@@ -181,11 +178,11 @@ export default function RegisterForm() {
                     />
 
                     <FormField
-                        label="Şifre"
+                        label={t("auth.passwordLabel")}
                         name="password"
                         control={control}
-                        placeholder="••••••••"
-                        error={errors.password?.message}
+                        placeholder={t("auth.passwordPlaceholder")}
+                        error={errors.password?.message ? t(errors.password.message) : undefined}
                         isLoading={isLoading}
                         autoComplete="password"
                         secureTextEntry={!showPassword}
@@ -197,7 +194,7 @@ export default function RegisterForm() {
                         disabled={isLoading}
                         className={clsx("mt-4 h-14 rounded-xl items-center justify-center shadow-sm", isLoading ? "bg-primary-400" : "bg-primary-500")}
                     >
-                        <Text className="text-white text-base font-bold">{isLoading ? "Kayıt yapılıyor..." : "Kayıt Ol"}</Text>
+                        <Text className="text-white text-base font-bold">{isLoading ? t("auth.signUpLoading") : t("auth.signUpButton")}</Text>
                     </TouchableOpacity>
                 </View>
 
@@ -205,7 +202,7 @@ export default function RegisterForm() {
                 <View className="flex-row items-center my-8" style={{ gap: 16 }}>
                     <View className={clsx("flex-1 h-px", isDark ? "bg-border-dark" : "bg-gray-200")} />
                     <Text className={clsx("text-xs font-medium uppercase", isDark ? "text-text-secondaryDark" : "text-text-secondaryLight")}>
-                        veya
+                        {t("auth.or")}
                     </Text>
                     <View className={clsx("flex-1 h-px", isDark ? "bg-border-dark" : "bg-gray-200")} />
                 </View>
@@ -224,7 +221,7 @@ export default function RegisterForm() {
                 <View className="items-center mb-4">
                     <TouchableOpacity onPress={handleGuestContinue} disabled={isLoading}>
                         <Text className={clsx("text-sm font-semibold", isDark ? "text-text-secondaryDark" : "text-text-secondaryLight", isLoading && "opacity-50")}>
-                            Misafir olarak devam et
+                            {t("auth.continueAsGuest")}
                         </Text>
                     </TouchableOpacity>
                 </View>

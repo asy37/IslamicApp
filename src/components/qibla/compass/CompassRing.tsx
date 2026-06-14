@@ -1,11 +1,11 @@
-import { View, Text } from "react-native";
+import { Animated, View, Text } from "react-native";
 import clsx from "clsx";
 import { colors } from "@/components/theme/colors";
 
 type CompassRingProps = Readonly<{
   compassSize: number;
   isDark: boolean;
-  dialRotation: number;
+  dialRotation: any;
 }>;
 export default function CompassRing({
   compassSize,
@@ -13,7 +13,7 @@ export default function CompassRing({
   dialRotation,
 }: CompassRingProps) {
   return (
-    <View
+    <Animated.View
       className={clsx(
         "relative rounded-full items-center justify-center border",
         isDark ? "bg-success border-primary-500" : "bg-white border-white"
@@ -27,7 +27,7 @@ export default function CompassRing({
         shadowOpacity: 0.5,
         shadowRadius: 40,
         elevation: 8,
-        transform: [{ rotate: `${dialRotation}deg` }],
+        transform: [{ rotate: dialRotation }],
       }}
     >
       {/* Degree Markings Ring */}
@@ -138,6 +138,6 @@ export default function CompassRing({
           backgroundColor: isDark ? colors.background.dark : colors.background.light,
         }}
       />
-    </View>
+    </Animated.View>
   );
 }

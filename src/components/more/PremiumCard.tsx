@@ -1,8 +1,10 @@
 import { Pressable, Text, View } from "react-native";
 import clsx from "clsx";
 import { colors } from "@/components/theme/colors";
+import { useTranslation } from "@/i18n";
 
 export default function PremiumCard({ isDark }: { isDark: boolean }) {
+  const { t } = useTranslation();
   return (
     <View className="mt-6 mb-8">
       <View
@@ -28,10 +30,10 @@ export default function PremiumCard({ isDark }: { isDark: boolean }) {
         />
         <View className="relative z-10">
           <Text className="text-lg font-bold text-white mb-1">
-            Premium'a Geç
+            {t("premium.title")}
           </Text>
           <Text className="text-white/80 text-sm mb-4 max-w-[80%]">
-            Reklamsız deneyim ve özel içerikler için destek olun.
+            {t("premium.subtitle")}
           </Text>
           <Pressable
             className="bg-white px-4 py-2 rounded-lg"
@@ -47,7 +49,7 @@ export default function PremiumCard({ isDark }: { isDark: boolean }) {
               className="text-sm font-semibold"
               style={{ color: colors.primary[500] }}
             >
-              Detayları Gör
+              {t("premium.button")}
             </Text>
           </Pressable>
         </View>

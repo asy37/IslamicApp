@@ -604,7 +604,9 @@ export class NotificationService {
   }
 
   /**
-   * Register background task for critical operations
+   * Register background task for periodic notification refresh.
+   * iOS: minimum ~4 hours (system decides actual interval).
+   * Android: minimum 15 minutes.
    */
   async registerBackgroundTask(): Promise<void> {
     loadNotificationModules();
@@ -614,14 +616,63 @@ export class NotificationService {
     }
 
     try {
-      await BackgroundFetch.registerTaskAsync('refresh-prayer-times', {
-        minimumInterval: 15 * 60, // 15 minutes
+      // Check if already registered
+      if (TaskManager) {
+        const isRegistered = await TaskManager.isTaskRegisteredAsync(
+          'BACKGROUND_NOTIFICATION_REFRESH'
+        );
+        if (isRegistered) {
+          console.log('[NotificationService] Background task already registered');
+          return;
+        }
+      }
+
+      const minimumInterval = Platform.OS === 'ios'
+        ? 4 * 60 * 60  // 4 saat — iOS minimum; sistem optimize eder
+        : 15 * 60;     // 15 dakika — Android daha sık çalışabilir
+
+      await BackgroundFetch.registerTaskAsync('BACKGROUND_NOTIFICATION_REFRESH', {
+        minimumInterval,
         stopOnTerminate: false,
         startOnBoot: true,
       });
+      console.log('[NotificationService] Background task registered successfully');
     } catch (error) {
       console.error('Background task registration failed:', error);
     }
+  }
+
+  /**
+   * Get count of currently scheduled notifications
+   */
+  async getScheduledNotificationCount(): Promise<number> {
+    const NotificationsModule = getNotifications();
+    if (!NotificationsModule) return 0;
+
+    const notifications = await NotificationsModule.getAllScheduledNotificationsAsync();
+    return notifications.length;
+  }
+
+  /**
+   * Check if there are upcoming prayer notifications within the next N hours.
+   * Returns false if no prayer_time notifications are found in the window.
+   */
+  async hasUpcomingPrayerNotifications(withinHours: number = 24): Promise<boolean> {
+    const NotificationsModule = getNotifications();
+    if (!NotificationsModule) return false;
+
+    const notifications = await NotificationsModule.getAllScheduledNotificationsAsync();
+    const now = Date.now();
+    const windowEnd = now + withinHours * 60 * 60 * 1000;
+
+    return notifications.some((n) => {
+      if (n.content.data?.type !== 'prayer_time') return false;
+      const trigger = n.trigger as any;
+      const triggerDate = trigger?.date ?? trigger?.value;
+      if (!triggerDate) return false;
+      const triggerTime = new Date(triggerDate).getTime();
+      return triggerTime > now && triggerTime <= windowEnd;
+    });
   }
 
   /**

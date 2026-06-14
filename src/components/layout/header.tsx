@@ -16,6 +16,8 @@ import { usePrayerTimesStore } from "@/lib/storage/prayerTimesStore";
 import { PrayerDate } from "../adhan/types/date-info";
 import { useAuth } from "@/lib/hooks/auth/useAuth";
 import { useUserProfile, useAvatarUrl } from "@/lib/hooks/profile/useUserProfile";
+import { useTranslation } from "@/i18n";
+import { formatGregorianDate, formatHijriDate } from "@/lib/utils/date";
 
 const PLACEHOLDER_AVATAR = "https://github.com/shadcn.png";
 
@@ -30,9 +32,14 @@ export default function PrayerHeader() {
   const avatarUrl = useAvatarUrl();
   const displayName = profile?.name ?? user?.user_metadata?.name ?? "";
   const AVATAR_URL = avatarUrl ?? PLACEHOLDER_AVATAR;
+  const { t, i18n } = useTranslation();
   const prayerDate = todayData?.date as PrayerDate;
-  const hijriDate = `${prayerDate?.hijri?.day} ${prayerDate?.hijri?.weekday.en} ${prayerDate?.hijri?.month.en} ${prayerDate?.hijri?.year}`;
-  const gregorianDate = `${prayerDate?.gregorian?.day} ${prayerDate?.gregorian?.weekday.en} ${prayerDate?.gregorian?.month.en} ${prayerDate?.gregorian?.year}`;
+  const currentLocale = i18n.language || "tr";
+  const hijriDate = formatHijriDate(prayerDate?.hijri, prayerDate?.gregorian, currentLocale);
+  const gregorianDate = formatGregorianDate(prayerDate?.gregorian, currentLocale);
+
+  const count = streakData?.count ?? 0;
+  const streakText = `${count} ${count === 1 ? t("common.day") : t("common.days")}`;
 
   return (
     <SafeAreaView
@@ -43,8 +50,8 @@ export default function PrayerHeader() {
         className={clsx(
           "border-b px-4 py-2 ",
           isDark
-            ? "border-border-dark bg-background-dark/95"
-            : "border-border-light bg-background-light/95"
+            ? "border-b border-border-dark bg-background-dark/95"
+            : "border-b border-border-light bg-background-light/95"
         )}
       >
         <View className="flex-row items-center justify-between">
@@ -87,7 +94,7 @@ export default function PrayerHeader() {
             </View>
           </View>
           <Button
-            text={`${streakData?.count ?? 0} Gün`}
+            text={streakText}
             onPress={() => setIsStreakModalVisible(true)}
             rightIcon="local-fire-department"
             size="small"

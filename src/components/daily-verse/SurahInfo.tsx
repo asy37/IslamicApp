@@ -1,12 +1,14 @@
 import { Ayah } from "@/types/quran";
 import clsx from "clsx";
 import { Text, View } from "react-native";
+import { useTranslation } from "@/i18n";
 
 type SurahInfoProps = Readonly<{
   dailyAyah: Ayah;
   isDark: boolean;
 }>;
 export default function SurahInfo({ isDark, dailyAyah }: SurahInfoProps) {
+  const { t } = useTranslation();
   return (
     <>
       {/* Surah Info */}
@@ -24,7 +26,7 @@ export default function SurahInfo({ isDark, dailyAyah }: SurahInfoProps) {
             isDark ? "text-primary-300" : "text-primary-500"
           )}
         >
-          Juz: {dailyAyah.juz}
+          {t("quran.juzLabel")}: {dailyAyah.juz}
         </Text>
         <Text
           className={clsx(
@@ -32,7 +34,7 @@ export default function SurahInfo({ isDark, dailyAyah }: SurahInfoProps) {
             isDark ? "text-primary-300" : "text-primary-500"
           )}
         >
-          Surah :{dailyAyah.surahArabicName + "/" + dailyAyah.surahTranslation}
+          {t("quran.surahLabel")}: {dailyAyah.surahArabicName + " / " + dailyAyah.surahTranslation}
         </Text>
         <Text
           className={clsx(
@@ -40,7 +42,7 @@ export default function SurahInfo({ isDark, dailyAyah }: SurahInfoProps) {
             isDark ? "text-primary-300" : "text-primary-500"
           )}
         >
-          Ayah Number: {dailyAyah.number}
+          {t("quran.ayahNumberLabel")}: {dailyAyah.number}
         </Text>
       </View>
     </>

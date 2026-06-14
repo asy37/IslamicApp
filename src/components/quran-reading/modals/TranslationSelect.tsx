@@ -11,6 +11,7 @@ import { useQuery } from "@tanstack/react-query";
 import clsx from "clsx";
 import React from "react";
 import { FlatList, Text, View } from "react-native";
+import { useTranslation } from "@/i18n";
 
 type TranslationSelectProps = {
   readonly visible: boolean;
@@ -26,6 +27,7 @@ export default function TranslationSelect({
     queryKey: queryKeys.translation.downloaded(),
     queryFn: getDownloadedTranslations,
   });
+  const { t } = useTranslation();
 
   const flatListData = React.useMemo(() => {
     return data ?? [];
@@ -38,13 +40,13 @@ export default function TranslationSelect({
     <ModalComponent
       visible={visible}
       onClose={onClose}
-      title="Translation Select"
+      title={t("quran.selectTranslationTitle")}
       isLoading={isLoading}
     >
       <FlatList
         data={flatListData}
         ListEmptyComponent={
-          <Text className={clsx("text-center", isDark ? "text-text-primaryDark" : "text-text-primaryLight")}>First download a translation to see the list</Text>
+          <Text className={clsx("text-center", isDark ? "text-text-primaryDark" : "text-text-primaryLight")}>{t("quran.downloadFirst")}</Text>
         }
         keyExtractor={(item) => item.edition_identifier}
         contentContainerClassName="gap-2 pb-4 w-full"

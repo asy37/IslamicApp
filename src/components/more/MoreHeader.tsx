@@ -2,8 +2,11 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { Pressable, Text, View } from "react-native";
 import clsx from "clsx";
 import { colors } from "@/components/theme/colors";
+import { useTranslation } from "@/i18n";
 
 export default function MoreHeader({ isDark }: { isDark: boolean }) {
+  const { t } = useTranslation();
+
   return (
     <View
       className={clsx(
@@ -18,18 +21,8 @@ export default function MoreHeader({ isDark }: { isDark: boolean }) {
             isDark ? "text-text-primaryDark" : "text-text-primaryLight"
           )}
         >
-          Daha Fazla
+          {t("more.title")}
         </Text>
-        <Pressable
-          className="w-10 h-10 rounded-full bg-primary-500/10 flex items-center justify-center"
-          hitSlop={10}
-        >
-          <MaterialIcons
-            name="notifications"
-            size={24}
-            color={isDark ? colors.secondary : colors.primary[500]}
-          />
-        </Pressable>
       </View>
       <Text
         className={clsx(
@@ -37,7 +30,7 @@ export default function MoreHeader({ isDark }: { isDark: boolean }) {
           isDark ? "text-text-secondaryDark" : "text-text-secondaryLight"
         )}
       >
-        Ruhsal araçlar ve ayarlar
+        {t("more.subtitle")}
       </Text>
     </View>
   );

@@ -22,6 +22,7 @@ import { useNotificationSetup } from "@/lib/hooks/layout/useNotificationSetup";
 import { usePrayerTimesPrefetch } from "@/lib/hooks/layout/usePrayerTimesPrefetch";
 import { useStalePrayerTimesModal } from "@/lib/hooks/layout/useStalePrayerTimesModal";
 import { useTranslationInit } from "@/lib/hooks/layout/useTranslationInit";
+import { useNotificationRefreshOnResume } from "@/lib/hooks/layout/useNotificationRefreshOnResume";
 import { DebugErrorBoundary } from "@/components/DebugErrorBoundary";
 import StalePrayerTimesModal from "@/components/adhan/StalePrayerTimesModal";
 import { QuranAudioProvider } from "@/contexts/QuranAudioContext";
@@ -137,6 +138,7 @@ export default function RootLayout() {
   }, [shouldShowRegister, canAccessApp, segments, isNavigationReady, onboardingCompleted, router]);
 
   useNotificationSetup(router);
+  useNotificationRefreshOnResume();
   usePrayerTimesPrefetch(dbReady);
   useTranslationInit(dbReady);
 

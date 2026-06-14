@@ -3,6 +3,7 @@ import { Text, View } from "react-native";
 import type { PrayerWithTime } from "@/types/prayer-tracking";
 import { useTheme } from "@/lib/storage/useThemeStore";
 import { colors } from "@/components/theme/colors";
+import { useTranslation } from "@/i18n";
 
 type UpcomingPrayerRowProps = {
   readonly prayer: PrayerWithTime;
@@ -10,6 +11,7 @@ type UpcomingPrayerRowProps = {
 
 export default function UpcomingPrayerRow({ prayer }: UpcomingPrayerRowProps) {
   const { isDark } = useTheme();
+  const { t } = useTranslation();
   
   return (
     <View
@@ -41,7 +43,7 @@ export default function UpcomingPrayerRow({ prayer }: UpcomingPrayerRowProps) {
               (isDark ? "text-text-primaryDark" : "text-text-primaryLight")
             }
           >
-            {prayer.displayName}
+            {t(`prayerNames.${prayer.prayer_name.toLowerCase()}`)}
           </Text>
           <Text
             className={
@@ -61,7 +63,7 @@ export default function UpcomingPrayerRow({ prayer }: UpcomingPrayerRowProps) {
             : "rounded-full bg-border-light/40 px-3 py-1 text-xs font-medium text-text-secondaryLight"
         }
       >
-        <Text className="text-[11px]">Yaklaşıyor</Text>
+        <Text className="text-[11px]">{t("prayer.approaching")}</Text>
       </View>
     </View>
   );

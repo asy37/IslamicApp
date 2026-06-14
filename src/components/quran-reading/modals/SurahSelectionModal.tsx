@@ -8,6 +8,7 @@ import { colors } from "@/components/theme/colors";
 import { SurahListItem } from "./SurahModalItem";
 import ModalComponent from "@/components/modal/ModalComponent";
 import { useTheme } from "@/lib/storage/useThemeStore";
+import { useTranslation } from "@/i18n";
 
 type SurahSelectionModalProps = {
   readonly visible: boolean;
@@ -22,6 +23,7 @@ export default function SurahSelectionModal({
 }: SurahSelectionModalProps) {
   const { isDark } = useTheme();
   const [search, setSearch] = useState("");
+  const { t } = useTranslation();
 
   const searchableSurah = useSearchableSurahs(SurahData);
   const filteredSurahs = useFilteredSurahs(searchableSurah, search);
@@ -30,7 +32,7 @@ export default function SurahSelectionModal({
     <ModalComponent
       visible={visible}
       onClose={onClose}
-      title="Surah Selection"
+      title={t("quran.surahSelection")}
     >
       <View className="px-6 pb-2 w-full">
         <View
@@ -47,7 +49,7 @@ export default function SurahSelectionModal({
           <TextInput
             value={search}
             onChangeText={setSearch}
-            placeholder="Sure ara (Bakara, Yasin, 2…)"
+            placeholder={t("quran.searchSurahPlaceholder")}
             placeholderTextColor={colors.text.primaryLight}
             className={"ml-2 flex-1 text-base text-text-muted"}
           />

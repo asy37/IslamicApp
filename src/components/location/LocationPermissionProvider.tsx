@@ -21,6 +21,7 @@ export default function LocationPermissionProvider() {
   const [isChecking, setIsChecking] = useState(true);
   const setLocation = useLocationStore((state) => state.setLocation);
   const location = useLocationStore((state) => state.location);
+  const autoLocation = useLocationStore((state) => state.autoLocation);
 
   // Helper function to fetch and set location
   const fetchAndSetLocation = async () => {
@@ -57,6 +58,11 @@ export default function LocationPermissionProvider() {
     }
 
     const checkLocationPermission = async () => {
+      if (!autoLocation) {
+        setIsChecking(false);
+        return;
+      }
+
       const onboardingCompleted = await storage.getString(ONBOARDING_COMPLETED_KEY);
       if (onboardingCompleted !== "true") {
         setIsChecking(false);
@@ -126,7 +132,7 @@ export default function LocationPermissionProvider() {
     };
 
     checkLocationPermission();
-  }, [session, isAuthLoading]); // Removed 'location' from dependencies to avoid unnecessary re-runs
+  }, [session, isAuthLoading, autoLocation]); // Added autoLocation to dependencies to recheck if toggled
 
   const handlePermissionGranted = async () => {
     try {

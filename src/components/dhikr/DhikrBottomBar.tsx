@@ -6,6 +6,7 @@ import React from "react";
 import DhikirSelect from "./DhikirSelect";
 import DhikirStats from "./DhikirStats";
 import { colors } from "@/components/theme/colors";
+import { useTranslation } from "@/i18n";
 
 
 
@@ -24,6 +25,7 @@ export default function DhikrBottomBar({
 }: DhikrBottomBarProps) {
   const [openDhikrSelect, setOpenDhikrSelect] = React.useState(false);
   const [openDhikrStats, setOpenDhikrStats] = React.useState(false);
+  const { t } = useTranslation();
 
   return (
     <>
@@ -68,7 +70,7 @@ export default function DhikrBottomBar({
                   isDark ? "text-text-secondaryDark/50" : "text-text-secondaryLight/40"
                 )}
               >
-                Current
+                {t("dhikr.current")}
               </Text>
               <Text
                 className={clsx(

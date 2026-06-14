@@ -5,6 +5,7 @@ import { useDhikrStats } from "@/lib/hooks/dhikir/useDhikirStats";
 import clsx from "clsx";
 import { useTheme } from "@/lib/storage/useThemeStore";
 import { colors } from "@/components/theme/colors";
+import { useTranslation } from "@/i18n";
 
 type DhikirStatsProps = Readonly<{
     readonly visible: boolean;
@@ -14,26 +15,27 @@ type DhikirStatsProps = Readonly<{
 export default function DhikirStats({ visible, onClose }: DhikirStatsProps) {
     const { isDark } = useTheme();
     const { stats, loading } = useDhikrStats();
+    const { t } = useTranslation();
 
     const statsList = stats
         ? [
               {
                   key: "week",
-                  label: "This Week",
+                  label: t("dhikr.thisWeek"),
                   completed: stats.week.completed,
                   continued: stats.week.active,
                   streak: 0, // Streak calculation not implemented yet
               },
               {
                   key: "month",
-                  label: "This Month",
+                  label: t("dhikr.thisMonth"),
                   completed: stats.month.completed,
                   continued: stats.month.active,
                   streak: 0, // Streak calculation not implemented yet
               },
               {
                   key: "year",
-                  label: "This Year",
+                  label: t("dhikr.thisYear"),
                   completed: stats.year.completed,
                   continued: stats.year.active,
                   streak: 0, // Streak calculation not implemented yet
@@ -45,7 +47,7 @@ export default function DhikirStats({ visible, onClose }: DhikirStatsProps) {
         <ModalComponent
             visible={visible}
             onClose={onClose}
-            title="Dhikir Stats"
+            title={t("dhikr.statsTitle")}
         >
             {(() => {
                 if (loading) {
@@ -53,7 +55,7 @@ export default function DhikirStats({ visible, onClose }: DhikirStatsProps) {
                         <View className="flex-1 items-center justify-center py-8">
                             <ActivityIndicator size="large" color={colors.primary[500]} />
                             <Text className={clsx("mt-4", isDark ? "text-text-primaryDark" : "text-text-primaryLight")}>
-                                Loading statistics...
+                                {t("dhikr.loadingStats")}
                             </Text>
                         </View>
                     );
@@ -63,10 +65,10 @@ export default function DhikirStats({ visible, onClose }: DhikirStatsProps) {
                     return (
                         <View className="flex-1 items-center justify-center py-8">
                             <Text className={clsx("text-center", isDark ? "text-text-primaryDark" : "text-text-primaryLight")}>
-                                No statistics available yet.
+                                {t("dhikr.noStats")}
                             </Text>
                             <Text className={clsx("text-center mt-2", isDark ? "text-text-secondaryDark" : "text-text-secondaryLight")}>
-                                Start tracking your dhikrs to see your progress!
+                                {t("dhikr.startTracking")}
                             </Text>
                         </View>
                     );
@@ -97,7 +99,7 @@ export default function DhikirStats({ visible, onClose }: DhikirStatsProps) {
                                 {item.streak > 0 && (
                                     <View className="flex-row items-center justify-between w-full">
                                         <Text className={clsx(isDark ? "text-text-primaryDark" : "text-text-primaryLight")}>
-                                            Continuous <Text className="font-bold text-primary-500">{item.streak}</Text> days.
+                                            {t("dhikr.streakPrefix")}<Text className="font-bold text-primary-500">{item.streak}</Text>{t("dhikr.streakSuffix")}
                                         </Text>
                                         <View className="p-2 rounded-full bg-primary-500">
                                             <MaterialIcons name="calendar-month" size={24} color="white" />
@@ -106,10 +108,10 @@ export default function DhikirStats({ visible, onClose }: DhikirStatsProps) {
                                 )}
                                 <View className="flex-row items-center justify-between w-full">
                                     <Text className={clsx(isDark ? "text-text-primaryDark" : "text-text-primaryLight")}>
-                                        Completed : <Text className="font-bold text-primary-500">{item.completed}</Text>
+                                        {t("dhikr.completed")}: <Text className="font-bold text-primary-500">{item.completed}</Text>
                                     </Text>
                                     <Text className={clsx(isDark ? "text-text-primaryDark" : "text-text-primaryLight")}>
-                                        Continued : <Text className="font-bold text-primary-500">{item.continued}</Text>
+                                        {t("dhikr.continued")}: <Text className="font-bold text-primary-500">{item.continued}</Text>
                                     </Text>
                                 </View>
                             </View>

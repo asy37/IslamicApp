@@ -16,6 +16,7 @@ import clsx from "clsx";
 import { saveQuranTranslation } from "@/lib/database/sqlite/translation/repository";
 import ModalComponent from "@/components/modal/ModalComponent";
 import Button from "@/components/button/Button";
+import { useTranslation } from "@/i18n";
 
 type DownloadModalType = {
   readonly visible: boolean;
@@ -25,6 +26,7 @@ export const DownloadModal = ({
   visible,
   onClose,
 }: DownloadModalType) => {
+  const { t } = useTranslation();
   const queryClient = useQueryClient();
   const [editionsData, setEditionsData] = useState<QuranEdition[]>();
   const [openEditions, setOpenEditions] = useState(false);
@@ -51,7 +53,7 @@ export const DownloadModal = ({
           queryKey: queryKeys.translation.downloaded(),
         });
 
-        Alert.alert("Başarılı", "Meal indirildi");
+        Alert.alert(t("common.success"), t("quran.downloadSuccess"));
       },
     });
 
@@ -96,18 +98,18 @@ export const DownloadModal = ({
     <ModalComponent
       visible={visible}
       onClose={onClose}
-      title="Download Translation"
+      title={t("quran.downloadTranslationTitle")}
     >
       <View className="flex-1 items-center gap-2 w-full">
         <Button
-          text={languageText ?? "Select Language"}
+          text={languageText ?? t("quran.selectLanguage")}
           onPress={() => setOpenLanguage(true)}
           backgroundColor="primary"
           rightIcon="chevron-right"
           size="large"
         />
         <Button
-          text={editionsText ?? "Select Author"}
+          text={editionsText ?? t("quran.selectAuthor")}
           onPress={handleGetTranslation}
           rightIcon="chevron-right"
           backgroundColor="primary"
@@ -125,7 +127,7 @@ export const DownloadModal = ({
           {isQuranPending ? (
             <ActivityIndicator />
           ) : (
-            <Text className="text-white text-center">Download</Text>
+            <Text className="text-white text-center">{t("quran.download")}</Text>
           )}
         </TouchableOpacity>
       </View>

@@ -5,18 +5,20 @@ import clsx from "clsx";
 import React from "react";
 import SelectButton from "@/components/button/SelectButton";
 import { useTheme } from "@/lib/storage/useThemeStore";
+import { useTranslation } from "@/i18n";
 
 type AuthMode = "login" | "register";
 
-const AUTH_BUTTONS: { key: AuthMode; label: string }[] = [
-  { key: "login", label: "Login" },
-  { key: "register", label: "Register" },
-];
-
 export default function AuthLayout() {
   const [RegisterOrLogin, setRegisterOrLogin] = React.useState<'register' | 'login'>('register');
-  const router = useRouter()
+  const router = useRouter();
   const { isDark } = useTheme();
+  const { t } = useTranslation();
+
+  const authButtons: { key: AuthMode; label: string }[] = [
+    { key: "login", label: t("auth.loginTab") },
+    { key: "register", label: t("auth.registerTab") },
+  ];
 
   const handleAuthChange = (mode: AuthMode) => {
     setRegisterOrLogin(mode);
@@ -28,13 +30,13 @@ export default function AuthLayout() {
       {/* Headlines */}
       <View className="items-center gap-4 px-4">
         <Text className={clsx("text-[32px] font-bold leading-tight mb-3", isDark ? "text-text-primaryDark" : "text-text-primaryLight")}>
-          Welcome!
+          {t("auth.welcome")}
         </Text>
         <Text className={clsx("text-base font-normal leading-relaxed text-center px-4", isDark ? "text-text-secondaryDark" : "text-text-secondaryLight")}>
-          Follow your prayers and find your daily motivation.
+          {t("auth.welcomeSubtitle")}
         </Text>
         <SelectButton<AuthMode>
-          buttonData={AUTH_BUTTONS}
+          buttonData={authButtons}
           selectedFilter={RegisterOrLogin}
           onPress={handleAuthChange}
         />

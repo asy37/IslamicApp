@@ -396,10 +396,25 @@ class DhikrSyncService {
         console.log(`[DhikrSync] Skipped ${result.skippedCount} records (server has newer version)`);
       }
 
-      // Log errors
-      result.errorCount += errors.length;
-      if (errors.length > 0) {
-        console.error('[DhikrSync] Sync errors:', errors);
+      // Log errors & resolve slug conflicts (already exists on server under different ID)
+      const realErrors: typeof errors = [];
+      for (const err of errors) {
+        if (err.error && err.error.includes('idx_dhikr_user_slug')) {
+          try {
+            await dhikrRepo.markDhikrSynced(err.id);
+            console.log(`[DhikrSync] Resolved slug conflict for record ${err.id} (already exists on server)`);
+          } catch (dbErr) {
+            console.error(`[DhikrSync] Error marking conflicted record ${err.id} as synced:`, dbErr);
+            realErrors.push(err);
+          }
+        } else {
+          realErrors.push(err);
+        }
+      }
+
+      result.errorCount += realErrors.length;
+      if (realErrors.length > 0) {
+        console.error('[DhikrSync] Sync errors:', realErrors);
       }
 
       // Update last sync timestamp

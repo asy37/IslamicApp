@@ -64,6 +64,7 @@ export default function MoreScreen() {
   const TOOLS_ITEMS = [
     { key: "dhikr", title: t("more.dhikrTracker"), subtitle: t("more.dhikrSubtitle"), icon: "timer", iconBg: "primary" as const, route: "./more/dhikr" },
     { key: "daily-verse", title: t("more.dailyVerse"), subtitle: t("more.dailyVerseSubtitle"), icon: "menu-book", iconBg: "primary" as const, route: "./more/daily-verse" },
+    { key: "liked-verses", title: t("quran.likedVerses"), subtitle: t("more.likedVersesSubtitle"), icon: "favorite", iconBg: "primary" as const, route: "./more/liked-verses" },
     { key: "prayers", title: t("more.myDuaNotebook"), subtitle: t("more.myDuaSubtitle"), icon: "volunteer-activism", iconBg: "primary" as const, route: "./more/duas" },
   ];
   const ACCOUNT_ITEMS = [

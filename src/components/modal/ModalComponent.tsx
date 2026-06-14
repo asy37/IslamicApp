@@ -1,6 +1,6 @@
 import { ModalHeader } from "@/components/modal/ModalHeader";
 import clsx from "clsx";
-import { ActivityIndicator, Modal, Pressable, View } from "react-native";
+import { ActivityIndicator, Modal, Pressable, View, ScrollView } from "react-native";
 import { useTheme } from "@/lib/storage/useThemeStore";
 
 type ModalComponentProps = {
@@ -9,6 +9,7 @@ type ModalComponentProps = {
   readonly children: React.ReactNode;
   readonly title: string;
   readonly isLoading?: boolean;
+  readonly scrollable?: boolean;
 };
 
 export default function ModalComponent({
@@ -17,6 +18,7 @@ export default function ModalComponent({
   children,
   title,
   isLoading,
+  scrollable = false,
 }: ModalComponentProps) {
   const { isDark } = useTheme();
   return (
@@ -34,7 +36,7 @@ export default function ModalComponent({
       </View>
       <View
         className={clsx(
-          "absolute left-0 right-0 bottom-0 rounded-t-3xl shadow-2xl h-[700px]",
+          "absolute left-0 right-0 bottom-0 rounded-t-3xl shadow-2xl h-[700px] max-h-[85%]",
           isDark ? "bg-background-cardDark" : "bg-background-light"
         )}
       >
@@ -43,9 +45,19 @@ export default function ModalComponent({
         ) : (
           <>
             <ModalHeader isDark={isDark} onClose={onClose} title={title} />
-            <View className="flex-1 items-center gap-2 px-6">
-              {children}
-            </View>
+            {scrollable ? (
+              <ScrollView
+                className="flex-1 w-full px-6"
+                contentContainerStyle={{ gap: 8, paddingBottom: 32 }}
+                showsVerticalScrollIndicator={true}
+              >
+                {children}
+              </ScrollView>
+            ) : (
+              <View className="flex-1 items-center gap-2 px-6">
+                {children}
+              </View>
+            )}
           </>
         )}
       </View>

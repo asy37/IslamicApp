@@ -9,6 +9,7 @@ import Button from "@/components/button/Button";
 import { generateSlug, generateUUID, validate } from "./utils";
 import { useTheme } from "@/lib/storage/useThemeStore";
 import { colors } from "@/components/theme/colors";
+import { useTranslation } from "@/i18n";
 
 type DhikrAddProps = Readonly<{
     readonly openAddDhikrModal: boolean;
@@ -19,6 +20,7 @@ type DhikrAddProps = Readonly<{
 export default function DhikrAdd({ openAddDhikrModal, setOpenAddDhikrModal, onDhikrAdded }: DhikrAddProps) {
     const { isDark } = useTheme();
     const { user } = useAuth();
+    const { t } = useTranslation();
     const userId = user?.id || null;
 
     const [label, setLabel] = useState("");
@@ -34,7 +36,7 @@ export default function DhikrAdd({ openAddDhikrModal, setOpenAddDhikrModal, onDh
         }
 
         if (!userId) {
-            Alert.alert("Error", "Please log in to create a dhikr");
+            Alert.alert(t("more.error"), t("dhikr.loginRequired"));
             return;
         }
 
@@ -48,7 +50,7 @@ export default function DhikrAdd({ openAddDhikrModal, setOpenAddDhikrModal, onDh
             // Check if slug already exists for this user
             const existing = await dhikrRepo.getDhikrBySlug(userId, slug);
             if (existing) {
-                Alert.alert("Error", "A dhikr with this name already exists");
+                Alert.alert(t("more.error"), t("dhikr.alreadyExists"));
                 setIsSubmitting(false);
                 return;
             }
@@ -88,7 +90,7 @@ export default function DhikrAdd({ openAddDhikrModal, setOpenAddDhikrModal, onDh
             setOpenAddDhikrModal(false);
         } catch (error) {
             console.error('[DhikrAdd] Error creating dhikr:', error);
-            Alert.alert("Error", "Failed to create dhikr. Please try again.");
+            Alert.alert(t("more.error"), t("dhikr.createFailed"));
         } finally {
             setIsSubmitting(false);
         }
@@ -103,7 +105,7 @@ export default function DhikrAdd({ openAddDhikrModal, setOpenAddDhikrModal, onDh
     };
 
     return (
-        <ModalComponent visible={openAddDhikrModal} onClose={handleClose} title="Add Dhikr">
+        <ModalComponent visible={openAddDhikrModal} onClose={handleClose} title={t("dhikr.addDhikr")} scrollable={true}>
             <KeyboardAvoidingView
                 behavior={Platform.OS === "ios" ? "padding" : "height"}
                 className={clsx(
@@ -117,7 +119,7 @@ export default function DhikrAdd({ openAddDhikrModal, setOpenAddDhikrModal, onDh
                             "text-sm font-medium mb-2",
                             isDark ? "text-text-primaryDark" : "text-text-primaryLight"
                         )}>
-                            Dhikr Name
+                            {t("dhikr.dhikrName")}
                         </Text>
                         <TextInput
                             value={label}
@@ -136,11 +138,11 @@ export default function DhikrAdd({ openAddDhikrModal, setOpenAddDhikrModal, onDh
                                 errors.label ? "border-error" : "",
                                 isDark ? "bg-background-cardDark border-border-dark text-text-primaryDark" : "bg-white border-gray-200 text-text-primaryLight"
                             )}
-                            placeholder="e.g., Subhanallah"
+                            placeholder={t("dhikr.dhikrNamePlaceholder")}
                             placeholderTextColor={isDark ? colors.text.secondaryDark : colors.text.secondaryLight}
                         />
                         {errors.label && (
-                            <Text className="text-error text-xs mt-1 ml-1">{errors.label}</Text>
+                            <Text className="text-error text-xs mt-1 ml-1">{errors.label ? t(errors.label) : ""}</Text>
                         )}
                     </View>
 
@@ -149,7 +151,7 @@ export default function DhikrAdd({ openAddDhikrModal, setOpenAddDhikrModal, onDh
                             "text-sm font-medium mb-2",
                             isDark ? "text-text-primaryDark" : "text-text-primaryLight"
                         )}>
-                            Target Count
+                            {t("dhikr.targetCount")}
                         </Text>
                         <TextInput
                             value={targetCount}
@@ -170,11 +172,11 @@ export default function DhikrAdd({ openAddDhikrModal, setOpenAddDhikrModal, onDh
                                 errors.targetCount ? "border-error" : "",
                                 isDark ? "bg-background-cardDark border-border-dark text-text-primaryDark" : "bg-white border-gray-200 text-text-primaryLight"
                             )}
-                            placeholder="e.g., 33"
+                            placeholder={t("dhikr.targetCountPlaceholder")}
                             placeholderTextColor={isDark ? colors.text.secondaryDark : colors.text.secondaryLight}
                         />
                         {errors.targetCount && (
-                            <Text className="text-error text-xs mt-1 ml-1">{errors.targetCount}</Text>
+                            <Text className="text-error text-xs mt-1 ml-1">{errors.targetCount ? t(errors.targetCount) : ""}</Text>
                         )}
                     </View>
 
@@ -188,10 +190,10 @@ export default function DhikrAdd({ openAddDhikrModal, setOpenAddDhikrModal, onDh
                             {isSubmitting ? (
                                 <View className="flex-row items-center gap-2">
                                     <ActivityIndicator size="small" color="white" />
-                                    <Text className="text-white font-semibold">Creating...</Text>
+                                    <Text className="text-white font-semibold">{t("dhikr.creating")}</Text>
                                 </View>
                             ) : (
-                                <Text className="text-white font-semibold">Create Dhikr</Text>
+                                <Text className="text-white font-semibold">{t("dhikr.createButton")}</Text>
                             )}
                         </Button>
                     </View>

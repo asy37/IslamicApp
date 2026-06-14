@@ -14,6 +14,9 @@ type QuranContentProps = Readonly<{
   activeWordIndex?: number;
   onScroll?: () => void;
   onAyahPress?: (ayahNumber: number) => void;
+  onLikePress?: (ayah: Ayah) => void;
+  onSharePress?: (ayah: Ayah) => void;
+  likedAyahNumbers?: number[];
 }>;
 
 export default function QuranContent({
@@ -24,6 +27,9 @@ export default function QuranContent({
   activeWordIndex = -1,
   onScroll,
   onAyahPress,
+  onLikePress,
+  onSharePress,
+  likedAyahNumbers = [],
 }: QuranContentProps) {
   const { surahNumber } = useSurahStore();
 
@@ -74,6 +80,9 @@ export default function QuranContent({
                 activeAyahNumber === item.number ? activeWordIndex : -1
               }
               onAyahPress={onAyahPress}
+              onLikePress={() => onLikePress?.(item)}
+              onSharePress={() => onSharePress?.(item)}
+              isLiked={likedAyahNumbers.includes(item.number)}
             />
           )}
           contentContainerStyle={{ paddingBottom: 100, paddingHorizontal: 20 }}

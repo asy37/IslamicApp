@@ -1,6 +1,7 @@
 import { Text, View } from "react-native";
 import type { FeedbackLevel } from "@/lib/hooks/qibla/useQiblaGuide";
 import clsx from "clsx";
+import { useTranslation } from "@/i18n";
 
 type AngleInfoProps = {
   readonly angle: number;
@@ -13,6 +14,8 @@ export default function AngleInfo({
   isDark,
   feedbackLevel,
 }: AngleInfoProps) {
+  const { t } = useTranslation();
+
   return (
     <View
       className={clsx(
@@ -23,7 +26,7 @@ export default function AngleInfo({
       )}
     >
       <Text className="text-xs font-medium uppercase tracking-wider text-white">
-        Difference
+        {t("qibla.difference")}
       </Text>
       <Text className="text-2xl font-bold tracking-tight text-white">
         {angle}°

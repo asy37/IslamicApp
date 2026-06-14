@@ -29,14 +29,14 @@ export const validate = (label: string, targetCount: string, setErrors: (errors:
     const newErrors: { label?: string; targetCount?: string } = {};
 
     if (!label.trim()) {
-        newErrors.label = "Dhikr name is required";
+        newErrors.label = "dhikr.errors.nameRequired";
     }
 
     const target = Number.parseInt(targetCount, 10);
     if (!targetCount.trim()) {
-        newErrors.targetCount = "Target count is required";
+        newErrors.targetCount = "dhikr.errors.targetRequired";
     } else if (Number.isNaN(target) || target <= 0) {
-        newErrors.targetCount = "Target count must be a positive number";
+        newErrors.targetCount = "dhikr.errors.targetPositive";
     }
 
     setErrors(newErrors);

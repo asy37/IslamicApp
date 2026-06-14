@@ -2,6 +2,7 @@ import { Text, View } from "react-native";
 import clsx from "clsx";
 import DuaCard from "./DuaCard";
 import { useTheme } from "@/lib/storage/useThemeStore";
+import { useTranslation } from "@/i18n";
 
 type Dua = {
   id: string;
@@ -21,6 +22,8 @@ type DuasListProps = {
 
 export default function DuasList({ duas, updateDua, deleteDua, toggleFavorite, isSaving }: DuasListProps) {
   const { isDark } = useTheme();
+  const { t } = useTranslation();
+
   return (
     <View className="gap-4">
       <View className="flex-row items-center justify-between mt-2 mb-1 px-1">
@@ -30,7 +33,7 @@ export default function DuasList({ duas, updateDua, deleteDua, toggleFavorite, i
             isDark ? "text-text-primaryDark" : "text-text-primaryLight"
           )}
         >
-          Your Prayers
+          {t("duas.yourPrayers")}
         </Text>
         <View
           className={clsx(
@@ -44,7 +47,7 @@ export default function DuasList({ duas, updateDua, deleteDua, toggleFavorite, i
               isDark ? "text-text-secondaryDark" : "text-text-secondaryLight"
             )}
           >
-            {duas.length} entries
+            {t("duas.entriesCount", { count: duas.length })}
           </Text>
         </View>
       </View>

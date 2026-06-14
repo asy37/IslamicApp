@@ -1,6 +1,8 @@
 import clsx from "clsx";
 import { Text, View } from "react-native";
 import { PrayerDate } from "./types/date-info";
+import { useTranslation } from "@/i18n";
+import { formatGregorianDate, formatHijriDate } from "@/lib/utils/date";
 
 type DateInfoProps = {
   readonly isDark: boolean;
@@ -11,9 +13,13 @@ export default function DateInfo({
   isDark,
   data,
 }: DateInfoProps) {
+  const { i18n } = useTranslation();
   const { hijri, gregorian } = data ?? {};
-  const hijriDate = `${hijri?.day}, ${hijri?.weekday.en} ${hijri?.month.en} ${hijri?.year}`;
-  const gregorianDate = `${gregorian?.day}, ${gregorian?.weekday.en} ${gregorian?.month.en} ${gregorian?.year}`;
+  
+  const currentLocale = i18n.language || "tr";
+  const hijriDate = formatHijriDate(hijri, gregorian, currentLocale);
+  const gregorianDate = formatGregorianDate(gregorian, currentLocale);
+
   return (
     <View
       className={clsx(

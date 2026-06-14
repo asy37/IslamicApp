@@ -139,3 +139,19 @@ CREATE TABLE IF NOT EXISTS prayer_times_sync_queue (
 );
 
 CREATE INDEX IF NOT EXISTS idx_prayer_times_sync_queue_created ON prayer_times_sync_queue(created_at);
+
+-- 11️⃣ Quran Bookmarks Table
+-- Stores user's liked/bookmarked Quran verses offline
+CREATE TABLE IF NOT EXISTS quran_bookmarks (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  ayah_number INTEGER NOT NULL UNIQUE, -- Global ayah number (1-6236)
+  surah_number INTEGER NOT NULL,
+  ayah_number_in_surah INTEGER NOT NULL,
+  surah_name TEXT NOT NULL,
+  surah_translation TEXT NOT NULL,
+  ayah_text TEXT NOT NULL,
+  translation_text TEXT,
+  juz INTEGER NOT NULL,
+  created_at INTEGER NOT NULL
+);
+

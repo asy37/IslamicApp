@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import clsx from "clsx";
 import { PrayerTimings } from "../prayer-list/types/prayer-timings";
 import { getNextPrayer, type NextPrayerInfo } from "./utils/utils-function";
+import { useTranslation } from "@/i18n";
 
 type NextPrayerCardProps = {
   readonly isDark: boolean;
@@ -14,6 +15,7 @@ export default function NextPrayerCard({
   isDark,
   data,
 }: NextPrayerCardProps) {
+  const { t } = useTranslation();
   const [nextPrayerInfo, setNextPrayerInfo] = useState<NextPrayerInfo | null>(
     getNextPrayer(data)
   );
@@ -72,18 +74,18 @@ export default function NextPrayerCard({
           >
             <MaterialIcons name="schedule" size={14} color="#FFFFFF" />
             <Text className="text-white text-xs font-medium tracking-wider uppercase">
-              Next Prayer
+              {t("adhan.nextPrayer")}
             </Text>
           </View>
           <Text className="text-white text-4xl font-bold mt-2 mb-1 tracking-tight">
-            {nextPrayerInfo?.name || "Loading..."}
+            {nextPrayerInfo?.name ? t(`prayerNames.${nextPrayerInfo.name.toLowerCase()}` as any, { defaultValue: nextPrayerInfo.name }) : t("adhan.loading")}
           </Text>
           <Text className="text-white/90 text-lg mb-6 font-light">
             {nextPrayerInfo?.localTime || "--:--"}
           </Text>
           <View className="flex-col items-center">
             <Text className="text-white/80 text-xs uppercase tracking-widest mb-1">
-              Time Remaining
+              {t("adhan.timeRemaining")}
             </Text>
             <Text
               className="text-5xl font-bold text-white tracking-tighter"

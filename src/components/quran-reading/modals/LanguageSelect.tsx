@@ -5,6 +5,7 @@ import Button from "@/components/button/Button";
 import { useQuery } from "@tanstack/react-query";
 import { getLanguages } from "@/lib/api/services/quranApi";
 import { queryKeys } from "@/lib/query/queryKeys";
+import { useTranslation } from "@/i18n";
 
 type LanguageSelectType = {
   openLanguage: boolean;
@@ -16,6 +17,7 @@ export const LanguageSelect = ({
   setOpenLanguage,
   handleSelectLanguage,
 }: LanguageSelectType) => {
+  const { t } = useTranslation();
   const { data: languageData, isLoading } = useQuery({
     queryKey: queryKeys.language.all,
     queryFn: getLanguages,
@@ -30,7 +32,7 @@ export const LanguageSelect = ({
     <ModalComponent
       visible={openLanguage}
       onClose={() => setOpenLanguage(false)}
-      title="Select Language"
+      title={t("quran.selectLanguage")}
       isLoading={isLoading}
     >
       <FlatList

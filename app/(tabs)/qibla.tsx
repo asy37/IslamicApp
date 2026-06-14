@@ -15,10 +15,13 @@ import { useQiblaBearing } from "@/lib/hooks/qibla/useQiblaBearing";
 import { useQiblaGuide } from "@/lib/hooks/qibla/useQiblaGuide";
 import { useTheme } from "@/lib/storage/useThemeStore";
 
+import { useTranslation } from "@/i18n";
+
 export default function QiblaTabScreen() {
   const BAD_ACCURACY_THRESHOLD = 1; // MVP: gerçek platform accuracy yoksa null döneriz
 
   const { isDark } = useTheme();
+  const { t } = useTranslation();
 
   const storedLocation = useLocationStore((s) => s.location);
   const {
@@ -81,7 +84,7 @@ export default function QiblaTabScreen() {
                 isDark ? "text-text-secondaryDark" : "text-text-secondaryLight"
               )}
             >
-              Location is being fetched…
+              {t("qibla.locationFetching")}
             </Text>
           </View>
         ) : (

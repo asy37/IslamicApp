@@ -1,5 +1,6 @@
 import clsx from "clsx";
 import { Text } from "react-native";
+import { useTranslation } from "@/i18n";
 
 type CalibrationHintProps = Readonly<{
   readonly isDark: boolean;
@@ -9,6 +10,8 @@ export default function CalibrationHint({
   isDark,
   shouldShow,
 }: CalibrationHintProps) {
+  const { t } = useTranslation();
+
   if (!shouldShow) return null;
 
   return (
@@ -18,7 +21,7 @@ export default function CalibrationHint({
         isDark ? "text-text-secondaryDark/60" : "text-text-secondaryLight/60"
       )}
     >
-      Daha iyi sonuçlar için telefonunuzu 8 yönünde hareket ettirin.
+      {t("qibla.calibrationHint")}
     </Text>
   );
 }

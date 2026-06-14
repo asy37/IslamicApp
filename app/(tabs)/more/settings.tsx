@@ -22,6 +22,8 @@ import { useTheme } from "@/lib/storage/useThemeStore";
 import CalculationMethodModal from "@/components/adhan/CalculationMethodModal";
 import { PrayerCalculationMethod } from "@/constants/prayer-method";
 import { useTranslation } from "@/i18n";
+import * as Location from "expo-location";
+import ManualLocationModal from "@/components/adhan/manuel-location/ManualLocationModal";
 import { setStoredLanguage } from "@/i18n/localeStorage";
 import type { SupportedLocale } from "@/i18n/localeStorage";
 
@@ -33,6 +35,8 @@ export default function SettingsScreen() {
   const effectiveLang: SupportedLocale = currentLang === "en" || currentLang === "tr" || currentLang === "ar" ? currentLang : "tr";
   const [showCalculationMethodModal, setShowCalculationMethodModal] =
     useState(false);
+  const [showManualLocationModal, setShowManualLocationModal] =
+    useState(false);
   const setMethod = useMethodStore((state) => state.setMethod);
   const method = useMethodStore((state) => state.method);
 
@@ -40,6 +44,7 @@ export default function SettingsScreen() {
 
   const autoLocation = useLocationStore((s) => s.autoLocation);
   const setAutoLocation = useLocationStore((s) => s.setAutoLocation);
+  const setLocation = useLocationStore((s) => s.setLocation);
 
   const adhanNotifications = useNotificationSettings((s) => s.adhanNotifications);
   const setAdhanNotifications = useNotificationSettings((s) => s.setAdhanNotifications);
@@ -206,7 +211,41 @@ export default function SettingsScreen() {
               title={t("settings.autoLocation")}
               subtitle={t("settings.autoLocationSubtitle")}
               value={autoLocation}
-              onValueChange={(v) => setAutoLocation(v)}
+              onValueChange={async (v) => {
+                if (v) {
+                  try {
+                    const { status } = await Location.requestForegroundPermissionsAsync();
+                    if (status === "granted") {
+                      setAutoLocation(true);
+                      const position = await Location.getCurrentPositionAsync({
+                        accuracy: Location.Accuracy.Balanced,
+                      });
+                      const [address] = await Location.reverseGeocodeAsync({
+                        latitude: position.coords.latitude,
+                        longitude: position.coords.longitude,
+                      });
+                      setLocation({
+                        latitude: position.coords.latitude,
+                        longitude: position.coords.longitude,
+                        city: address?.city || address?.subregion || undefined,
+                        country: address?.country || undefined,
+                      });
+                      queryClient.invalidateQueries({ queryKey: queryKeys.prayerTimes.all });
+                    } else {
+                      Alert.alert(
+                        t("settings.locationPermissionRequired"),
+                        t("settings.locationPermissionDeniedMessage")
+                      );
+                    }
+                  } catch (error) {
+                    console.error("[Settings] Error enabling auto location:", error);
+                    Alert.alert(t("common.error"), t("prayer.errorLoading"));
+                  }
+                } else {
+                  setAutoLocation(false);
+                  setShowManualLocationModal(true);
+                }
+              }}
               isDark={isDark}
             />
           </View>
@@ -401,6 +440,15 @@ export default function SettingsScreen() {
         visible={showCalculationMethodModal}
         onClose={() => setShowCalculationMethodModal(false)}
         onSelect={handleCalculationMethodSelect}
+      />
+      <ManualLocationModal
+        visible={showManualLocationModal}
+        onClose={() => setShowManualLocationModal(false)}
+        onSelectLocation={(loc) => {
+          setLocation(loc);
+          setAutoLocation(false);
+          queryClient.invalidateQueries({ queryKey: queryKeys.prayerTimes.all });
+        }}
       />
     </View>
   );

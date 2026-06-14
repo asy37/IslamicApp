@@ -12,12 +12,18 @@ type AyahBlockProps = Readonly<{
   ayah: Ayah;
   activeWordIndex?: number; // Aktif kelime index'i (highlight için)
   onAyahPress?: (ayahNumber: number) => void; // Ayet tıklandığında çağrılacak callback
+  onLikePress?: () => void;
+  onSharePress?: () => void;
+  isLiked?: boolean;
 }>;
 
 export default function AyahBlock({
   ayah,
   activeWordIndex = -1,
   onAyahPress,
+  onLikePress,
+  onSharePress,
+  isLiked = false,
 }: AyahBlockProps) {
   const { isDark } = useTheme();
   
@@ -94,16 +100,28 @@ export default function AyahBlock({
               color={isDark ? colors.text.primaryDark : colors.text.primaryLight}
             />
           </TouchableOpacity>
-          <Pressable className="rounded-full p-2">
+          <TouchableOpacity
+            onPress={onLikePress}
+            disabled={!onLikePress}
+            className="rounded-full p-2"
+          >
             <MaterialIcons
-              name="bookmark-border"
+              name={isLiked ? "favorite" : "favorite-border"}
               size={20}
               color={
-                isDark ? colors.text.primaryDark : colors.text.primaryLight
+                isLiked
+                  ? "#EF4444"
+                  : isDark
+                  ? colors.text.primaryDark
+                  : colors.text.primaryLight
               }
             />
-          </Pressable>
-          <Pressable className="rounded-full p-2">
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={onSharePress}
+            disabled={!onSharePress}
+            className="rounded-full p-2"
+          >
             <MaterialIcons
               name="share"
               size={20}
@@ -111,7 +129,7 @@ export default function AyahBlock({
                 isDark ? colors.text.primaryDark : colors.text.primaryLight
               }
             />
-          </Pressable>
+          </TouchableOpacity>
         </View>
       </View>
 

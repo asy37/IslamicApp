@@ -10,6 +10,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 import clsx from "clsx";
 import { useTheme } from "@/lib/storage/useThemeStore";
 import { colors } from "@/components/theme/colors";
+import { useTranslation } from "@/i18n";
 
 type CalculationMethodModalProps = {
   readonly visible: boolean;
@@ -23,6 +24,7 @@ type ModalHeaderProps = {
 };
 
 function ModalHeader({ isDark, onClose }: ModalHeaderProps) {
+  const { t } = useTranslation();
   return (
     <View className="pt-3 pb-2">
       <View className="flex items-center mb-2">
@@ -41,7 +43,7 @@ function ModalHeader({ isDark, onClose }: ModalHeaderProps) {
             isDark ? "text-text-primaryDark" : "text-text-primaryLight"
           )}
         >
-          Calculation Method
+          {t("settings.calculationMethodTitle")}
         </Text>
         <Pressable onPress={onClose} className="rounded-full p-2" hitSlop={10}>
           <MaterialIcons
@@ -73,6 +75,7 @@ function MethodListItem({
   onPress,
   isLast,
 }: MethodListItemProps) {
+  const { t } = useTranslation();
   return (
     <Pressable
       onPress={onPress}
@@ -122,7 +125,7 @@ function MethodListItem({
               isDark ? "text-orange-400" : "text-orange-600"
             )}
           >
-            Ek parametre gerektirir (shafaq)
+            {t("settings.shafaqRequired")}
           </Text>
         )}
       </View>

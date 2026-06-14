@@ -7,6 +7,8 @@ import {
   useTranslationStore,
 } from "@/lib/storage/useQuranStore";
 import { getDailyAyahNumber } from "@/lib/quran/dailyAyah";
+import { useTranslation } from "@/i18n";
+import { getSurahTranslationName } from "@/lib/quran/utils/surahTranslation";
 
 const AYAH_PER_PAGE = 10;
 
@@ -14,6 +16,9 @@ export function useQuran(
   quranData: unknown,
   initialSurahNumber = 1,
 ) {
+  const { i18n } = useTranslation();
+  const currentLanguage = i18n.language;
+
   const {
     currentSurahNumber: storeSurahNumber,
     currentPageIndex: storePageIndex,
@@ -72,10 +77,13 @@ export function useQuran(
 
       return {
         ...arabicAyah,
+        surahNumber: surah.number,
+        surahArabicName: surah.name,
+        surahTranslation: getSurahTranslationName(surah.number, currentLanguage),
         translationText: translationAyah?.text,
       };
     });
-  }, [surah, translationData, currentSurahNumber]);
+  }, [surah, translationData, currentSurahNumber, currentLanguage]);
 
   /**
    * Rastgele bir ayet döndürür.
@@ -112,11 +120,10 @@ export function useQuran(
       ...arabicAyah,
       surahNumber: surahItem.number,
       surahArabicName: surahItem.name,
-      surahTranslation:
-        surahItem.englishNameTranslation ?? surahItem.englishName ?? "",
+      surahTranslation: getSurahTranslationName(surahItem.number, currentLanguage),
       translationText: translationAyah?.text,
     };
-  }, [quranData, translationData]);
+  }, [quranData, translationData, currentLanguage]);
 
   /**
    * Küresel ayet numarasına (1–6236) göre ayet döndürür.
@@ -144,14 +151,13 @@ export function useQuran(
           ...arabicAyah,
           surahNumber: surahItem.number,
           surahArabicName: surahItem.name,
-          surahTranslation:
-            surahItem.englishNameTranslation ?? surahItem.englishName ?? "",
+          surahTranslation: getSurahTranslationName(surahItem.number, currentLanguage),
           translationText: translationAyah?.text,
         };
       }
       return null;
     },
-    [quranData, translationData]
+    [quranData, translationData, currentLanguage]
   );
 
   /**

@@ -1,10 +1,10 @@
 import { z } from "zod";
 
 const optionalText = z.union([z.literal(""), z.string()]).optional();
-const optionalEmail = z.union([z.literal(""), z.string().email("Geçerli bir email giriniz")]);
+const optionalEmail = z.union([z.literal(""), z.string().email("auth.errors.emailInvalid")]);
 const optionalPassword = z.union([
   z.literal(""),
-  z.string().min(6, "Şifre en az 6 karakter olmalıdır"),
+  z.string().min(6, "auth.errors.passwordTooShort"),
 ]);
 
 export const profileSchema = z.object({
