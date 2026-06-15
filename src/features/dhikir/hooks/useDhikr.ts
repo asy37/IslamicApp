@@ -9,8 +9,8 @@
 
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { AppState, AppStateStatus } from 'react-native';
-import { dhikrRepo } from '@/lib/sqlite/dhikr/repository';
-import { getDb } from '@/lib/sqlite/db';
+import { dhikrRepo } from '@/lib/database/dhikr/repository';
+import { getDb } from '@/lib/database/db';
 import { useAuth } from '@/features/auth/hooks/useAuth';
 import type { Dhikr } from '@/features/dhikir/types';
 

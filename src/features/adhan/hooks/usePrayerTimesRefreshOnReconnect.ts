@@ -14,16 +14,15 @@ import { queryClient } from '@/lib/query/queryClient';
 import { queryKeys } from '@/lib/query/queryKeys';
 import { getTodayDDMMYYYY } from '@/lib/services/dailyReset';
 import { getEffectiveToday } from '@/lib/services/prayerDate';
-import {
-  upsertMonth,
-  getPrayerTimesSyncQueue,
-  removeFromPrayerTimesSyncQueue,
-} from '@/lib/sqlite/prayer-times/repository';
 import { useLocationStore } from '@/lib/storage/locationStore';
 import { useMethodStore } from '@/lib/storage/useMethodStore';
 import { usePrayerTimesStore } from '@/lib/storage/prayerTimesStore';
 import { notificationScheduler } from '@/lib/services/notificationScheduler';
 import { notificationService } from '@/lib/services/NotificationService';
+import {
+  removeFromPrayerTimesSyncQueue, upsertMonth,
+  getPrayerTimesSyncQueue,
+} from '@/lib/database/prayer-times/repository';
 
 const REFRESH_COOLDOWN_MS = 60 * 1000;
 

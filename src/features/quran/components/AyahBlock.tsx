@@ -3,7 +3,7 @@ import { Text, TouchableOpacity, View } from "react-native";
 import { colors } from "@/lib/components/theme/colors";
 import clsx from "clsx";
 import { useAudioStore } from "@/lib/storage/useQuranStore";
-import { splitAyahText } from "@/lib/quran/utils/wordSplitter";
+import { splitAyahText } from "@/features/quran/quran-text/utils/wordSplitter";
 import { useMemo } from "react";
 import { useTheme } from "@/lib/storage/useThemeStore";
 import { AyahBlockProps } from "../types/types";

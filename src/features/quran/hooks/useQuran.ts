@@ -1,14 +1,15 @@
 import { useCallback, useEffect, useMemo } from "react";
-import { Surah, Ayah } from "@/types/quran";
+import { Surah, Ayah } from "../types/";
 import {
   useAudioStore,
   usePageStore,
   useSurahStore,
   useTranslationStore,
 } from "@/lib/storage/useQuranStore";
-import { getDailyAyahNumber } from "@/lib/quran/dailyAyah";
 import { useTranslation } from "@/lib/i18n";
-import { getSurahTranslationName } from "@/lib/quran/utils/surahTranslation";
+import { getSurahTranslationName } from "../quran-text/utils/surahTranslation";
+import { getDailyAyahNumber } from "../quran-text/dailyAyah";
+
 
 const AYAH_PER_PAGE = 10;
 

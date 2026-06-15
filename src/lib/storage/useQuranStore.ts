@@ -1,7 +1,7 @@
 import { Ayah, Surah } from "@/types/quran";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import { TranslationMetadata } from "../sqlite/translation/repository";
+import { TranslationMetadata } from "@/lib/database/translation/repository";
 
 type AudioStateType = {
   // Aktif ayet numarası (şu anda çalan ayet)

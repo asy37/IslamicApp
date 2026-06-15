@@ -1,6 +1,6 @@
 import { MaterialIcons } from "@expo/vector-icons";
 import { FlatList, TextInput, View } from "react-native";
-import SurahData from "@/lib/quran/surah/surah.json";
+import SurahData from "@/features/quran/quran-text/surah/surah.json";
 import { useState } from "react";
 import clsx from "clsx";
 import { useFilteredSurahs, useSearchableSurahs } from "../../utils/utils";

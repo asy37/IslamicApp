@@ -1,7 +1,7 @@
 import { useMethodStore } from "@/lib/storage/useMethodStore";
 import { useLocationStore } from "@/lib/storage/locationStore";
 import { getTodayDDMMYYYY } from "@/lib/services/dailyReset";
-import { getMonth, upsertMonth } from "@/lib/sqlite/prayer-times/repository";
+import { getMonth, upsertMonth } from "@/lib/database/prayer-times/repository";
 import { fetchPrayerTimes, fetchPrayerTimesCalendar } from "@/lib/api/services/prayerTimes";
 import type { PrayerTimesDayData } from "@/lib/api/services/prayerTimes";
 import { notificationScheduler } from "@/lib/services/notificationScheduler";

@@ -1,4 +1,4 @@
-import QuranData from "@/lib/quran/arabic/ar.json";
+import QuranData from "@/features/quran/quran-text/arabic/ar.json";
 
 type SegmentRaw = number[];
 

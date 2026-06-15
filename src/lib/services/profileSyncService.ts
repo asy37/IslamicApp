@@ -8,7 +8,7 @@
  */
 
 import { supabase } from '@/lib/supabase/client';
-import { profileRepo, type ProfileSyncQueueItem } from '@/lib/sqlite/profile/repository';
+import { profileRepo, type ProfileSyncQueueItem } from '@/lib/database/profile/repository';
 import { getMyProfile, updateMyProfile } from '@/lib/api/services/profile';
 import type { UpdateUserProfileInput } from '@/lib/api/services/profile';
 import NetInfo from '@react-native-community/netinfo';

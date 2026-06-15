@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import {
   getDownloadedTranslations,
   TranslationMetadata,
-} from "../../sqlite/translation/repository";
+} from "@/lib/database/translation/repository";
 
 export function useTranslationsQuran() {
   const [translations, setTranslations] = useState<TranslationMetadata[]>([]);

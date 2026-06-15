@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { getTranslationByIdentifier } from "@/lib/sqlite/translation/repository";
-import { Surah } from "@/types/quran";
+import { getTranslationByIdentifier } from "@/lib/database/translation/repository";
+import { Surah } from "../types";
 
 type translationData = {
   editions: {

@@ -3,7 +3,6 @@ import { useRouter } from "expo-router";
 import clsx from "clsx";
 import MoreHeader from "@/lib/components/more/MoreHeader";
 import MenuSection from "@/lib/components/more/MenuSection";
-import PremiumCard from "@/lib/components/more/PremiumCard";
 import VersionInfo from "@/lib/components/more/VersionInfo";
 import { signOut } from "@/lib/api/services/auth";
 import { supabase } from "@/lib/supabase/client";
@@ -83,15 +82,9 @@ export default function MoreScreen() {
       showsVerticalScrollIndicator={false}
     >
       <MoreHeader isDark={isDark} />
-      <View className="flex-1 px-4 mt-4 space-y-6">
+      <View className="flex-1 gap-2 px-4 mt-4 space-y-6">
         <MenuSection title="" items={TOOLS_ITEMS} isDark={isDark} />
-        {/* <MenuSection
-          title="Konum Servisleri"
-          items={LOCATION_ITEMS}
-          isDark={isDark}
-        /> */}
         <MenuSection title={t("more.account")} items={ACCOUNT_ITEMS} isDark={isDark} />
-        <PremiumCard isDark={isDark} />
         <VersionInfo isDark={isDark} />
       </View>
     </ScrollView>

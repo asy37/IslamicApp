@@ -16,7 +16,8 @@ export default function TabLayout() {
         tabBarInactiveTintColor: isDark ? colors.text.secondaryDark : colors.text.secondaryLight,
         tabBarStyle: {
           backgroundColor: isDark ? colors.background.dark : colors.background.light,
-          borderTopColor: isDark ? colors.border.dark : colors.border.light,
+          borderTopColor: isDark ? colors.border.light : colors.primary[100],
+          borderTopWidth: 1,
         },
       }}
     >

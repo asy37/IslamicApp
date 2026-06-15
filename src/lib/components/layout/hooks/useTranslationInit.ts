@@ -4,8 +4,8 @@
 
 import { useEffect, useState } from "react";
 import { useTranslationStore } from "@/lib/storage/useQuranStore";
-import { getDownloadedTranslations } from "@/lib/sqlite/translation/repository";
 import { useTranslationByIdentifier } from "@/features/quran/hooks/useTranslationByIdentifier";
+import { getDownloadedTranslations } from "@/lib/database/translation/repository";
 
 export function useTranslationInit(dbReady: boolean): void {
   const { selectedTranslation, setSelectedTranslation, setTranslationData } =

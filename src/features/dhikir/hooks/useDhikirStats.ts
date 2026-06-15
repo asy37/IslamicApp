@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "../../auth/hooks/useAuth";
 import { useUserId } from "../../auth/hooks/useUser";
-import { getDhikrStatsSummary } from "@/lib/sqlite/dhikr/stats.service";
+import { getDhikrStatsSummary } from "@/lib/database/dhikr/stats.service";
 import type { DhikrStats } from "@/features/dhikir/types";
 
 export function useDhikrStats() {

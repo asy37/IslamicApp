@@ -3,7 +3,7 @@ import ModalComponent from "@/lib/components/modal/ModalComponent";
 import Button from "@/lib/components/button/Button";
 import React from "react";
 import type { Dhikr, DhikirSelectProps } from "@/features/dhikir/types";
-import { dhikrRepo } from "@/lib/sqlite/dhikr/repository";
+import { dhikrRepo } from "@/lib/database/dhikr/repository";
 import { useAuth } from "@/features/auth/hooks/useAuth";
 import { DHIKR_PRESETS, generateUUID } from "@/features/dhikir/utils/utils";
 import clsx from "clsx";

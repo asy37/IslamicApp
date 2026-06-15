@@ -47,7 +47,7 @@ export default function TodayJourneyCard({ data }: TodayJourneyCardProps) {
               (isDark ? "text-text-secondaryDark" : "text-text-secondaryLight")
             }
           >
-            {t(motivationMessage)}
+            {t(motivationMessage, { count: totalPrayed, total: totalCount })}
           </Text>
         </View>
 

@@ -29,7 +29,7 @@ export default function MenuSection({
       {title !== "" && (
         <Text
           className={clsx(
-            "px-2 text-sm font-semibold uppercase tracking-wider opacity-80",
+            "px-2 text-sm font-semibold uppercase tracking-wider opacity-80 mb-2",
             isDark ? "text-text-secondaryDark" : "text-text-secondaryLight"
           )}
         >

@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { quranBookmarkRepo } from "@/lib/sqlite/quran-bookmark/repository";
+import { quranBookmarkRepo } from "@/lib/database/quran-bookmark/repository";
 import { queryKeys } from "@/lib/query/queryKeys";
 import { Ayah } from "@/types/quran";
 import { Alert } from "react-native";

@@ -11,9 +11,9 @@
  */
 
 import { supabase } from '@/lib/supabase/client';
-import { duaRepo } from '@/lib/sqlite/dua/repository';
-import type { SyncQueueItem } from '@/types/dua';
+import { duaRepo } from '@/lib/database/dua/repository';
 import NetInfo from '@react-native-community/netinfo';
+import { SyncQueueItem } from '@/features/my-duas/types';
 
 interface SyncResult {
   success: boolean;

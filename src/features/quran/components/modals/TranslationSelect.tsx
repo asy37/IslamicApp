@@ -3,7 +3,7 @@ import ModalComponent from "@/lib/components/modal/ModalComponent";
 import {
   getDownloadedTranslations,
   TranslationMetadata,
-} from "@/lib/sqlite/translation/repository";
+} from "@/lib/database/translation/repository";
 import { queryKeys } from "@/lib/query/queryKeys";
 import { useTranslationStore } from "@/lib/storage/useQuranStore";
 import { useTheme } from "@/lib/storage/useThemeStore";

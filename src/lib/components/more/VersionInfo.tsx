@@ -12,7 +12,7 @@ export default function VersionInfo({ isDark }: { isDark: boolean }) {
           isDark ? "text-text-secondaryDark" : "text-text-secondaryLight"
         )}
       >
-        {t("settings.version", { version: "1.0.2", build: "1" })}
+        {t("settings.version", { version: "1.0.0" })}
       </Text>
     </View>
   );

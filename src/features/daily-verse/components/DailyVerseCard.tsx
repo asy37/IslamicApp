@@ -134,7 +134,7 @@ export default function DailyVerseCard({ isDark }: DailyVerseCardProps) {
         )}
         style={{ lineHeight: 60 }}
       >
-        {t("quran.basmala")}
+        بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ
       </Text>
       <AyahBlock
         ayah={dailyAyah}

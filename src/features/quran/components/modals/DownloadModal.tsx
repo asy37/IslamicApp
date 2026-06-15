@@ -13,7 +13,7 @@ import { QuranEdition } from "@/types/quran";
 import { LanguageSelect } from "./LanguageSelect";
 import { EditionsSelect } from "./EditionsSelect";
 import clsx from "clsx";
-import { saveQuranTranslation } from "@/lib/sqlite/translation/repository";
+import { saveQuranTranslation } from "@/lib/database/translation/repository";
 import ModalComponent from "@/lib/components/modal/ModalComponent";
 import Button from "@/lib/components/button/Button";
 import { useTranslation } from "@/lib/i18n";

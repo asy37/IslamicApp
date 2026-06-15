@@ -15,7 +15,7 @@ import {
   removeFromPrayerTimesSyncQueue,
   addToPrayerTimesSyncQueue,
   upsertMonth,
-} from "@/lib/sqlite/prayer-times/repository";
+} from "@/lib/database/prayer-times/repository";
 import { usePrayerTimesStore } from "@/lib/storage/prayerTimesStore";
 import { useLocationStore } from "@/lib/storage/locationStore";
 import { useMethodStore } from "@/lib/storage/useMethodStore";

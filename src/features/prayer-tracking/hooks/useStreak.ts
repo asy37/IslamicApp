@@ -9,7 +9,7 @@ import {
   calculateStreakFromSupabaseLogs,
   type PrayerLogRow,
 } from '@/lib/services/streakCalculation';
-import { prayerTrackingRepo } from '@/lib/sqlite/prayer-tracking/repository';
+import { prayerTrackingRepo } from '@/lib/database/prayer-tracking/repository';
 import type { PrayerStreak } from '@/features/prayer-tracking/types';
 
 const STALE_MS = 90 * 1000;

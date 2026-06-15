@@ -5,12 +5,12 @@
  */
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { prayerTrackingRepo } from '@/lib/sqlite/prayer-tracking/repository';
 import { dailyResetService } from '@/lib/services/dailyReset';
 import { getEffectiveToday } from '@/lib/services/prayerDate';
 import { usePrayerTimesStore } from '@/lib/storage/prayerTimesStore';
 import { notificationService } from '@/lib/services/NotificationService';
 import type { PrayerStatus, PrayerName, PrayerStreak } from '@/features/prayer-tracking/types';
+import { prayerTrackingRepo } from '@/lib/database/prayer-tracking/repository';
 
 /**
  * Get today's prayer state from SQLite.

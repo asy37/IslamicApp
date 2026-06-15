@@ -8,11 +8,11 @@
  */
 
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { duaRepo } from '@/lib/sqlite/dua/repository';
+import { duaRepo } from '@/lib/database/dua/repository';
 import { useUserId } from '@/features/auth/hooks/useUser';
 import { generateUUID } from '@/lib/utils/uuid';
 import { isOnline } from '@/lib/utils/network';
-import type { Dua } from '@/types/dua';
+import { Dua } from '../types';
 
 /**
  * Hook for managing duas list
