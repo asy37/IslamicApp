@@ -1,14 +1,14 @@
 import { ScrollView, View, Alert } from "react-native";
 import { useRouter } from "expo-router";
 import clsx from "clsx";
-import MoreHeader from "@/components/more/MoreHeader";
-import MenuSection from "@/components/more/MenuSection";
-import PremiumCard from "@/components/more/PremiumCard";
-import VersionInfo from "@/components/more/VersionInfo";
+import MoreHeader from "@/lib/components/more/MoreHeader";
+import MenuSection from "@/lib/components/more/MenuSection";
+import PremiumCard from "@/lib/components/more/PremiumCard";
+import VersionInfo from "@/lib/components/more/VersionInfo";
 import { signOut } from "@/lib/api/services/auth";
 import { supabase } from "@/lib/supabase/client";
 import { useTheme } from "@/lib/storage/useThemeStore";
-import { useTranslation } from "@/i18n";
+import { useTranslation } from "@/lib/i18n";
 
 export default function MoreScreen() {
   const { isDark } = useTheme();
@@ -36,7 +36,7 @@ export default function MoreScreen() {
               // Check session is actually cleared
               let attempts = 0;
               const maxAttempts = 50; // 5 seconds max wait (50 * 100ms)
-              
+
               const checkSession = async () => {
                 attempts++;
                 const { data: { session } } = await supabase.auth.getSession();

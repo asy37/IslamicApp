@@ -10,7 +10,7 @@
  * 5. Reset daily state for new day
  */
 
-import { prayerTrackingRepo } from '@/lib/database/sqlite/prayer-tracking/repository';
+import { prayerTrackingRepo } from '@/lib/sqlite/prayer-tracking/repository';
 import { storage } from '@/lib/storage/mmkv';
 import { format } from 'date-fns';
 import type { AladhanPrayerTimesResponse } from '@/lib/api/services/prayerTimes';

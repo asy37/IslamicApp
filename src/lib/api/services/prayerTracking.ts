@@ -7,7 +7,7 @@ import { supabase } from '@/lib/supabase/client';
 import type {
   PrayerTrackingData,
   UpdatePrayerStatusRequest,
-} from '@/types/prayer-tracking';
+} from '@/features/prayer-tracking/types';
 import type { PrayerLogRow } from '@/lib/services/streakCalculation';
 
 const PRAYER_LOGS_DAYS = 60;

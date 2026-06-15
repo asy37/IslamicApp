@@ -22,7 +22,7 @@
 
 import NetInfo from '@react-native-community/netinfo';
 import { supabase } from '@/lib/supabase/client';
-import { dhikrRepo, type DhikrRecord } from '@/lib/database/sqlite/dhikr/repository';
+import { dhikrRepo, type DhikrRecord } from '@/lib/sqlite/dhikr/repository';
 import { storage } from '@/lib/storage/mmkv';
 
 const ONE_DAY_MS = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
@@ -82,20 +82,20 @@ class DhikrSyncService {
     try {
       const lastSyncKey = getLastSyncKey(userId);
       const lastSyncStr = await storage.getString(lastSyncKey);
-      
+
       if (!lastSyncStr) {
         return true; // Never synced before
       }
 
       const lastSync = Number.parseInt(lastSyncStr, 10);
-      
+
       if (Number.isNaN(lastSync)) {
         return true; // Invalid timestamp
       }
 
       const now = Date.now();
       const timeSinceLastSync = now - lastSync;
-      
+
       return timeSinceLastSync >= ONE_DAY_MS;
     } catch (error) {
       console.error('[DhikrSync] Error checking sync time:', error);

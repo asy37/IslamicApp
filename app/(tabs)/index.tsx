@@ -1,81 +1,26 @@
-import { ScrollView, View, Text, ActivityIndicator } from "react-native";
-import clsx from "clsx";
-import TodayJourneyCard from "@/components/tracking/TodayJourneyCard";
-import DailyProgressSection from "@/components/tracking/DailyProgressSection";
 import { usePrayerTrackingLocal, convertToPrayerTrackingData } from "@/lib/hooks/prayer-tracking/usePrayerTrackingLocal";
 import { useAutoSync } from "@/lib/hooks/adhan/usePrayerSync";
-import { useTheme } from "@/lib/storage/useThemeStore";
-import { useTranslation } from "@/i18n";
-import { colors } from "@/components/theme/colors";
+import { PrayView } from "@/features/prayer-tracking/view";
+import { ErrorView } from "@/lib/components/error";
+
 
 export default function PrayerTrackingScreen() {
-  const { isDark } = useTheme();
-  const { t } = useTranslation();
-  
+
+
   // Setup auto sync
   useAutoSync();
-  
+
   // Get local prayer state
   const { data: localState, isLoading, error } = usePrayerTrackingLocal();
 
   // Convert local state to PrayerTrackingData format
   const data = localState ? convertToPrayerTrackingData(localState) : null;
-  if (isLoading) {
-    return (
-      <View
-        className={clsx(
-          "flex-1 items-center justify-center",
-          isDark ? "bg-background-dark" : "bg-background-light"
-        )}
-      >
-        <ActivityIndicator size="large" color={isDark ? colors.secondary : colors.primary[500]} />
-        <Text
-          className={clsx(
-            "mt-4 text-sm",
-            isDark ? "text-text-secondaryDark" : "text-text-secondaryLight"
-          )}
-        >
-          {t("prayer.loadingTimes")}
-        </Text>
-      </View>
-    );
-  }
-
   if (error || !data) {
     return (
-      <View
-        className={clsx(
-          "flex-1 items-center justify-center p-4",
-          isDark ? "bg-background-dark" : "bg-background-light"
-        )}
-      >
-        <Text
-          className={clsx(
-            "text-base text-center",
-            isDark ? "text-text-secondaryDark" : "text-text-secondaryLight"
-          )}
-        >
-          {t("prayer.errorLoading")}
-        </Text>
-      </View>
+      <ErrorView text="prayer.errorLoading" />
     );
   }
-
   return (
-    <ScrollView
-      className={clsx("flex-1 p-4", isDark ? "bg-background-dark" : "bg-background-light")}
-      contentContainerStyle={{ paddingBottom: 32 }}
-      showsVerticalScrollIndicator={false}
-    >
-
-
-      {/* Today's Journey Card */}
-      <View className="mt-6">
-        <TodayJourneyCard data={data} />
-      </View>
-
-      {/* Daily Progress Section */}
-      <DailyProgressSection data={data} />
-    </ScrollView>
+    <PrayView data={data} isLoading={isLoading} error={error} />
   );
 }

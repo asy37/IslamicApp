@@ -1,0 +1,1 @@
+export { PrayView } from './PrayView';

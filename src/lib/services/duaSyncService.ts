@@ -11,7 +11,7 @@
  */
 
 import { supabase } from '@/lib/supabase/client';
-import { duaRepo } from '@/lib/database/sqlite/dua/repository';
+import { duaRepo } from '@/lib/sqlite/dua/repository';
 import type { SyncQueueItem } from '@/types/dua';
 import NetInfo from '@react-native-community/netinfo';
 

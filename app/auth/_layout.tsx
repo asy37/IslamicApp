@@ -3,9 +3,9 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Pressable, Text, View } from "react-native";
 import clsx from "clsx";
 import React from "react";
-import SelectButton from "@/components/button/SelectButton";
+import SelectButton from "@/lib/components/button/SelectButton";
 import { useTheme } from "@/lib/storage/useThemeStore";
-import { useTranslation } from "@/i18n";
+import { useTranslation } from "@/lib/i18n";
 
 type AuthMode = "login" | "register";
 

@@ -1,5 +1,5 @@
-import OnboardingNotificationsScreen from "@/components/onboarding/notifications";
+import { OnboardingNotificationsView } from "@/features/onboarding/view";
 
 export default function OnboardingNotificationsRoute() {
-  return <OnboardingNotificationsScreen />;
+  return <OnboardingNotificationsView />;
 }

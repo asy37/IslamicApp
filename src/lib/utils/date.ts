@@ -1,4 +1,4 @@
-import { HijriDate, GregorianDate } from "@/components/adhan/types/date-info";
+import { HijriDate, GregorianDate } from "@/features/adhan/types/date-info";
 
 function toArabicDigits(str: string): string {
   const arabicDigits = ["٠", "١", "٢", "٣", "٤", "٥", "٦", "٧", "٨", "٩"];

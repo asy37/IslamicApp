@@ -10,7 +10,7 @@ import {
   type UpgradeAnonymousUserInput,
 } from '@/lib/api/services/profile';
 import { useAuth } from '@/lib/hooks/auth/useAuth';
-import { profileRepo } from '@/lib/database/sqlite/profile/repository';
+import { profileRepo } from '@/lib/sqlite/profile/repository';
 
 export function useUserProfile() {
   const { session } = useAuth();

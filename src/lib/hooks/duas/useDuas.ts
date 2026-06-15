@@ -8,7 +8,7 @@
  */
 
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { duaRepo } from '@/lib/database/sqlite/dua/repository';
+import { duaRepo } from '@/lib/sqlite/dua/repository';
 import { useUserId } from '@/lib/hooks/auth/useUser';
 import { generateUUID } from '@/lib/utils/uuid';
 import { isOnline } from '@/lib/utils/network';
@@ -27,14 +27,14 @@ export function useDuas() {
   const previousUserIdRef = useRef<string | null>(null);
   const loadDuasRef = useRef<(() => Promise<void>) | null>(null);
   const isLoadingRef = useRef(false);
-  
+
   // Update previousUserIdRef when userId changes
   useEffect(() => {
     if (userId) {
       previousUserIdRef.current = userId;
     }
   }, [userId]);
-  
+
   // Load duas from SQLite
   const loadDuas = useCallback(async () => {
     // Don't load if userId is still loading or is null (might be temporary)
@@ -68,7 +68,7 @@ export function useDuas() {
       setIsLoading(false);
     }
   }, [userId, isUserIdLoading]);
-  
+
   // Store loadDuas in ref so it can be called from other callbacks without dependency issues
   useEffect(() => {
     loadDuasRef.current = loadDuas;

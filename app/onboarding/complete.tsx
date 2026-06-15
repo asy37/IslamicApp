@@ -1,5 +1,5 @@
-import OnboardingCompleteScreen from "@/components/onboarding/complete";
+import { OnboardingCompleteView } from "@/features/onboarding/view";
 
 export default function OnboardingCompleteRoute() {
-  return <OnboardingCompleteScreen />;
+  return <OnboardingCompleteView />;
 }

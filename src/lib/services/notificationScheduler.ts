@@ -14,8 +14,8 @@ import type {
   AladhanPrayerTimesResponse,
   PrayerTimesDayData,
 } from '@/lib/api/services/prayerTimes';
-import { createPrayerTime } from '@/components/prayer-list/utils/utils';
-import { getMonth } from '@/lib/database/sqlite/prayer-times/repository';
+import { createPrayerTime } from '@/lib/components/prayer-list/utils/utils';
+import { getMonth } from '@/lib/sqlite/prayer-times/repository';
 import { Platform } from 'react-native';
 
 // Prayer order for finding next prayer
@@ -168,17 +168,17 @@ class NotificationSchedulerService {
     effectiveDays: number,
     vibration: boolean
   ): Promise<void> {
-    const { prayerTrackingRepo } = await import('@/lib/database/sqlite/prayer-tracking/repository');
+    const { prayerTrackingRepo } = await import('@/lib/sqlite/prayer-tracking/repository');
     const today = getEffectiveToday();
     const state = await prayerTrackingRepo.getCurrentPrayerState();
     const alreadyPrayedToday: Record<string, boolean> = state?.date === today
       ? {
-          fajr: state.fajr === 'prayed',
-          dhuhr: state.dhuhr === 'prayed',
-          asr: state.asr === 'prayed',
-          maghrib: state.maghrib === 'prayed',
-          isha: state.isha === 'prayed',
-        }
+        fajr: state.fajr === 'prayed',
+        dhuhr: state.dhuhr === 'prayed',
+        asr: state.asr === 'prayed',
+        maghrib: state.maghrib === 'prayed',
+        isha: state.isha === 'prayed',
+      }
       : {};
     await notificationService.schedulePrayerReminderNotifications(
       limitedPrayerTimes,
@@ -306,7 +306,7 @@ class NotificationSchedulerService {
     try {
       // Get daily ayah number
       const ayahNumber = getDailyAyahNumber();
-      
+
       // We need to get ayah text from quran data
       // For now, we'll use a placeholder - this should be enhanced to get actual text
       // TODO: Get actual ayah text from quran data store

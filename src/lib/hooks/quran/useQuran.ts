@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo } from "react";
-import { Surah, Ayah, SurahItem } from "@/types/quran";
+import { Surah, Ayah } from "@/types/quran";
 import {
   useAudioStore,
   usePageStore,
@@ -7,7 +7,7 @@ import {
   useTranslationStore,
 } from "@/lib/storage/useQuranStore";
 import { getDailyAyahNumber } from "@/lib/quran/dailyAyah";
-import { useTranslation } from "@/i18n";
+import { useTranslation } from "@/lib/i18n";
 import { getSurahTranslationName } from "@/lib/quran/utils/surahTranslation";
 
 const AYAH_PER_PAGE = 10;
@@ -131,7 +131,7 @@ export function useQuran(
    */
   const getAyahByNumber = useCallback(
     (globalAyahNumber: number): Ayah | null => {
-      const data = quranData as { surahs?: SurahItem[] };
+      const data = quranData as { surahs?: Surah[] };
       if (!data?.surahs?.length) return null;
 
       for (const surahItem of data.surahs) {

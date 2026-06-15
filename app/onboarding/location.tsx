@@ -1,5 +1,5 @@
-import OnboardingLocationScreen from "@/components/onboarding/location";
+import { OnboardingLocationView } from "@/features/onboarding/view";
 
 export default function OnboardingLocationRoute() {
-  return <OnboardingLocationScreen />;
+  return <OnboardingLocationView />;
 }

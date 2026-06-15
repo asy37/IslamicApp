@@ -9,7 +9,7 @@
  */
 
 import { supabase } from '@/lib/supabase/client';
-import { prayerTrackingRepo, type SyncQueueItem } from '@/lib/database/sqlite/prayer-tracking/repository';
+import { prayerTrackingRepo, type SyncQueueItem } from '@/lib/sqlite/prayer-tracking/repository';
 
 export interface SyncResult {
   success: boolean;

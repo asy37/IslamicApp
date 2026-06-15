@@ -5,15 +5,15 @@ import { useEffect, useState } from "react";
 
 import * as SplashScreen from "expo-splash-screen";
 import { QueryClientProvider } from "@tanstack/react-query";
-import { initI18n } from "@/i18n";
-import PrayerHeader from "@/components/layout/header";
+import { initI18n } from "@/lib/i18n";
+import PrayerHeader from "@/lib/components/layout/header";
 import { queryClient } from "@/lib/query/queryClient";
 import { setupQueryManagers } from "@/lib/query/setup";
 import { useAuthFlow } from "@/lib/hooks/auth/useAuth";
-import EmailConfirmationProvider from "@/components/auth/email/EmailConfirmationProvider";
-import LocationPermissionProvider from "@/components/location/LocationPermissionProvider";
+import EmailConfirmationProvider from "@/features/auth/components/email/EmailConfirmationProvider";
+import LocationPermissionProvider from "@/lib/components/location/LocationPermissionProvider";
 import { useThemeStore } from "@/lib/storage/useThemeStore";
-import { getDb } from "@/lib/database/sqlite/db";
+import { getDb } from "@/lib/sqlite/db";
 import { usePrayerTimesRefreshOnReconnect } from "@/lib/hooks/adhan/usePrayerTimesRefreshOnReconnect";
 import { useDhikrSync } from "@/lib/hooks/dhikir/useDhikrSync";
 import { useDuaSync } from "@/lib/hooks/duas/useDuaSync";
@@ -23,9 +23,9 @@ import { usePrayerTimesPrefetch } from "@/lib/hooks/layout/usePrayerTimesPrefetc
 import { useStalePrayerTimesModal } from "@/lib/hooks/layout/useStalePrayerTimesModal";
 import { useTranslationInit } from "@/lib/hooks/layout/useTranslationInit";
 import { useNotificationRefreshOnResume } from "@/lib/hooks/layout/useNotificationRefreshOnResume";
-import { DebugErrorBoundary } from "@/components/DebugErrorBoundary";
-import StalePrayerTimesModal from "@/components/adhan/StalePrayerTimesModal";
-import { QuranAudioProvider } from "@/contexts/QuranAudioContext";
+import { DebugErrorBoundary } from "@/lib/components/DebugErrorBoundary";
+import StalePrayerTimesModal from "@/features/adhan/components/StalePrayerTimesModal";
+import { QuranAudioProvider } from "@/lib/contexts/QuranAudioContext";
 import { storage } from "@/lib/storage/mmkv";
 
 const ONBOARDING_COMPLETED_KEY = "onboarding_completed";
@@ -41,7 +41,7 @@ export default function RootLayout() {
 
   useEffect(() => {
     initI18n().then(() => setI18nReady(true)).catch(() => setI18nReady(true));
-    
+
     // Check onboarding status
     storage.getString(ONBOARDING_COMPLETED_KEY).then((val) => {
       setOnboardingCompleted(val === "true");
@@ -61,10 +61,10 @@ export default function RootLayout() {
   useEffect(() => {
     const run = async () => {
       // 3 saniyelik bir timeout ekliyoruz. Eğer DB kilitlenirse sonsuza kadar beklemesin.
-      const timeoutPromise = new Promise((_, reject) => 
+      const timeoutPromise = new Promise((_, reject) =>
         setTimeout(() => reject(new Error("DB Timeout")), 3000)
       );
-      
+
       try {
         await Promise.race([getDb(), timeoutPromise]);
       } catch (err) {
@@ -118,18 +118,18 @@ export default function RootLayout() {
   // Runtime'da auth durumu veya segment değişirse yönlendirmeleri yönet (örneğin logout olunca)
   useEffect(() => {
     if (!isNavigationReady) return; // Sadece uygulama tam açıldıktan sonra
-    
+
     const inOnboarding = segments[0] === "onboarding";
     if (!onboardingCompleted) {
       if (!inOnboarding) router.replace("/onboarding");
       return;
     }
-    
+
     const inAuth = segments[0] === "auth";
     const inTabs = segments[0] === "(tabs)";
-    
+
     if (inOnboarding) return;
-    
+
     if (shouldShowRegister && !inAuth) {
       router.replace("/auth/register");
     } else if (canAccessApp && !inTabs && !inAuth) {

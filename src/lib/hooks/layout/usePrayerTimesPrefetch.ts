@@ -15,7 +15,7 @@ import {
   removeFromPrayerTimesSyncQueue,
   addToPrayerTimesSyncQueue,
   upsertMonth,
-} from "@/lib/database/sqlite/prayer-times/repository";
+} from "@/lib/sqlite/prayer-times/repository";
 import { usePrayerTimesStore } from "@/lib/storage/prayerTimesStore";
 import { useLocationStore } from "@/lib/storage/locationStore";
 import { useMethodStore } from "@/lib/storage/useMethodStore";
@@ -116,9 +116,9 @@ export function usePrayerTimesPrefetch(dbReady: boolean): void {
         const weekData: PrayerTimesDayData[] =
           dayIndex >= 0
             ? cal.data.slice(dayIndex, dayIndex + 7).map((d) => ({
-                date: d.date?.gregorian?.date ?? "",
-                data: d,
-              }))
+              date: d.date?.gregorian?.date ?? "",
+              data: d,
+            }))
             : [];
 
         if (weekData.length > 0) {

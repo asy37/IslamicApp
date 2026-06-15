@@ -13,7 +13,7 @@
 
 import Constants from 'expo-constants';
 import { supabase } from '@/lib/supabase/client';
-import { dhikrRepo, type DhikrRecord } from '@/lib/database/sqlite/dhikr/repository';
+import { dhikrRepo, type DhikrRecord } from '@/lib/sqlite/dhikr/repository';
 import { storage } from '@/lib/storage/mmkv';
 
 const getExtra = () => (Constants.expoConfig?.extra as { supabaseUrl?: string; supabaseAnonKey?: string } | undefined);
@@ -117,7 +117,7 @@ class DhikrSyncService {
   private async isOnline(): Promise<boolean> {
     try {
       // #region agent log
-      fetch('http://127.0.0.1:7243/ingest/8bb95933-fbb3-484f-ab06-c34d89a637ef',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({sessionId:'debug-session',runId:'post-fix',hypothesisId:'B',location:'src/lib/services/dhikrSyncService.ts:isOnline',message:'isOnline start',data:{},timestamp:Date.now()})}).catch(()=>{});
+      fetch('http://127.0.0.1:7243/ingest/8bb95933-fbb3-484f-ab06-c34d89a637ef', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ sessionId: 'debug-session', runId: 'post-fix', hypothesisId: 'B', location: 'src/lib/services/dhikrSyncService.ts:isOnline', message: 'isOnline start', data: {}, timestamp: Date.now() }) }).catch(() => { });
       // #endregion
       const response = await fetch('https://www.google.com', {
         method: 'HEAD',
@@ -125,12 +125,12 @@ class DhikrSyncService {
         cache: 'no-store',
       });
       // #region agent log
-      fetch('http://127.0.0.1:7243/ingest/8bb95933-fbb3-484f-ab06-c34d89a637ef',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({sessionId:'debug-session',runId:'post-fix',hypothesisId:'B',location:'src/lib/services/dhikrSyncService.ts:isOnline',message:'isOnline done',data:{hasResponse:!!response},timestamp:Date.now()})}).catch(()=>{});
+      fetch('http://127.0.0.1:7243/ingest/8bb95933-fbb3-484f-ab06-c34d89a637ef', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ sessionId: 'debug-session', runId: 'post-fix', hypothesisId: 'B', location: 'src/lib/services/dhikrSyncService.ts:isOnline', message: 'isOnline done', data: { hasResponse: !!response }, timestamp: Date.now() }) }).catch(() => { });
       // #endregion
       return true;
     } catch {
       // #region agent log
-      fetch('http://127.0.0.1:7243/ingest/8bb95933-fbb3-484f-ab06-c34d89a637ef',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({sessionId:'debug-session',runId:'post-fix',hypothesisId:'B',location:'src/lib/services/dhikrSyncService.ts:isOnline',message:'isOnline failed',data:{},timestamp:Date.now()})}).catch(()=>{});
+      fetch('http://127.0.0.1:7243/ingest/8bb95933-fbb3-484f-ab06-c34d89a637ef', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ sessionId: 'debug-session', runId: 'post-fix', hypothesisId: 'B', location: 'src/lib/services/dhikrSyncService.ts:isOnline', message: 'isOnline failed', data: {}, timestamp: Date.now() }) }).catch(() => { });
       // #endregion
       return false;
     }
@@ -147,7 +147,7 @@ class DhikrSyncService {
       // getUser() forces validation against Supabase and prevents "Invalid JWT" at runtime.
       const { data: { user }, error } = await supabase.auth.getUser();
       // #region agent log
-      fetch('http://127.0.0.1:7243/ingest/8bb95933-fbb3-484f-ab06-c34d89a637ef',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({sessionId:'debug-session',runId:'post-fix',hypothesisId:'C',location:'src/lib/services/dhikrSyncService.ts:isAuthenticated',message:'getUser result',data:{hasUser:!!user,errorMessage:error?.message ?? null},timestamp:Date.now()})}).catch(()=>{});
+      fetch('http://127.0.0.1:7243/ingest/8bb95933-fbb3-484f-ab06-c34d89a637ef', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ sessionId: 'debug-session', runId: 'post-fix', hypothesisId: 'C', location: 'src/lib/services/dhikrSyncService.ts:isAuthenticated', message: 'getUser result', data: { hasUser: !!user, errorMessage: error?.message ?? null }, timestamp: Date.now() }) }).catch(() => { });
       // #endregion
 
       if (error) {
@@ -170,7 +170,7 @@ class DhikrSyncService {
       const lastSyncStr = await storage.getString(LAST_SYNC_KEY);
       if (!lastSyncStr) {
         // #region agent log
-        fetch('http://127.0.0.1:7243/ingest/8bb95933-fbb3-484f-ab06-c34d89a637ef',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({sessionId:'debug-session',runId:'post-fix',hypothesisId:'B',location:'src/lib/services/dhikrSyncService.ts:shouldSync',message:'no lastSyncStr',data:{},timestamp:Date.now()})}).catch(()=>{});
+        fetch('http://127.0.0.1:7243/ingest/8bb95933-fbb3-484f-ab06-c34d89a637ef', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ sessionId: 'debug-session', runId: 'post-fix', hypothesisId: 'B', location: 'src/lib/services/dhikrSyncService.ts:shouldSync', message: 'no lastSyncStr', data: {}, timestamp: Date.now() }) }).catch(() => { });
         // #endregion
         return true; // Never synced
       }
@@ -178,7 +178,7 @@ class DhikrSyncService {
       const lastSync = parseInt(lastSyncStr, 10);
       if (isNaN(lastSync)) {
         // #region agent log
-        fetch('http://127.0.0.1:7243/ingest/8bb95933-fbb3-484f-ab06-c34d89a637ef',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({sessionId:'debug-session',runId:'post-fix',hypothesisId:'B',location:'src/lib/services/dhikrSyncService.ts:shouldSync',message:'invalid lastSyncStr',data:{lastSyncStr},timestamp:Date.now()})}).catch(()=>{});
+        fetch('http://127.0.0.1:7243/ingest/8bb95933-fbb3-484f-ab06-c34d89a637ef', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ sessionId: 'debug-session', runId: 'post-fix', hypothesisId: 'B', location: 'src/lib/services/dhikrSyncService.ts:shouldSync', message: 'invalid lastSyncStr', data: { lastSyncStr }, timestamp: Date.now() }) }).catch(() => { });
         // #endregion
         return true; // Invalid timestamp
       }
@@ -187,7 +187,7 @@ class DhikrSyncService {
       const timeSinceLastSync = now - lastSync;
       const allowed = timeSinceLastSync >= ONE_DAY_MS;
       // #region agent log
-      fetch('http://127.0.0.1:7243/ingest/8bb95933-fbb3-484f-ab06-c34d89a637ef',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({sessionId:'debug-session',runId:'post-fix',hypothesisId:'B',location:'src/lib/services/dhikrSyncService.ts:shouldSync',message:'cooldown calc',data:{timeSinceLastSyncMs:timeSinceLastSync,allowed},timestamp:Date.now()})}).catch(()=>{});
+      fetch('http://127.0.0.1:7243/ingest/8bb95933-fbb3-484f-ab06-c34d89a637ef', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ sessionId: 'debug-session', runId: 'post-fix', hypothesisId: 'B', location: 'src/lib/services/dhikrSyncService.ts:shouldSync', message: 'cooldown calc', data: { timeSinceLastSyncMs: timeSinceLastSync, allowed }, timestamp: Date.now() }) }).catch(() => { });
       // #endregion
       return allowed;
     } catch {
@@ -226,13 +226,13 @@ class DhikrSyncService {
    */
   async syncDhikrsIfNeeded(): Promise<SyncResult> {
     // #region agent log
-    fetch('http://127.0.0.1:7243/ingest/8bb95933-fbb3-484f-ab06-c34d89a637ef',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({sessionId:'debug-session',runId:'run1',hypothesisId:'A',location:'src/lib/services/dhikrSyncService.ts:syncDhikrsIfNeeded',message:'enter',data:{supabaseHost:this.getSupabaseHostForDebug()},timestamp:Date.now()})}).catch(()=>{});
+    fetch('http://127.0.0.1:7243/ingest/8bb95933-fbb3-484f-ab06-c34d89a637ef', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ sessionId: 'debug-session', runId: 'run1', hypothesisId: 'A', location: 'src/lib/services/dhikrSyncService.ts:syncDhikrsIfNeeded', message: 'enter', data: { supabaseHost: this.getSupabaseHostForDebug() }, timestamp: Date.now() }) }).catch(() => { });
     // #endregion
 
     // Prevent concurrent syncs
     if (this.isSyncing) {
       // #region agent log
-      fetch('http://127.0.0.1:7243/ingest/8bb95933-fbb3-484f-ab06-c34d89a637ef',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({sessionId:'debug-session',runId:'post-fix',hypothesisId:'E',location:'src/lib/services/dhikrSyncService.ts:syncDhikrsIfNeeded',message:'exit early: already syncing',data:{},timestamp:Date.now()})}).catch(()=>{});
+      fetch('http://127.0.0.1:7243/ingest/8bb95933-fbb3-484f-ab06-c34d89a637ef', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ sessionId: 'debug-session', runId: 'post-fix', hypothesisId: 'E', location: 'src/lib/services/dhikrSyncService.ts:syncDhikrsIfNeeded', message: 'exit early: already syncing', data: {}, timestamp: Date.now() }) }).catch(() => { });
       // #endregion
       return {
         success: false,
@@ -244,7 +244,7 @@ class DhikrSyncService {
 
     this.isSyncing = true;
     // #region agent log
-    fetch('http://127.0.0.1:7243/ingest/8bb95933-fbb3-484f-ab06-c34d89a637ef',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({sessionId:'debug-session',runId:'post-fix',hypothesisId:'E',location:'src/lib/services/dhikrSyncService.ts:syncDhikrsIfNeeded',message:'set isSyncing=true',data:{},timestamp:Date.now()})}).catch(()=>{});
+    fetch('http://127.0.0.1:7243/ingest/8bb95933-fbb3-484f-ab06-c34d89a637ef', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ sessionId: 'debug-session', runId: 'post-fix', hypothesisId: 'E', location: 'src/lib/services/dhikrSyncService.ts:syncDhikrsIfNeeded', message: 'set isSyncing=true', data: {}, timestamp: Date.now() }) }).catch(() => { });
     // #endregion
     const result: SyncResult = {
       success: false,
@@ -257,7 +257,7 @@ class DhikrSyncService {
       // Check authentication (only sync for authenticated users)
       const authenticated = await this.isAuthenticated();
       // #region agent log
-      fetch('http://127.0.0.1:7243/ingest/8bb95933-fbb3-484f-ab06-c34d89a637ef',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({sessionId:'debug-session',runId:'run1',hypothesisId:'C',location:'src/lib/services/dhikrSyncService.ts:authCheck',message:'isAuthenticated',data:{authenticated},timestamp:Date.now()})}).catch(()=>{});
+      fetch('http://127.0.0.1:7243/ingest/8bb95933-fbb3-484f-ab06-c34d89a637ef', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ sessionId: 'debug-session', runId: 'run1', hypothesisId: 'C', location: 'src/lib/services/dhikrSyncService.ts:authCheck', message: 'isAuthenticated', data: { authenticated }, timestamp: Date.now() }) }).catch(() => { });
       // #endregion
       if (!authenticated) {
         // Guest users never sync - this is expected, not an error
@@ -268,7 +268,7 @@ class DhikrSyncService {
       // Check internet connectivity
       const online = await this.isOnline();
       // #region agent log
-      fetch('http://127.0.0.1:7243/ingest/8bb95933-fbb3-484f-ab06-c34d89a637ef',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({sessionId:'debug-session',runId:'run1',hypothesisId:'B',location:'src/lib/services/dhikrSyncService.ts:onlineCheck',message:'isOnline',data:{online},timestamp:Date.now()})}).catch(()=>{});
+      fetch('http://127.0.0.1:7243/ingest/8bb95933-fbb3-484f-ab06-c34d89a637ef', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ sessionId: 'debug-session', runId: 'run1', hypothesisId: 'B', location: 'src/lib/services/dhikrSyncService.ts:onlineCheck', message: 'isOnline', data: { online }, timestamp: Date.now() }) }).catch(() => { });
       // #endregion
       if (!online) {
         this.isSyncing = false;
@@ -284,7 +284,7 @@ class DhikrSyncService {
 
       const userId = user.id;
       // #region agent log
-      fetch('http://127.0.0.1:7243/ingest/8bb95933-fbb3-484f-ab06-c34d89a637ef',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({sessionId:'debug-session',runId:'post-fix',hypothesisId:'C',location:'src/lib/services/dhikrSyncService.ts:userInfo',message:'userInfo',data:{hasUser:!!user,hasUserId:!!user?.id},timestamp:Date.now()})}).catch(()=>{});
+      fetch('http://127.0.0.1:7243/ingest/8bb95933-fbb3-484f-ab06-c34d89a637ef', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ sessionId: 'debug-session', runId: 'post-fix', hypothesisId: 'C', location: 'src/lib/services/dhikrSyncService.ts:userInfo', message: 'userInfo', data: { hasUser: !!user, hasUserId: !!user?.id }, timestamp: Date.now() }) }).catch(() => { });
       // #endregion
 
       // Get access token for Edge Function Authorization.
@@ -293,7 +293,7 @@ class DhikrSyncService {
       // #region agent log
       const claims = accessToken ? this.decodeJwtClaims(accessToken) : {};
       const header = accessToken ? this.decodeJwtHeader(accessToken) : {};
-      fetch('http://127.0.0.1:7243/ingest/8bb95933-fbb3-484f-ab06-c34d89a637ef',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({sessionId:'debug-session',runId:'post-fix',hypothesisId:'D',location:'src/lib/services/dhikrSyncService.ts:tokenInfo',message:'tokenInfo',data:{hasAccessToken:!!accessToken,tokenLength:accessToken?.length ?? 0,segmentCount:accessToken ? accessToken.split('.').length : 0,exp:claims.exp ?? null,iat:claims.iat ?? null,issHost:claims.iss ? (()=>{try{return new URL(claims.iss).host}catch{return null}})() : null,aud:claims.aud ?? null,alg:header.alg ?? null,typ:header.typ ?? null,hasKid:!!header.kid,nowSec:Math.floor(Date.now()/1000)},timestamp:Date.now()})}).catch(()=>{});
+      fetch('http://127.0.0.1:7243/ingest/8bb95933-fbb3-484f-ab06-c34d89a637ef', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ sessionId: 'debug-session', runId: 'post-fix', hypothesisId: 'D', location: 'src/lib/services/dhikrSyncService.ts:tokenInfo', message: 'tokenInfo', data: { hasAccessToken: !!accessToken, tokenLength: accessToken?.length ?? 0, segmentCount: accessToken ? accessToken.split('.').length : 0, exp: claims.exp ?? null, iat: claims.iat ?? null, issHost: claims.iss ? (() => { try { return new URL(claims.iss).host } catch { return null } })() : null, aud: claims.aud ?? null, alg: header.alg ?? null, typ: header.typ ?? null, hasKid: !!header.kid, nowSec: Math.floor(Date.now() / 1000) }, timestamp: Date.now() }) }).catch(() => { });
       // #endregion
 
       // If token seems expired/stale, force refresh (gateway may reject stale JWT even if getUser() succeeds via refresh path).
@@ -304,11 +304,11 @@ class DhikrSyncService {
           if (refreshedToken) accessToken = refreshedToken;
           const refreshedClaims = refreshedToken ? this.decodeJwtClaims(refreshedToken) : {};
           // #region agent log
-          fetch('http://127.0.0.1:7243/ingest/8bb95933-fbb3-484f-ab06-c34d89a637ef',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({sessionId:'debug-session',runId:'post-fix',hypothesisId:'D',location:'src/lib/services/dhikrSyncService.ts:tokenRefresh',message:'refreshSession',data:{refreshError:refreshed.error?.message ?? null,tokenChanged:!!refreshedToken && refreshedToken !== session?.access_token,exp:refreshedClaims.exp ?? null,issHost:refreshedClaims.iss ? (()=>{try{return new URL(refreshedClaims.iss).host}catch{return null}})() : null},timestamp:Date.now()})}).catch(()=>{});
+          fetch('http://127.0.0.1:7243/ingest/8bb95933-fbb3-484f-ab06-c34d89a637ef', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ sessionId: 'debug-session', runId: 'post-fix', hypothesisId: 'D', location: 'src/lib/services/dhikrSyncService.ts:tokenRefresh', message: 'refreshSession', data: { refreshError: refreshed.error?.message ?? null, tokenChanged: !!refreshedToken && refreshedToken !== session?.access_token, exp: refreshedClaims.exp ?? null, issHost: refreshedClaims.iss ? (() => { try { return new URL(refreshedClaims.iss).host } catch { return null } })() : null }, timestamp: Date.now() }) }).catch(() => { });
           // #endregion
         } catch (e) {
           // #region agent log
-          fetch('http://127.0.0.1:7243/ingest/8bb95933-fbb3-484f-ab06-c34d89a637ef',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({sessionId:'debug-session',runId:'post-fix',hypothesisId:'D',location:'src/lib/services/dhikrSyncService.ts:tokenRefresh',message:'refreshSession exception',data:{message:(e as any)?.message ?? null},timestamp:Date.now()})}).catch(()=>{});
+          fetch('http://127.0.0.1:7243/ingest/8bb95933-fbb3-484f-ab06-c34d89a637ef', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ sessionId: 'debug-session', runId: 'post-fix', hypothesisId: 'D', location: 'src/lib/services/dhikrSyncService.ts:tokenRefresh', message: 'refreshSession exception', data: { message: (e as any)?.message ?? null }, timestamp: Date.now() }) }).catch(() => { });
           // #endregion
         }
       }
@@ -328,11 +328,11 @@ class DhikrSyncService {
       // If there are dirty records, we still attempt sync even within cooldown.
       const shouldSync = await this.shouldSync();
       // #region agent log
-      fetch('http://127.0.0.1:7243/ingest/8bb95933-fbb3-484f-ab06-c34d89a637ef',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({sessionId:'debug-session',runId:'run1',hypothesisId:'B',location:'src/lib/services/dhikrSyncService.ts:cooldownCheck',message:'shouldSync',data:{shouldSync,dirtyCount:dirtyRecords.length},timestamp:Date.now()})}).catch(()=>{});
+      fetch('http://127.0.0.1:7243/ingest/8bb95933-fbb3-484f-ab06-c34d89a637ef', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ sessionId: 'debug-session', runId: 'run1', hypothesisId: 'B', location: 'src/lib/services/dhikrSyncService.ts:cooldownCheck', message: 'shouldSync', data: { shouldSync, dirtyCount: dirtyRecords.length }, timestamp: Date.now() }) }).catch(() => { });
       // #endregion
       if (!shouldSync) {
         // #region agent log
-        fetch('http://127.0.0.1:7243/ingest/8bb95933-fbb3-484f-ab06-c34d89a637ef',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({sessionId:'debug-session',runId:'post-fix',hypothesisId:'B',location:'src/lib/services/dhikrSyncService.ts:cooldownSkip',message:'cooldown active but dirty exists -> proceed',data:{dirtyCount:dirtyRecords.length},timestamp:Date.now()})}).catch(()=>{});
+        fetch('http://127.0.0.1:7243/ingest/8bb95933-fbb3-484f-ab06-c34d89a637ef', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ sessionId: 'debug-session', runId: 'post-fix', hypothesisId: 'B', location: 'src/lib/services/dhikrSyncService.ts:cooldownSkip', message: 'cooldown active but dirty exists -> proceed', data: { dirtyCount: dirtyRecords.length }, timestamp: Date.now() }) }).catch(() => { });
         // #endregion
       }
 
@@ -341,14 +341,14 @@ class DhikrSyncService {
 
       // Call Supabase Edge Function
       // #region agent log
-      fetch('http://127.0.0.1:7243/ingest/8bb95933-fbb3-484f-ab06-c34d89a637ef',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({sessionId:'debug-session',runId:'run1',hypothesisId:'A',location:'src/lib/services/dhikrSyncService.ts:invoke',message:'invoke sync_dhikr',data:{payloadCount:syncPayload.length},timestamp:Date.now()})}).catch(()=>{});
+      fetch('http://127.0.0.1:7243/ingest/8bb95933-fbb3-484f-ab06-c34d89a637ef', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ sessionId: 'debug-session', runId: 'run1', hypothesisId: 'A', location: 'src/lib/services/dhikrSyncService.ts:invoke', message: 'invoke sync_dhikr', data: { payloadCount: syncPayload.length }, timestamp: Date.now() }) }).catch(() => { });
       // #endregion
       const fetchResult = accessToken
         ? await this.invokeDhikrSyncViaFetch(accessToken, syncPayload)
         : { ok: false, status: 0, bodyText: 'Missing access token' };
 
       // #region agent log
-      fetch('http://127.0.0.1:7243/ingest/8bb95933-fbb3-484f-ab06-c34d89a637ef',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({sessionId:'debug-session',runId:'post-fix',hypothesisId:'D',location:'src/lib/services/dhikrSyncService.ts:invokeFetch',message:'invoke via fetch result',data:{status:fetchResult.status,ok:fetchResult.ok,bodySnippet:(fetchResult.bodyText||'').slice(0,200)},timestamp:Date.now()})}).catch(()=>{});
+      fetch('http://127.0.0.1:7243/ingest/8bb95933-fbb3-484f-ab06-c34d89a637ef', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ sessionId: 'debug-session', runId: 'post-fix', hypothesisId: 'D', location: 'src/lib/services/dhikrSyncService.ts:invokeFetch', message: 'invoke via fetch result', data: { status: fetchResult.status, ok: fetchResult.ok, bodySnippet: (fetchResult.bodyText || '').slice(0, 200) }, timestamp: Date.now() }) }).catch(() => { });
       // #endregion
 
       if (!fetchResult.ok) {
@@ -376,7 +376,7 @@ class DhikrSyncService {
       const errors = response.errors ?? [];
 
       // #region agent log
-      fetch('http://127.0.0.1:7243/ingest/8bb95933-fbb3-484f-ab06-c34d89a637ef',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({sessionId:'debug-session',runId:'run1',hypothesisId:'B',location:'src/lib/services/dhikrSyncService.ts:invokeSuccess',message:'invoke success summary',data:{synced:syncedIds.length,skipped:skippedIds.length,errors:errors.length},timestamp:Date.now()})}).catch(()=>{});
+      fetch('http://127.0.0.1:7243/ingest/8bb95933-fbb3-484f-ab06-c34d89a637ef', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ sessionId: 'debug-session', runId: 'run1', hypothesisId: 'B', location: 'src/lib/services/dhikrSyncService.ts:invokeSuccess', message: 'invoke success summary', data: { synced: syncedIds.length, skipped: skippedIds.length, errors: errors.length }, timestamp: Date.now() }) }).catch(() => { });
       // #endregion
 
       // Mark successfully synced records as clean
@@ -428,7 +428,7 @@ class DhikrSyncService {
     } finally {
       this.isSyncing = false;
       // #region agent log
-      fetch('http://127.0.0.1:7243/ingest/8bb95933-fbb3-484f-ab06-c34d89a637ef',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({sessionId:'debug-session',runId:'post-fix',hypothesisId:'E',location:'src/lib/services/dhikrSyncService.ts:syncDhikrsIfNeeded',message:'finally set isSyncing=false',data:{},timestamp:Date.now()})}).catch(()=>{});
+      fetch('http://127.0.0.1:7243/ingest/8bb95933-fbb3-484f-ab06-c34d89a637ef', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ sessionId: 'debug-session', runId: 'post-fix', hypothesisId: 'E', location: 'src/lib/services/dhikrSyncService.ts:syncDhikrsIfNeeded', message: 'finally set isSyncing=false', data: {}, timestamp: Date.now() }) }).catch(() => { });
       // #endregion
     }
 

@@ -1,0 +1,1 @@
+export { DailyVerseView } from "./DailyVerseView";

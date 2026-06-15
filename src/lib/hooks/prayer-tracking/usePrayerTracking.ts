@@ -13,7 +13,7 @@ import type {
   PrayerTrackingData,
   UpdatePrayerStatusRequest,
   PrayerName,
-} from '@/types/prayer-tracking';
+} from '@/features/prayer-tracking/types';
 import { useAuth } from '@/lib/hooks/auth/useAuth';
 
 /**

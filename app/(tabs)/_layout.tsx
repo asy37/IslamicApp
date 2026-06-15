@@ -1,9 +1,9 @@
 import { Tabs } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { View } from "react-native";
-import { colors } from "@/components/theme/colors";
+import { colors } from "@/lib/components/theme/colors";
 import { useTheme } from "@/lib/storage/useThemeStore";
-import { useTranslation } from "@/i18n";
+import { useTranslation } from "@/lib/i18n";
 
 export default function TabLayout() {
   const { isDark } = useTheme();

@@ -41,14 +41,14 @@ export async function backgroundNotificationRefresh(): Promise<void> {
 
   try {
     // Lazy import — background context'te sadece gerekli modülleri yükle
-    const { getMonth } = await import('@/lib/database/sqlite/prayer-times/repository');
+    const { getMonth } = await import('@/lib/sqlite/prayer-times/repository');
     const { useNotificationSettings } = await import('@/lib/storage/notificationSettings');
     const { notificationService } = await import('@/lib/notifications/NotificationService');
-    const { i18n } = await import('@/i18n');
+    const { i18n } = await import('@/lib/i18n');
 
     // Ensure i18n is initialized
     try {
-      const { initI18n } = await import('@/i18n');
+      const { initI18n } = await import('@/lib/i18n');
       await initI18n();
     } catch {
       // i18n already initialized or not available

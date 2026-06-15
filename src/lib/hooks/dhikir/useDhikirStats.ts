@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "../auth/useAuth";
 import { useUserId } from "../auth/useUser";
-import { getDhikrStatsSummary } from "@/lib/database/sqlite/dhikr/stats.service";
-import { DhikrStats } from "@/types/dhikir";
+import { getDhikrStatsSummary } from "@/lib/sqlite/dhikr/stats.service";
+import type { DhikrStats } from "@/features/dhikir/types";
 
 export function useDhikrStats() {
   const { user } = useAuth();

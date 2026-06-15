@@ -1,0 +1,1 @@
+export { QuranView } from "./QuranView";

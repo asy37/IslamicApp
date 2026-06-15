@@ -11,7 +11,7 @@
  */
 
 import { Platform } from 'react-native';
-import { i18n } from '@/i18n';
+import { i18n } from '@/lib/i18n';
 
 // Conditional import for Expo Go compatibility
 // Use lazy loading to avoid errors in Expo Go
@@ -155,7 +155,7 @@ async function ensurePrayerTimeChannelsAndroid(): Promise<void> {
 export class NotificationService {
   private static instance: NotificationService;
 
-  private constructor() {}
+  private constructor() { }
 
   public static getInstance(): NotificationService {
     if (!NotificationService.instance) {

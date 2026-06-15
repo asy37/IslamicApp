@@ -9,10 +9,10 @@
 
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { AppState, AppStateStatus } from 'react-native';
-import { dhikrRepo } from '@/lib/database/sqlite/dhikr/repository';
-import { getDb } from '@/lib/database/sqlite/db';
+import { dhikrRepo } from '@/lib/sqlite/dhikr/repository';
+import { getDb } from '@/lib/sqlite/db';
 import { useAuth } from '@/lib/hooks/auth/useAuth';
-import type { Dhikr } from '@/types/dhikir';
+import type { Dhikr } from '@/features/dhikir/types';
 
 /**
  * Hook for managing a single dhikr
@@ -23,7 +23,7 @@ import type { Dhikr } from '@/types/dhikir';
 export function useDhikr(slug: string | null) {
   const { user } = useAuth();
   const userId = user?.id || null;
-  
+
   const [dhikr, setDhikr] = useState<Dhikr | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const isSavingRef = useRef(false);
@@ -48,7 +48,7 @@ export function useDhikr(slug: string | null) {
     try {
       setIsLoading(true);
       const record = await dhikrRepo.getDhikrBySlug(userId, slug);
-      
+
       if (record) {
         // Convert DhikrRecord to Dhikr (exclude user_id, is_dirty, last_synced_at)
         setDhikr({

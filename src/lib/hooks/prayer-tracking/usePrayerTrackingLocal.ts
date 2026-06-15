@@ -5,12 +5,12 @@
  */
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { prayerTrackingRepo } from '@/lib/database/sqlite/prayer-tracking/repository';
+import { prayerTrackingRepo } from '@/lib/sqlite/prayer-tracking/repository';
 import { dailyResetService } from '@/lib/services/dailyReset';
 import { getEffectiveToday } from '@/lib/services/prayerDate';
 import { usePrayerTimesStore } from '@/lib/storage/prayerTimesStore';
 import { notificationService } from '@/lib/notifications/NotificationService';
-import type { PrayerStatus, PrayerName, PrayerStreak } from '@/types/prayer-tracking';
+import type { PrayerStatus, PrayerName, PrayerStreak } from '@/features/prayer-tracking/types';
 
 /**
  * Get today's prayer state from SQLite.
@@ -108,11 +108,11 @@ export function useUpdatePrayerStatusLocal() {
       });
       if (status === 'prayed') {
         // Hemen iptal et
-        notificationService.cancelPrayerReminderForPrayer(prayer, effectiveToday).catch(() => {});
+        notificationService.cancelPrayerReminderForPrayer(prayer, effectiveToday).catch(() => { });
         // Race condition: eğer eşzamanlı bir reschedule (prefetch/reconnect) bildirimi
         // geri oluşturursa, 3 saniye sonra tekrar iptal et
         setTimeout(() => {
-          notificationService.cancelPrayerReminderForPrayer(prayer, effectiveToday).catch(() => {});
+          notificationService.cancelPrayerReminderForPrayer(prayer, effectiveToday).catch(() => { });
         }, 3000);
       }
     },
@@ -143,7 +143,7 @@ export function convertToPrayerTrackingData(state: {
   asr: PrayerStatus;
   maghrib: PrayerStatus;
   isha: PrayerStatus;
-}): import('@/types/prayer-tracking').PrayerTrackingData {
+}): import('@/features/prayer-tracking/types').PrayerTrackingData {
   return {
     prayers: {
       fajr: state.fajr,
