@@ -10,7 +10,7 @@
 
 import { useEffect, useRef } from 'react';
 import { AppState, type AppStateStatus } from 'react-native';
-import { notificationService } from '@/lib/notifications/NotificationService';
+import { notificationService } from '@/lib/services/NotificationService';
 import { notificationScheduler } from '@/lib/services/notificationScheduler';
 
 const RESCHEDULE_COOLDOWN_MS = 5 * 60 * 1000; // 5 dakika cooldown

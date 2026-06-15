@@ -5,7 +5,7 @@ import {
   Text,
   View,
 } from "react-native";
-import { PRAYER_CALCULATION_METHODS, PrayerCalculationMethod } from "@/lib/constants/prayer-method";
+import { PRAYER_CALCULATION_METHODS, PrayerCalculationMethod } from "@/features/adhan/utils/prayer-method";
 import { MaterialIcons } from "@expo/vector-icons";
 import clsx from "clsx";
 import { useTheme } from "@/lib/storage/useThemeStore";

@@ -4,7 +4,7 @@
  */
 
 import { supabase } from '@/lib/supabase/client';
-import { notificationService } from '@/lib/notifications/NotificationService';
+import { notificationService } from '@/lib/services/NotificationService';
 import { useNotificationSettings } from '@/lib/storage/notificationSettings';
 import { Platform } from 'react-native';
 

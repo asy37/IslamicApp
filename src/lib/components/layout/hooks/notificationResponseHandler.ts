@@ -5,7 +5,7 @@
 
 import * as Notifications from "expo-notifications";
 import type { Router } from "expo-router";
-import { notificationService } from "@/lib/notifications/NotificationService";
+import { notificationService } from "@/lib/services/NotificationService";
 
 export type NotificationHandlerParams = {
   router: Router;

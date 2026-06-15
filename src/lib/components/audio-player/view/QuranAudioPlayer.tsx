@@ -2,7 +2,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { colors } from "@/lib/components/theme/colors";
 import { useAudioStore, useSurahStore } from "@/lib/storage/useQuranStore";
-import { formatTime, progressPercentage } from "../utils/utils";
+import { formatTime, progressPercentage } from "../../../../features/quran/utils/utils";
 import { useTheme } from "@/lib/storage/useThemeStore";
 
 

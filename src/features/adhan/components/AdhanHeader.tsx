@@ -7,7 +7,7 @@ import CalculationMethodModal from "./CalculationMethodModal";
 import { useLocationStore } from "@/lib/storage/locationStore";
 import { getLocationText } from "../utils/utils-function";
 import { useMethodStore } from "@/lib/storage/useMethodStore";
-import { PrayerCalculationMethod } from "@/lib/constants/prayer-method";
+import { PrayerCalculationMethod } from "@/features/adhan/utils/prayer-method";
 import Button from "@/lib/components/button/Button";
 import { colors } from "@/lib/components/theme/colors";
 import { useTranslation } from "@/lib/i18n";

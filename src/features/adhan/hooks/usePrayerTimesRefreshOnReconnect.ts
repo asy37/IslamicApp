@@ -23,7 +23,7 @@ import { useLocationStore } from '@/lib/storage/locationStore';
 import { useMethodStore } from '@/lib/storage/useMethodStore';
 import { usePrayerTimesStore } from '@/lib/storage/prayerTimesStore';
 import { notificationScheduler } from '@/lib/services/notificationScheduler';
-import { notificationService } from '@/lib/notifications/NotificationService';
+import { notificationService } from '@/lib/services/NotificationService';
 
 const REFRESH_COOLDOWN_MS = 60 * 1000;
 

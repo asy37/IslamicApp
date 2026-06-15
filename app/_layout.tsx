@@ -24,7 +24,7 @@ import { useTranslationInit } from "@/lib/components/layout/hooks/useTranslation
 import { useNotificationRefreshOnResume } from "@/lib/components/layout/hooks/useNotificationRefreshOnResume";
 import { DebugErrorBoundary } from "@/lib/components/DebugErrorBoundary";
 import StalePrayerTimesModal from "@/features/adhan/components/StalePrayerTimesModal";
-import { QuranAudioProvider } from "@/lib/contexts/QuranAudioContext";
+import { QuranAudioProvider } from "@/lib/components/audio-player/contexts/QuranAudioContext";
 import { storage } from "@/lib/storage/mmkv";
 import { getDb } from "@/lib/database/db";
 

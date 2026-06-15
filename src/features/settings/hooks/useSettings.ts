@@ -12,7 +12,7 @@ import { queryClient } from "@/lib/query/queryClient";
 import { queryKeys } from "@/lib/query/queryKeys";
 import { rescheduleNotifications } from "../utils";
 import type { SettingsToggleKey } from "../types";
-import type { PrayerCalculationMethod } from "@/lib/constants/prayer-method";
+import type { PrayerCalculationMethod } from "@/features/adhan/utils/prayer-method";
 
 export const useSettings = () => {
     const { isDark } = useTheme();

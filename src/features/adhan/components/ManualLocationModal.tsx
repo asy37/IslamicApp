@@ -2,7 +2,7 @@ import { FlatList, Text, TextInput, View, Pressable } from "react-native";
 import { useState, useMemo } from "react";
 import clsx from "clsx";
 import { MaterialIcons } from "@expo/vector-icons";
-import { searchCities, type City } from "@/lib/constants/popular-cities";
+import { searchCities, type City } from "@/features/adhan/utils/popular-cities";
 import { UserLocation } from "@/lib/storage/locationStore";
 import ModalComponent from "@/lib/components/modal/ModalComponent";
 import Button from "@/lib/components/button/Button";

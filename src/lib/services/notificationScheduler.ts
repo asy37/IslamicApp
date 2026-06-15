@@ -4,9 +4,8 @@
  */
 
 import { format, parse } from 'date-fns';
-import { notificationService } from '@/lib/notifications/NotificationService';
+import { notificationService } from '@/lib/services/NotificationService';
 import { useNotificationSettings } from '@/lib/storage/notificationSettings';
-import { getDailyAyahNumber } from '@/lib/quran/dailyAyah';
 import { getEffectiveToday } from '@/lib/services/prayerDate';
 import { getPrayerLogsRecent } from '@/lib/api/services/prayerTracking';
 import { calculateStreakFromSupabaseLogs } from '@/lib/services/streakCalculation';
@@ -18,6 +17,7 @@ import { createPrayerTime } from '@/lib/components/prayer-list/utils/utils';
 import { Platform } from 'react-native';
 import { prayerTrackingRepo } from '../database/prayer-tracking/repository';
 import { getMonth } from '../database/prayer-times/repository';
+import { getDailyAyahNumber } from '@/features/quran/quran-text/dailyAyah';
 
 // Prayer order for finding next prayer
 const PRAYER_ORDER = ['Fajr', 'Dhuhr', 'Asr', 'Maghrib', 'Isha'] as const;

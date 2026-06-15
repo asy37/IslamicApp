@@ -9,7 +9,7 @@ import { prayerTrackingRepo } from '@/lib/sqlite/prayer-tracking/repository';
 import { dailyResetService } from '@/lib/services/dailyReset';
 import { getEffectiveToday } from '@/lib/services/prayerDate';
 import { usePrayerTimesStore } from '@/lib/storage/prayerTimesStore';
-import { notificationService } from '@/lib/notifications/NotificationService';
+import { notificationService } from '@/lib/services/NotificationService';
 import type { PrayerStatus, PrayerName, PrayerStreak } from '@/features/prayer-tracking/types';
 
 /**

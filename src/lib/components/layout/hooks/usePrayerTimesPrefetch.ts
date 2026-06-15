@@ -22,7 +22,7 @@ import { useMethodStore } from "@/lib/storage/useMethodStore";
 import { queryClient } from "@/lib/query/queryClient";
 import { queryKeys } from "@/lib/query/queryKeys";
 import { notificationScheduler } from "@/lib/services/notificationScheduler";
-import { notificationService } from "@/lib/notifications/NotificationService";
+import { notificationService } from "@/lib/services/NotificationService";
 import { useNotificationSettings } from "@/lib/storage/notificationSettings";
 
 const SCHEDULE_DEBOUNCE_MS = 2500;

@@ -5,7 +5,7 @@ import { useState } from "react";
 import { useTheme } from "@/lib/storage/useThemeStore";
 import { useTranslation } from "@/lib/i18n";
 import Button from "@/lib/components/button/Button";
-import { notificationService } from "@/lib/notifications/NotificationService";
+import { notificationService } from "@/lib/services/NotificationService";
 import { OnboardingContainer } from "../components";
 import { NotificationChoice } from "../types";
 

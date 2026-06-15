@@ -9,7 +9,7 @@ import { ShareCard } from "@/features/daily-verse/components/ShareCard";
 import { captureRef } from "react-native-view-shot";
 import * as Sharing from "expo-sharing";
 import { useAudioStore } from "@/lib/storage/useQuranStore";
-import { useQuranAudio } from "@/lib/contexts/QuranAudioContext";
+import { useQuranAudio } from "@/lib/components/audio-player/contexts/QuranAudioContext";
 import { useRouter } from "expo-router";
 
 import { BookmarkedAyah } from "../types";

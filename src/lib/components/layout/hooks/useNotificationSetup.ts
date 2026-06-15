@@ -5,9 +5,9 @@
 
 import { useEffect, useRef } from "react";
 import type { Router } from "expo-router";
-import { notificationService } from "@/lib/notifications/NotificationService";
+import { notificationService } from "@/lib/services/NotificationService";
 import { syncPushTokenAndSettings } from "@/lib/services/pushTokenSync";
-import { processNotificationResponse, type NotificationHandlerParams } from "@/lib/layout/notificationResponseHandler";
+import { processNotificationResponse, type NotificationHandlerParams } from "@/lib/components/layout/hooks/notificationResponseHandler";
 import { useLocationStore } from "@/lib/storage/locationStore";
 import { useMethodStore } from "@/lib/storage/useMethodStore";
 
@@ -29,8 +29,8 @@ export function useNotificationSetup(router: Router): void {
       }
 
       if (cancelled) return;
-      notificationService.requestPermissions().catch(() => {});
-      syncPushTokenAndSettings().catch(() => {});
+      notificationService.requestPermissions().catch(() => { });
+      syncPushTokenAndSettings().catch(() => { });
       notificationService.registerBackgroundTask().catch((err) => {
         console.warn('[NotificationSetup] Background task registration failed:', err);
       });
@@ -42,14 +42,14 @@ export function useNotificationSetup(router: Router): void {
       };
 
       const handleResponse = (response: import("expo-notifications").NotificationResponse) => {
-        processNotificationResponse(response, params).catch(() => {});
+        processNotificationResponse(response, params).catch(() => { });
       };
 
       const last = Notifications.getLastNotificationResponse();
       if (last && !cancelled) handleResponse(last);
 
       if (cancelled) return;
-      notificationListenerRef.current = Notifications.addNotificationReceivedListener(() => {});
+      notificationListenerRef.current = Notifications.addNotificationReceivedListener(() => { });
       responseListenerRef.current = Notifications.addNotificationResponseReceivedListener(handleResponse);
     };
 

@@ -1,10 +1,7 @@
 import { useEffect } from "react";
-import { splitAyahText } from "@/lib/quran/utils/wordSplitter";
-import {
-    getActiveWordIndexFromTimings,
-    getVerseTiming,
-} from "@/lib/quran/utils/audioTimings";
 import { useAudioStore } from "@/lib/storage/useQuranStore";
+import { splitAyahText } from "../quran-text/utils/wordSplitter";
+import { getActiveWordIndexFromTimings, getVerseTiming } from "../quran-text/utils/audioTimings";
 
 type UseAyahWordSyncParams = {
     surahNumber: number;

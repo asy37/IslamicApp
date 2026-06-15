@@ -1,6 +1,6 @@
 import { useEffect, useRef, useCallback } from "react";
 import { useAudioStore } from "@/lib/storage/useQuranStore";
-import { useQuranAudio } from "@/lib/contexts/QuranAudioContext";
+import { useQuranAudio } from "@/lib/components/audio-player/contexts/QuranAudioContext";
 import { Ayah } from "@/types/quran";
 
 type OnPageChangeCallback = (page: number) => void;

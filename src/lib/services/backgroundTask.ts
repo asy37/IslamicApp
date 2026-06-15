@@ -43,7 +43,7 @@ export async function backgroundNotificationRefresh(): Promise<void> {
   try {
     // Lazy import — background context'te sadece gerekli modülleri yükle
     const { useNotificationSettings } = await import('@/lib/storage/notificationSettings');
-    const { notificationService } = await import('@/lib/notifications/NotificationService');
+    const { notificationService } = await import('@/lib/services/NotificationService');
     const { i18n } = await import('@/lib/i18n');
 
     // Ensure i18n is initialized
