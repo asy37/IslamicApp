@@ -10,6 +10,7 @@
 
 import { Platform } from 'react-native';
 import { format, parse } from 'date-fns';
+import { getMonth } from '../database/prayer-times/repository';
 
 const PRAYER_ORDER = ['Fajr', 'Dhuhr', 'Asr', 'Maghrib', 'Isha'] as const;
 
@@ -41,7 +42,6 @@ export async function backgroundNotificationRefresh(): Promise<void> {
 
   try {
     // Lazy import — background context'te sadece gerekli modülleri yükle
-    const { getMonth } = await import('@/lib/sqlite/prayer-times/repository');
     const { useNotificationSettings } = await import('@/lib/storage/notificationSettings');
     const { notificationService } = await import('@/lib/notifications/NotificationService');
     const { i18n } = await import('@/lib/i18n');

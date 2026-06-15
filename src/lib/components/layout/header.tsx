@@ -6,7 +6,7 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useStreak } from "@/lib/hooks/prayer-tracking/useStreak";
+import { useStreak } from "@/features/prayer-tracking/hooks/useStreak";
 import StreakCounter from "@/features/prayer-tracking/components/StreakCounter";
 import { useState } from "react";
 import Button from "@/lib/components/button/Button";
@@ -14,8 +14,8 @@ import clsx from "clsx";
 import { useTheme } from "@/lib/storage/useThemeStore";
 import { usePrayerTimesStore } from "@/lib/storage/prayerTimesStore";
 import { PrayerDate } from "@/features/adhan/types/date-info";
-import { useAuth } from "@/lib/hooks/auth/useAuth";
-import { useUserProfile, useAvatarUrl } from "@/lib/hooks/profile/useUserProfile";
+import { useAuth } from "@/features/auth/hooks/useAuth";
+import { useUserProfile, useAvatarUrl } from "@/features/profile/hooks/useUserProfile";
 import { useTranslation } from "@/lib/i18n";
 import { formatGregorianDate, formatHijriDate } from "@/lib/utils/date";
 

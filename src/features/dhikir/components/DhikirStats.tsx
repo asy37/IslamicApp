@@ -1,7 +1,7 @@
 import { FlatList, Text, View, ActivityIndicator } from "react-native";
 import ModalComponent from "@/lib/components/modal/ModalComponent";
 import { MaterialIcons } from "@expo/vector-icons";
-import { useDhikrStats } from "@/lib/hooks/dhikir/useDhikirStats";
+import { useDhikrStats } from "@/features/dhikir/hooks/useDhikirStats";
 import clsx from "clsx";
 import { useTheme } from "@/lib/storage/useThemeStore";
 import { colors } from "@/lib/components/theme/colors";

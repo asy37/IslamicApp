@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import { Animated, Text, View } from "react-native";
-import type { FeedbackLevel } from "@/lib/hooks/qibla/useQiblaGuide";
+import type { FeedbackLevel } from "@/features/qibla/hooks/useQiblaGuide";
 import { getCompassColor } from "../utils/utils";
 import CompassRing from "./compass/CompassRing";
 import CompassIcons from "./compass/CompassIcons";

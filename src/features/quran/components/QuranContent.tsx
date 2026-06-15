@@ -4,7 +4,7 @@ import { Ayah } from "@/types/quran";
 import PageIndicator from "./PageIndicator";
 import { useMemo } from "react";
 import { useSurahStore } from "@/lib/storage/useQuranStore";
-import { useSwipeScroll } from "@/lib/hooks/quran/useSwipeScroll";
+import { useSwipeScroll } from "@/features/quran/hooks/useSwipeScroll";
 import { QuranContentProps } from "../types/types";
 
 export default function QuranContent({

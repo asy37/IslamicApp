@@ -1,6 +1,6 @@
 import { Image, Text, View } from "react-native";
 import clsx from "clsx";
-import { useLocation } from "@/lib/hooks/qibla/useLocation";
+import { useLocation } from "@/features/qibla/hooks/useLocation";
 import ModalComponent from "@/lib/components/modal/ModalComponent";
 import ManualLocationModal from "./ManualLocationModal";
 import { queryKeys } from "@/lib/query/queryKeys";

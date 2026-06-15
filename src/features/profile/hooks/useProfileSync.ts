@@ -12,7 +12,7 @@
 import { useEffect, useRef } from 'react';
 import { AppState, type AppStateStatus } from 'react-native';
 import { profileSyncService } from '@/lib/services/profileSyncService';
-import { useAuth } from '@/lib/hooks/auth/useAuth';
+import { useAuth } from '@/features/auth/hooks/useAuth';
 import NetInfo from '@react-native-community/netinfo';
 import { queryClient } from '@/lib/query/queryClient';
 import { queryKeys } from '@/lib/query/queryKeys';

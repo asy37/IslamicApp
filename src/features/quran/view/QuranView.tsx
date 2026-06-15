@@ -1,11 +1,11 @@
 import React from "react";
 import { View } from "react-native";
 import clsx from "clsx";
-import { useQuran } from "@/lib/hooks/quran/useQuran";
+import { useQuran } from "@/features/quran/hooks/useQuran";
 import QuranData from "@/lib/quran/arabic/ar.json";
-import { useSurahPlayer } from "@/lib/hooks/audio-player/useSurahPlayer";
+import { useSurahPlayer } from "@/lib/components/audio-player/hooks/useSurahPlayer";
 import { useAudioStore } from "@/lib/storage/useQuranStore";
-import { useAyahWordSync } from "@/lib/hooks/quran/useAyahWordSync";
+import { useAyahWordSync } from "@/features/quran/hooks/useAyahWordSync";
 import { useTheme } from "@/lib/storage/useThemeStore";
 import { ShareCard } from "@/features/daily-verse/components/ShareCard";
 import QuranSubHeader from "../components/QuranSubHeader";

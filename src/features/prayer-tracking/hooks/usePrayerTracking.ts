@@ -14,7 +14,7 @@ import type {
   UpdatePrayerStatusRequest,
   PrayerName,
 } from '@/features/prayer-tracking/types';
-import { useAuth } from '@/lib/hooks/auth/useAuth';
+import { useAuth } from '@/features/auth/hooks/useAuth';
 
 /**
  * Hook: Get today's prayer tracking data

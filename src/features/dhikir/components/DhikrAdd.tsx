@@ -2,14 +2,14 @@ import { KeyboardAvoidingView, Platform, Text, TextInput, View, Alert, ActivityI
 import ModalComponent from "@/lib/components/modal/ModalComponent";
 import clsx from "clsx";
 import { useState } from "react";
-import { dhikrRepo } from "@/lib/sqlite/dhikr/repository";
-import { useAuth } from "@/lib/hooks/auth/useAuth";
+import { useAuth } from "@/features/auth/hooks/useAuth";
 import type { Dhikr, DhikrAddProps } from "@/features/dhikir/types";
 import Button from "@/lib/components/button/Button";
 import { generateSlug, generateUUID, validate } from "@/features/dhikir/utils/utils";
 import { useTheme } from "@/lib/storage/useThemeStore";
 import { colors } from "@/lib/components/theme/colors";
 import { useTranslation } from "@/lib/i18n";
+import { dhikrRepo } from "@/lib/database/dhikr/repository";
 
 export default function DhikrAdd({ openAddDhikrModal, setOpenAddDhikrModal, onDhikrAdded }: DhikrAddProps) {
     const { isDark } = useTheme();

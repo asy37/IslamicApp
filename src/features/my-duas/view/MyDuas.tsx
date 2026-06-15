@@ -2,7 +2,7 @@ import React from "react";
 import { ScrollView, View, ActivityIndicator } from "react-native";
 import clsx from "clsx";
 import { DuasHeader, DuasList, FloatingActionButton } from "../components";
-import { useDuas } from "@/lib/hooks/duas/useDuas";
+import { useDuas } from "@/features/my-duas/hooks/useDuas";
 import SelectButton from "@/lib/components/button/SelectButton";
 import { FILTERS, filterDuas } from "../utils";
 import { useTheme } from "@/lib/storage/useThemeStore";

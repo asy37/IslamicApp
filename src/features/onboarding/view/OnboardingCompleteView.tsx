@@ -4,7 +4,7 @@ import clsx from "clsx";
 import { useTheme } from "@/lib/storage/useThemeStore";
 import { useTranslation } from "@/lib/i18n";
 import Button from "@/lib/components/button/Button";
-import { useAuthFlow } from "@/lib/hooks/auth/useAuth";
+import { useAuthFlow } from "@/features/auth/hooks/useAuth";
 import { OnboardingContainer } from "../components";
 import { setOnboardingCompleted } from "../utils";
 

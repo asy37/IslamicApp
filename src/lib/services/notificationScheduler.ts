@@ -15,8 +15,9 @@ import type {
   PrayerTimesDayData,
 } from '@/lib/api/services/prayerTimes';
 import { createPrayerTime } from '@/lib/components/prayer-list/utils/utils';
-import { getMonth } from '@/lib/sqlite/prayer-times/repository';
 import { Platform } from 'react-native';
+import { prayerTrackingRepo } from '../database/prayer-tracking/repository';
+import { getMonth } from '../database/prayer-times/repository';
 
 // Prayer order for finding next prayer
 const PRAYER_ORDER = ['Fajr', 'Dhuhr', 'Asr', 'Maghrib', 'Isha'] as const;
@@ -168,7 +169,6 @@ class NotificationSchedulerService {
     effectiveDays: number,
     vibration: boolean
   ): Promise<void> {
-    const { prayerTrackingRepo } = await import('@/lib/sqlite/prayer-tracking/repository');
     const today = getEffectiveToday();
     const state = await prayerTrackingRepo.getCurrentPrayerState();
     const alreadyPrayedToday: Record<string, boolean> = state?.date === today

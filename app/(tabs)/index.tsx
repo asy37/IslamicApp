@@ -1,5 +1,5 @@
-import { usePrayerTrackingLocal, convertToPrayerTrackingData } from "@/lib/hooks/prayer-tracking/usePrayerTrackingLocal";
-import { useAutoSync } from "@/lib/hooks/adhan/usePrayerSync";
+import { usePrayerTrackingLocal, convertToPrayerTrackingData } from "@/features/prayer-tracking/hooks/usePrayerTrackingLocal";
+import { useAutoSync } from "@/features/adhan/hooks/usePrayerSync";
 import { PrayView } from "@/features/prayer-tracking/view";
 import { ErrorView } from "@/lib/components/error";
 

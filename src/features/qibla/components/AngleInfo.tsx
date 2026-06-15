@@ -1,5 +1,5 @@
 import { Text, View } from "react-native";
-import type { FeedbackLevel } from "@/lib/hooks/qibla/useQiblaGuide";
+import type { FeedbackLevel } from "@/features/qibla/hooks/useQiblaGuide";
 import clsx from "clsx";
 import { useTranslation } from "@/lib/i18n";
 

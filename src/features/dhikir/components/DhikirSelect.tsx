@@ -4,7 +4,7 @@ import Button from "@/lib/components/button/Button";
 import React from "react";
 import type { Dhikr, DhikirSelectProps } from "@/features/dhikir/types";
 import { dhikrRepo } from "@/lib/sqlite/dhikr/repository";
-import { useAuth } from "@/lib/hooks/auth/useAuth";
+import { useAuth } from "@/features/auth/hooks/useAuth";
 import { DHIKR_PRESETS, generateUUID } from "@/features/dhikir/utils/utils";
 import clsx from "clsx";
 import { useTheme } from "@/lib/storage/useThemeStore";

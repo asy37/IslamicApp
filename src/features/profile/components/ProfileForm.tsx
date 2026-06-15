@@ -4,16 +4,15 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as ImagePicker from "expo-image-picker";
 import { Alert, ScrollView, Text, View } from "react-native";
 import AvatarPicker from "@/lib/components/form/AvatarPicker";
-import { useAuth } from "@/lib/hooks/auth/useAuth";
+import { useAuth } from "@/features/auth/hooks/useAuth";
 import { supabase } from "@/lib/supabase/client";
 import {
     useUpgradeAnonymousUser,
     useUploadAvatar,
     useUpdateUserProfile,
     useUserProfile,
-} from "@/lib/hooks/profile/useUserProfile";
+} from "@/features/profile/hooks/useUserProfile";
 import { getAvatarSignedUrl, getMyProfile } from "@/lib/api/services/profile";
-import { profileRepo } from "@/lib/sqlite/profile/repository";
 import { queryClient } from "@/lib/query/queryClient";
 import { queryKeys } from "@/lib/query/queryKeys";
 import { useTranslation } from "@/lib/i18n";
@@ -27,6 +26,7 @@ import {
 } from "../utils";
 import ProfileFormFields from "./ProfileFormFields";
 import ProfileSubmitButton from "./ProfileSubmitButton";
+import { profileRepo } from "@/lib/database/profile/repository";
 
 export default function ProfileForm() {
     const { t } = useTranslation();

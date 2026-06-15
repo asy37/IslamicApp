@@ -5,7 +5,7 @@
  */
 
 import { useState, useEffect } from "react";
-import { useAuth } from "@/lib/hooks/auth/useAuth";
+import { useAuth } from "@/features/auth/hooks/useAuth";
 import EmailConfirmationModal from "./EmailConfirmationModal";
 import { storage } from "@/lib/storage/mmkv";
 
@@ -28,12 +28,12 @@ export default function EmailConfirmationProvider() {
     const checkReminderStatus = async () => {
       try {
         const dismissedAt = await storage.getString(EMAIL_REMINDER_DISMISSED_KEY);
-        
+
         if (dismissedAt) {
           const dismissedDate = new Date(dismissedAt);
           const now = new Date();
           const daysSinceDismissed = (now.getTime() - dismissedDate.getTime()) / (1000 * 60 * 60 * 24);
-          
+
           // Only show if it's been more than the cooldown period
           if (daysSinceDismissed < EMAIL_REMINDER_COOLDOWN_DAYS) {
             return;
@@ -54,7 +54,7 @@ export default function EmailConfirmationProvider() {
 
   const handleClose = async () => {
     setShowModal(false);
-    
+
     // Save dismissal timestamp
     try {
       await storage.set(EMAIL_REMINDER_DISMISSED_KEY, new Date().toISOString());

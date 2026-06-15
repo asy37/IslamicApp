@@ -2,7 +2,7 @@ import { Image, Text, View } from "react-native";
 import { useRouter } from "expo-router";
 import clsx from "clsx";
 import React, { useState } from "react";
-import { useLocation } from "@/lib/hooks/qibla/useLocation";
+import { useLocation } from "@/features/qibla/hooks/useLocation";
 import Button from "@/lib/components/button/Button";
 import ManualLocationModal from "@/features/adhan/components/ManualLocationModal";
 import { queryKeys } from "@/lib/query/queryKeys";

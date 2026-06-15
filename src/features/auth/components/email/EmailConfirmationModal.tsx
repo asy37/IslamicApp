@@ -13,7 +13,7 @@ import {
 } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import clsx from "clsx";
-import { useAuth } from "@/lib/hooks/auth/useAuth";
+import { useAuth } from "@/features/auth/hooks/useAuth";
 import { resendConfirmationEmail } from "@/lib/api/services/auth";
 import { useTheme } from "@/lib/storage/useThemeStore";
 import { colors } from "@/lib/components/theme/colors";

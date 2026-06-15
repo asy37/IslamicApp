@@ -13,8 +13,8 @@
 
 import Constants from 'expo-constants';
 import { supabase } from '@/lib/supabase/client';
-import { dhikrRepo, type DhikrRecord } from '@/lib/sqlite/dhikr/repository';
 import { storage } from '@/lib/storage/mmkv';
+import { DhikrRecord, dhikrRepo } from '../database/dhikr/repository';
 
 const getExtra = () => (Constants.expoConfig?.extra as { supabaseUrl?: string; supabaseAnonKey?: string } | undefined);
 

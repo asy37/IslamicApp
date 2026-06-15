@@ -1,29 +1,28 @@
 /**
- * Dua Sync Hook
+ * Dhikr Sync Hook
  * 
  * Triggers sync when:
  * - App comes to foreground
  * - User logs in
- * - Internet connectivity is restored
+ * - 24h passed since last sync
  * 
  * Never blocks UI, fails silently
  */
 
 import { useEffect, useRef } from 'react';
 import { AppState, AppStateStatus } from 'react-native';
-import { duaSyncService } from '@/lib/services/duaSyncService';
-import { useAuth } from '@/lib/hooks/auth/useAuth';
-import NetInfo from '@react-native-community/netinfo';
+import { dhikrSyncService } from '@/lib/services/dhikrSyncService';
+import { useAuth } from '../../auth/hooks/useAuth';
 
 /**
- * Hook to setup automatic dua sync
+ * Hook to setup automatic dhikr sync
  * 
  * Syncs when:
  * - App comes to foreground
  * - User logs in (SIGNED_IN event)
- * - Internet connectivity is restored
+ * - Max once every 24 hours
  */
-export function useDuaSync() {
+export function useDhikrSync() {
   const { user, session } = useAuth();
   const lastSyncAttemptRef = useRef<number>(0);
   const SYNC_COOLDOWN_MS = 60 * 1000; // Don't sync more than once per minute
@@ -40,8 +39,8 @@ export function useDuaSync() {
 
         lastSyncAttemptRef.current = now;
         // Fire and forget - don't await, don't block
-        duaSyncService.syncPendingChanges().catch((error) => {
-          console.error('[DuaSync] Foreground sync error:', error);
+        dhikrSyncService.syncDhikrsIfNeeded().catch((error) => {
+          console.error('[DhikrSync] Foreground sync error:', error);
         });
       }
     });
@@ -54,7 +53,7 @@ export function useDuaSync() {
   // Sync on login
   useEffect(() => {
     if (user && session) {
-      // User just logged in - sync pending changes
+      // User just logged in - sync dirty records
       const now = Date.now();
       if (now - lastSyncAttemptRef.current < SYNC_COOLDOWN_MS) {
         return;
@@ -62,31 +61,9 @@ export function useDuaSync() {
 
       lastSyncAttemptRef.current = now;
       // Fire and forget - don't await, don't block
-      duaSyncService.syncPendingChanges().catch((error) => {
-        console.error('[DuaSync] Login sync error:', error);
+      dhikrSyncService.syncDhikrsIfNeeded().catch((error) => {
+        console.error('[DhikrSync] Login sync error:', error);
       });
     }
   }, [user, session]);
-
-  // Sync when internet connectivity is restored
-  useEffect(() => {
-    const unsubscribe = NetInfo.addEventListener((state) => {
-      if (state.isConnected && state.isInternetReachable) {
-        const now = Date.now();
-        if (now - lastSyncAttemptRef.current < SYNC_COOLDOWN_MS) {
-          return;
-        }
-
-        lastSyncAttemptRef.current = now;
-        // Fire and forget - don't await, don't block
-        duaSyncService.syncPendingChanges().catch((error) => {
-          console.error('[DuaSync] Connectivity restored sync error:', error);
-        });
-      }
-    });
-
-    return () => {
-      unsubscribe();
-    };
-  }, []);
 }

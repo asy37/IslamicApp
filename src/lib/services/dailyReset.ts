@@ -10,11 +10,11 @@
  * 5. Reset daily state for new day
  */
 
-import { prayerTrackingRepo } from '@/lib/sqlite/prayer-tracking/repository';
 import { storage } from '@/lib/storage/mmkv';
 import { format } from 'date-fns';
 import type { AladhanPrayerTimesResponse } from '@/lib/api/services/prayerTimes';
 import { getEffectivePrayerDate } from '@/lib/services/prayerDate';
+import { prayerTrackingRepo } from '../database/prayer-tracking/repository';
 
 const LAST_RESET_DATE_KEY = 'prayer_tracking_last_reset_date';
 

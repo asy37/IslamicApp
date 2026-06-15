@@ -3,19 +3,19 @@ import clsx from "clsx";
 import { useAudioStore } from "@/lib/storage/useQuranStore";
 import { useTranslation } from "@/lib/i18n";
 import React, { useEffect, useRef } from "react";
-import { useQuran } from "@/lib/hooks/quran/useQuran";
+import { useQuran } from "@/features/quran/hooks/useQuran";
 import QuranData from "@/lib/quran/arabic/ar.json";
 import { useQuranAudio } from "@/lib/contexts/QuranAudioContext";
 import { DailyVerseAudio } from "./DailyVerseAudio";
 import SurahInfo from "./SurahInfo";
-import { useAyahWordSync } from "@/lib/hooks/daily-verse/useAyahWordSync";
+import { useAyahWordSync } from "@/features/daily-verse/hooks/useAyahWordSync";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { quranBookmarkRepo } from "@/lib/sqlite/quran-bookmark/repository";
 import { queryKeys } from "@/lib/query/queryKeys";
 import { ShareCard } from "./ShareCard";
 import { captureRef } from "react-native-view-shot";
 import * as Sharing from "expo-sharing";
 import AyahBlock from "@/features/quran/components/AyahBlock";
+import { quranBookmarkRepo } from "@/lib/database/quran-bookmark/repository";
 
 type DailyVerseCardProps = {
   readonly isDark: boolean;

@@ -9,7 +9,7 @@ import {
   type UpdateUserProfileInput,
   type UpgradeAnonymousUserInput,
 } from '@/lib/api/services/profile';
-import { useAuth } from '@/lib/hooks/auth/useAuth';
+import { useAuth } from '@/features/auth/hooks/useAuth';
 import { profileRepo } from '@/lib/sqlite/profile/repository';
 
 export function useUserProfile() {

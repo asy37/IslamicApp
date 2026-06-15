@@ -2,7 +2,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { Pressable, Text, View } from "react-native";
 import { colors } from "../../../lib/components/theme/colors";
 import type { PrayerWithTime } from "@/features/prayer-tracking/types";
-import { useMarkPrayerCompleted, useSetRemindLater } from "@/lib/hooks/prayer-tracking/usePrayerTracking";
+import { useMarkPrayerCompleted, useSetRemindLater } from "@/features/prayer-tracking/hooks/usePrayerTracking";
 import { useState } from "react";
 import { useTheme } from "@/lib/storage/useThemeStore";
 import { useTranslation } from "@/lib/i18n";

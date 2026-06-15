@@ -1,4 +1,4 @@
-import { dhikrRepo } from "@/lib/sqlite/dhikr/repository";
+import { dhikrRepo } from "@/lib/database/dhikr/repository";
 import { Dhikr } from "../types";
 
 /**

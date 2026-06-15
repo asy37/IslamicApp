@@ -8,14 +8,14 @@ import { colors } from "@/lib/components/theme/colors";
 import DhikrAdd from "@/features/dhikir/components/DhikrAdd";
 import DhikrCounter from "@/features/dhikir/components/DhikrCounter";
 import DhikrBottomBar from "@/features/dhikir/components/DhikrBottomBar";
-import { getDb } from "@/lib/sqlite/db";
 import DhikrHeader from "@/features/dhikir/components/DhikrHeader";
 import { useTheme } from "@/lib/storage/useThemeStore";
 import { useTranslation } from "@/lib/i18n";
 import { initializeUserDhikrs } from "@/features/dhikir/utils/utils";
-import { useAuth } from "@/lib/hooks/auth/useAuth";
-import { useDhikr } from "@/lib/hooks/dhikir/useDhikr";
-import { useDhikrSync } from "@/lib/hooks/dhikir/useDhikrSync";
+import { useAuth } from "@/features/auth/hooks/useAuth";
+import { useDhikr } from "@/features/dhikir/hooks/useDhikr";
+import { useDhikrSync } from "@/features/dhikir/hooks/useDhikrSync";
+import { getDb } from "@/lib/database/db";
 
 export const DhikrView = () => {
     const { isDark } = useTheme();

@@ -8,11 +8,11 @@ import AlignmentFeedback from "@/features/qibla/components/AlignmentFeedback";
 import LocationInfo from "@/features/qibla/components/LocationInfo";
 import AngleInfo from "@/features/qibla/components/AngleInfo";
 import CalibrationHint from "@/features/qibla/components/CalibrationHint";
-import { useLocation } from "@/lib/hooks/qibla/useLocation";
+import { useLocation } from "@/features/qibla/hooks/useLocation";
 import { useLocationStore } from "@/lib/storage/locationStore";
-import { useDeviceHeading } from "@/lib/hooks/useDeviceHeading";
-import { useQiblaBearing } from "@/lib/hooks/qibla/useQiblaBearing";
-import { useQiblaGuide } from "@/lib/hooks/qibla/useQiblaGuide";
+import { useDeviceHeading } from "@/features/quran/hooks/useDeviceHeading";
+import { useQiblaBearing } from "@/features/qibla/hooks/useQiblaBearing";
+import { useQiblaGuide } from "@/features/qibla/hooks/useQiblaGuide";
 import { useTheme } from "@/lib/storage/useThemeStore";
 import { useTranslation } from "@/lib/i18n";
 

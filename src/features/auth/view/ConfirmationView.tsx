@@ -3,7 +3,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import clsx from "clsx";
 import { useState, useEffect } from "react";
-import { useAuth } from "@/lib/hooks/auth/useAuth";
+import { useAuth } from "@/features/auth/hooks/useAuth";
 import { resendConfirmationEmail } from "@/lib/api/services/auth";
 import { useTheme } from "@/lib/storage/useThemeStore";
 import { colors } from "@/lib/components/theme/colors";

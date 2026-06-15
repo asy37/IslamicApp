@@ -3,7 +3,6 @@ import clsx from "clsx";
 import { useTheme } from "@/lib/storage/useThemeStore";
 import React, { useState, useRef } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { quranBookmarkRepo } from "@/lib/sqlite/quran-bookmark/repository";
 import { queryKeys } from "@/lib/query/queryKeys";
 import { useTranslation } from "@/lib/i18n";
 import { ShareCard } from "@/features/daily-verse/components/ShareCard";
@@ -21,6 +20,7 @@ import {
     LikedVerseItem,
     LikedVerseDetailModal,
 } from "../components";
+import { quranBookmarkRepo } from "@/lib/database/quran-bookmark/repository";
 
 export const LikedVerseView = () => {
     const { isDark } = useTheme();

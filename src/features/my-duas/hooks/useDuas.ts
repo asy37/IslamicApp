@@ -9,7 +9,7 @@
 
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { duaRepo } from '@/lib/sqlite/dua/repository';
-import { useUserId } from '@/lib/hooks/auth/useUser';
+import { useUserId } from '@/features/auth/hooks/useUser';
 import { generateUUID } from '@/lib/utils/uuid';
 import { isOnline } from '@/lib/utils/network';
 import type { Dua } from '@/types/dua';

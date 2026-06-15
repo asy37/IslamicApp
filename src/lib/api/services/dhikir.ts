@@ -22,8 +22,8 @@
 
 import NetInfo from '@react-native-community/netinfo';
 import { supabase } from '@/lib/supabase/client';
-import { dhikrRepo, type DhikrRecord } from '@/lib/sqlite/dhikr/repository';
 import { storage } from '@/lib/storage/mmkv';
+import { dhikrRepo, type DhikrRecord } from '@/lib/database/dhikr/repository';
 
 const ONE_DAY_MS = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
 
