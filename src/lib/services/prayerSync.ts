@@ -8,6 +8,7 @@
  * - Supabase receives only boolean payloads (prayed/not prayed)
  */
 
+import NetInfo from '@react-native-community/netinfo';
 import { supabase } from '@/lib/supabase/client';
 import { prayerTrackingRepo, SyncQueueItem } from '../database/prayer-tracking/repository';
 
@@ -23,25 +24,8 @@ class PrayerSyncService {
 
   async isOnline(): Promise<boolean> {
     try {
-      // NetInfo kullanarak bağlantı kontrolü; yoksa küçük bir fetch ile kontrol et
-      try {
-        const NetInfo = require('@react-native-community/netinfo');
-        const state = await NetInfo.fetch();
-        return state.isConnected === true;
-      } catch {
-        // NetInfo yüklü değilse, basit fetch ile kontrol et
-        const controller = new AbortController();
-        const timeout = setTimeout(() => controller.abort(), 5000);
-        try {
-          await fetch('https://www.google.com/generate_204', {
-            method: 'HEAD',
-            signal: controller.signal,
-          });
-          return true;
-        } finally {
-          clearTimeout(timeout);
-        }
-      }
+      const state = await NetInfo.fetch();
+      return state.isConnected === true;
     } catch {
       return false;
     }

@@ -1,5 +1,6 @@
 import React from "react";
 import { Text, View } from "react-native";
+import * as Sentry from "@sentry/react-native";
 import { debugLog } from "@/lib/utils/debugLog";
 
 type Props = { children: React.ReactNode };
@@ -17,6 +18,12 @@ export class DebugErrorBoundary extends React.Component<Props, State> {
       message: error.message,
       stack: error.stack ?? "",
       componentStack: info.componentStack ?? "",
+    });
+    // Send the error to Sentry
+    Sentry.captureException(error, {
+      extra: {
+        componentStack: info.componentStack,
+      },
     });
   }
 

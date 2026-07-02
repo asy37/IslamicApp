@@ -1,4 +1,5 @@
 import { ScrollView, View, Text } from "react-native";
+import { router } from "expo-router";
 import clsx from "clsx";
 import SettingsHeader from "@/features/settings/components/SettingsHeader";
 import SettingsSection from "@/features/settings/components/SettingsSection";
@@ -258,7 +259,7 @@ export const SettingsView = () => {
                         <SettingsItem
                             title={t("settings.privacyPolicy")}
                             isDark={isDark}
-                            onPress={() => { }}
+                            onPress={() => router.push("/privacy-policy")}
                         />
                         <View
                             className="h-px"

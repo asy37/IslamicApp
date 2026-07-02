@@ -60,8 +60,7 @@
         "android.permission.VIBRATE",
         "android.permission.SCHEDULE_EXACT_ALARM",
         "android.permission.USE_EXACT_ALARM",
-        "android.permission.FOREGROUND_SERVICE",
-        "android.permission.RECORD_AUDIO"
+        "android.permission.FOREGROUND_SERVICE"
       ]
     },
     "web": {
@@ -112,13 +111,21 @@
           "cameraPermission": "Profil fotoğrafı çekmek için kameraya erişim gerekiyor."
         }
       ],
-      "expo-router"
+      "expo-router",
+      [
+        "@sentry/react-native/expo",
+        {
+          "organization": "salah-org",
+          "project": "salah-app"
+        }
+      ]
     ],
     "extra": {
       "eas": {
         "projectId": "b33415b1-d444-4718-9268-773e8c2749ae"
       },
-      "router": {}
+      "router": {},
+      "privacyPolicyUrl": "https://salahapp.com/privacy-policy"
     },
     "scheme": "salah",
     "owner": "asy37"

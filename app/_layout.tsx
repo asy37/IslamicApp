@@ -1,6 +1,12 @@
 import "@/lib/utils/debugLogInit";
 import "../global.css";
+import * as Sentry from "@sentry/react-native";
 import { Stack, useRouter, useSegments } from "expo-router";
+
+Sentry.init({
+  dsn: process.env.EXPO_PUBLIC_SENTRY_DSN || "",
+  enabled: !__DEV__ || !!process.env.EXPO_PUBLIC_SENTRY_DSN,
+});
 import { useEffect, useState } from "react";
 
 import * as SplashScreen from "expo-splash-screen";
@@ -30,7 +36,7 @@ import { getDb } from "@/lib/database/db";
 
 const ONBOARDING_COMPLETED_KEY = "onboarding_completed";
 
-export default function RootLayout() {
+function RootLayout() {
   const router = useRouter();
   const segments = useSegments();
   const { shouldShowRegister, canAccessApp, isLoading } = useAuthFlow();
@@ -165,12 +171,15 @@ export default function RootLayout() {
             <Stack.Screen name="onboarding" />
             <Stack.Screen name="(tabs)" />
             <Stack.Screen name="auth" />
+            <Stack.Screen name="privacy-policy" />
           </Stack>
         </QuranAudioProvider>
       </QueryClientProvider>
     </DebugErrorBoundary>
   );
 }
+
+export default Sentry.wrap(RootLayout);
 
 function DhikrSyncProvider() {
   useDhikrSync();
