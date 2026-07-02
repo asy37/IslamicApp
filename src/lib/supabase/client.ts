@@ -6,6 +6,7 @@
 import { createClient } from '@supabase/supabase-js';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Constants from 'expo-constants';
+import { AppState } from 'react-native';
 import { Database } from './types';
 
 const extra = Constants.expoConfig?.extra as { supabaseUrl?: string; supabaseAnonKey?: string } | undefined;
@@ -74,5 +75,16 @@ export const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey, {
   },
   // Don't override fetch - let Supabase use React Native's native fetch
   // This should work better in iOS Simulator
+});
+
+// Supabase'in RN için resmi önerisi: uygulama arka plandayken token refresh
+// timer'ını durdur, ön plana geçince tekrar başlat (proaktif refresh + gereksiz
+// arka plan network isteklerini önler).
+AppState.addEventListener('change', (state) => {
+  if (state === 'active') {
+    supabase.auth.startAutoRefresh();
+  } else {
+    supabase.auth.stopAutoRefresh();
+  }
 });
 

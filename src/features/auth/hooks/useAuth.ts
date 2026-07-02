@@ -12,8 +12,14 @@ import type { User, Session } from '@supabase/supabase-js';
 import { isAnonymousUser, isEmailConfirmed } from '@/lib/api/services/auth';
 import { debugLog } from '@/lib/utils/debugLog';
 
-/** Auth timeout süresi (ms). Ağ yavaş/offline olduğunda splash'ı bloklamayı önler. */
-const AUTH_TIMEOUT_MS = 5000;
+/**
+ * Auth timeout süresi (ms). Ağ yavaş/offline olduğunda splash'ı bloklamayı önler.
+ * getSession() süresi dolmuş bir access token'ı network üzerinden refresh
+ * edebildiği için (özellikle uygulama uzun süre kapalı kaldıktan sonra),
+ * gerçekçi bir round-trip süresine izin verecek kadar yüksek tutulmalı.
+ * Düşük tutulursa yavaş network = "session yok" (yanlış logout) sonucu doğar.
+ */
+const AUTH_TIMEOUT_MS = 12000;
 
 export interface AuthState {
   user: User | null;
