@@ -8,7 +8,11 @@ import { notificationService } from '@/lib/services/NotificationService';
 import { useNotificationSettings } from '@/lib/storage/notificationSettings';
 import { getEffectiveToday } from '@/lib/services/prayerDate';
 import { getPrayerLogsRecent } from '@/lib/api/services/prayerTracking';
-import { calculateStreakFromSupabaseLogs } from '@/lib/services/streakCalculation';
+import {
+  calculateStreakFromMergedLogs,
+  isDayComplete,
+  type DailyCompletionRow,
+} from '@/lib/services/streakCalculation';
 import type {
   AladhanPrayerTimesResponse,
   PrayerTimesDayData,
@@ -335,7 +339,12 @@ class NotificationSchedulerService {
     try {
       const effectiveToday = getEffectiveToday();
       const logs = await getPrayerLogsRecent();
-      const streak = calculateStreakFromSupabaseLogs(logs, effectiveToday);
+      const localRows = await prayerTrackingRepo.getLocalCompletionRows();
+      const mergedRows: DailyCompletionRow[] = [
+        ...logs.map((log) => ({ date: log.date, complete: isDayComplete(log) })),
+        ...localRows,
+      ];
+      const streak = calculateStreakFromMergedLogs(mergedRows, effectiveToday);
       await notificationService.scheduleStreakNotification(streak, time);
     } catch (error) {
       console.error('[NotificationScheduler] Failed to schedule streak:', error);

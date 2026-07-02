@@ -14,7 +14,7 @@ export interface PrayerLogRow {
 
 const MAX_STREAK_DAYS = 10000;
 
-function isDayComplete(log: PrayerLogRow): boolean {
+export function isDayComplete(log: PrayerLogRow): boolean {
   return (
     log.fajr === true &&
     log.dhuhr === true &&
@@ -24,29 +24,30 @@ function isDayComplete(log: PrayerLogRow): boolean {
   );
 }
 
+export interface DailyCompletionRow {
+  date: string;
+  complete: boolean;
+}
+
 /**
- * Calculate streak from Supabase logs using effective Islamic today.
- * Does NOT reset streak when today is incomplete; only when yesterday is missing or incomplete.
+ * Calculate streak from a merged set of completion rows (Supabase-synced days
+ * plus local days not yet synced). A date counts as complete if ANY source
+ * reports it complete. This avoids undercounting the streak while a day is
+ * still sitting in the local sync queue (e.g. right after the imsak reset,
+ * or after being offline for a few days), which would otherwise look
+ * "missing" from Supabase's perspective and break the streak early.
  */
-export function calculateStreakFromSupabaseLogs(
-  logs: PrayerLogRow[],
+export function calculateStreakFromMergedLogs(
+  rows: DailyCompletionRow[],
   effectiveToday: string
 ): number {
-  const byDate = new Map<string, PrayerLogRow>();
-  for (const row of logs) {
-    byDate.set(row.date, row);
+  const byDate = new Map<string, boolean>();
+  for (const row of rows) {
+    byDate.set(row.date, byDate.get(row.date) === true || row.complete);
   }
 
-  const todayLog = byDate.get(effectiveToday);
-  const todayComplete = todayLog != null && isDayComplete(todayLog);
-
-  let startDate: string;
-  if (todayComplete) {
-    startDate = effectiveToday;
-  } else {
-    const yesterday = getPreviousDateString(effectiveToday);
-    startDate = yesterday;
-  }
+  const todayComplete = byDate.get(effectiveToday) === true;
+  const startDate = todayComplete ? effectiveToday : getPreviousDateString(effectiveToday);
 
   let streak = 0;
   let checkDate = startDate;
@@ -54,10 +55,7 @@ export function calculateStreakFromSupabaseLogs(
 
   while (iterations < MAX_STREAK_DAYS) {
     iterations++;
-    const log = byDate.get(checkDate);
-    if (log == null || !isDayComplete(log)) {
-      break;
-    }
+    if (byDate.get(checkDate) !== true) break;
     streak++;
     checkDate = getPreviousDateString(checkDate);
   }

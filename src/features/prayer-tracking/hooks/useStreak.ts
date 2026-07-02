@@ -6,7 +6,9 @@ import { useQuery } from '@tanstack/react-query';
 import { getPrayerLogsRecent } from '@/lib/api/services/prayerTracking';
 import { getEffectiveToday } from '@/lib/services/prayerDate';
 import {
-  calculateStreakFromSupabaseLogs,
+  calculateStreakFromMergedLogs,
+  isDayComplete,
+  type DailyCompletionRow,
   type PrayerLogRow,
 } from '@/lib/services/streakCalculation';
 import { prayerTrackingRepo } from '@/lib/database/prayer-tracking/repository';
@@ -21,17 +23,14 @@ export function useStreak() {
     queryKey: ['prayerStreak', effectiveToday],
     queryFn: async () => {
       const logs: PrayerLogRow[] = await getPrayerLogsRecent();
-      const hasEffectiveToday = logs.some((r) => r.date === effectiveToday);
-      let count = calculateStreakFromSupabaseLogs(logs, effectiveToday);
-      let localStreak = 0;
-      if (!hasEffectiveToday) {
-        localStreak = await prayerTrackingRepo.calculateLocalStreak();
-        if (count === 0) {
-          count = localStreak;
-        } else if (localStreak >= 1) {
-          count += 1;
-        }
-      }
+      const localRows = await prayerTrackingRepo.getLocalCompletionRows();
+
+      const mergedRows: DailyCompletionRow[] = [
+        ...logs.map((log) => ({ date: log.date, complete: isDayComplete(log) })),
+        ...localRows,
+      ];
+
+      const count = calculateStreakFromMergedLogs(mergedRows, effectiveToday);
       return { count };
     },
     staleTime: STALE_MS,

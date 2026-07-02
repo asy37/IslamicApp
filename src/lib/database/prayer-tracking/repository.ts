@@ -10,7 +10,7 @@ import * as SQLite from 'expo-sqlite';
 import { getDb } from '../db';
 import type { PrayerStatus, PrayerName } from '@/features/prayer-tracking/types';
 import { getEffectiveToday } from '@/lib/services/prayerDate';
-import { getPreviousDateString } from '@/lib/services/streakCalculation';
+import { getPreviousDateString, type DailyCompletionRow } from '@/lib/services/streakCalculation';
 
 // Types
 export interface DailyPrayerState {
@@ -260,6 +260,47 @@ class PrayerTrackingRepository {
       payload: JSON.parse(result.payload),
       created_at: result.created_at,
     };
+  }
+
+  /**
+   * Local completion rows not yet confirmed synced to Supabase: today's
+   * in-progress state plus every day still sitting in the sync queue.
+   * Used to fill gaps in the Supabase streak calculation (see
+   * calculateStreakFromMergedLogs) so an unsynced day doesn't look "missing".
+   */
+  async getLocalCompletionRows(): Promise<DailyCompletionRow[]> {
+    await this.initialize();
+    if (!this.db) throw new Error('Database not initialized');
+
+    const rows: DailyCompletionRow[] = [];
+
+    const currentState = await this.getCurrentPrayerState();
+    if (currentState) {
+      rows.push({
+        date: currentState.date,
+        complete:
+          currentState.fajr === 'prayed' &&
+          currentState.dhuhr === 'prayed' &&
+          currentState.asr === 'prayed' &&
+          currentState.maghrib === 'prayed' &&
+          currentState.isha === 'prayed',
+      });
+    }
+
+    const queueItems = await this.getPendingQueueItems();
+    for (const item of queueItems) {
+      rows.push({
+        date: item.date,
+        complete:
+          item.payload.fajr &&
+          item.payload.dhuhr &&
+          item.payload.asr &&
+          item.payload.maghrib &&
+          item.payload.isha,
+      });
+    }
+
+    return rows;
   }
 
   /**
